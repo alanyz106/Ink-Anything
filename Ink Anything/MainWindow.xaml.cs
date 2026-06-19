@@ -264,7 +264,10 @@ namespace Ink_Anything
 
             LogHelper.WriteLogToFile("Ink Anything Loaded", LogHelper.LogType.Event);
 
-            PreloadIALibrary();
+            if (!Environment.Is64BitProcess)
+            {
+                PreloadIALibrary();
+            }
 
             isLoaded = true;
         }
