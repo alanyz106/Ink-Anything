@@ -2,6 +2,7 @@ using Ink_Anything.Helpers;
 using iNKORE.UI.WPF.Modern;
 using Microsoft.Office.Interop.PowerPoint;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -286,6 +287,7 @@ namespace Ink_Anything
                 slidescount = Wn.Presentation.Slides.Count;
                 previousSlideID = 0;
                 memoryStreams = new MemoryStream[slidescount + 2];
+                pptTextElements = new List<TextElementData>[slidescount + 2];
 
                 pptName = Wn.Presentation.Name;
                 LogHelper.NewLog("Name: " + Wn.Presentation.Name);
@@ -302,16 +304,12 @@ namespace Ink_Anything
                         int count = 0;
                         foreach (FileInfo file in files)
                         {
-                            if (file.Name != "Position")
+                            if (file.Name != "Position" && file.Extension == ".icstk")
                             {
                                 int i = -1;
                                 try
                                 {
                                     i = int.Parse(System.IO.Path.GetFileNameWithoutExtension(file.Name));
-                                    //var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read);
-                                    //MemoryStream ms = new MemoryStream(File.ReadAllBytes(file.FullName));
-                                    //new StrokeCollection(fs).Save(ms);
-                                    //ms.Position = 0;
                                     memoryStreams[i] = new MemoryStream(File.ReadAllBytes(file.FullName));
                                     memoryStreams[i].Position = 0;
                                     count++;
@@ -323,6 +321,26 @@ namespace Ink_Anything
                             }
                         }
                         LogHelper.WriteLogToFile(string.Format("Loaded {0} saved strokes", count.ToString()));
+
+                        int txtCount = 0;
+                        foreach (FileInfo file in files)
+                        {
+                            if (file.Extension == ".ictxt")
+                            {
+                                int i = -1;
+                                try
+                                {
+                                    i = int.Parse(System.IO.Path.GetFileNameWithoutExtension(file.Name));
+                                    pptTextElements[i] = LoadTextElementDataFromStream(file.FullName);
+                                    if (pptTextElements[i] != null) txtCount++;
+                                }
+                                catch (Exception ex)
+                                {
+                                    LogHelper.WriteLogToFile(string.Format("Failed to load text on Slide {0}\n{1}", i, ex.ToString()), LogHelper.LogType.Error);
+                                }
+                            }
+                        }
+                        if (txtCount > 0) LogHelper.WriteLogToFile(string.Format("Loaded {0} saved text elements", txtCount.ToString()));
                     }
                 }
 
@@ -439,6 +457,7 @@ namespace Ink_Anything
                         inkCanvas.Strokes.Save(ms);
                         ms.Position = 0;
                         memoryStreams[currentShowPosition] = ms;
+                        pptTextElements[currentShowPosition] = GetCurrentTextElementDataList();
                     }
                     catch { }
                 });
@@ -451,7 +470,6 @@ namespace Ink_Anything
                             if (memoryStreams[i].Length > 8)
                             {
                                 byte[] srcBuf = new Byte[memoryStreams[i].Length];
-                                //MessageBox.Show(memoryStreams[i].Length.ToString());
                                 int byteLength = memoryStreams[i].Read(srcBuf, 0, srcBuf.Length);
                                 File.WriteAllBytes(folderPath + @"\" + i.ToString("0000") + ".icstk", srcBuf);
                                 LogHelper.WriteLogToFile(string.Format("Saved strokes for Slide {0}, size={1}, byteLength={2}", i.ToString(), memoryStreams[i].Length, byteLength));
@@ -466,6 +484,24 @@ namespace Ink_Anything
                             LogHelper.WriteLogToFile(string.Format("Failed to save strokes for Slide {0}\n{1}", i, ex.ToString()), LogHelper.LogType.Error);
                             File.Delete(folderPath + @"\" + i.ToString("0000") + ".icstk");
                         }
+                    }
+
+                    string txtPath = folderPath + @"\" + i.ToString("0000") + ".ictxt";
+                    if (pptTextElements != null && i < pptTextElements.Length && pptTextElements[i] != null && pptTextElements[i].Count > 0)
+                    {
+                        try
+                        {
+                            SaveTextElementDataToStream(pptTextElements[i], txtPath);
+                            LogHelper.WriteLogToFile(string.Format("Saved text for Slide {0}, count={1}", i, pptTextElements[i].Count));
+                        }
+                        catch (Exception ex)
+                        {
+                            LogHelper.WriteLogToFile(string.Format("Failed to save text for Slide {0}\n{1}", i, ex.ToString()), LogHelper.LogType.Error);
+                        }
+                    }
+                    else
+                    {
+                        try { File.Delete(txtPath); } catch { }
                     }
                 }
             }
@@ -532,6 +568,7 @@ namespace Ink_Anything
 
         int previousSlideID = 0;
         MemoryStream[] memoryStreams = new MemoryStream[50];
+        List<TextElementData>[] pptTextElements;
 
         private void PptApplication_SlideShowNextSlide(SlideShowWindow Wn)
         {
@@ -544,6 +581,8 @@ namespace Ink_Anything
                     inkCanvas.Strokes.Save(ms);
                     ms.Position = 0;
                     memoryStreams[previousSlideID] = ms;
+
+                    pptTextElements[previousSlideID] = GetCurrentTextElementDataList();
 
                     if (inkCanvas.Strokes.Count > Settings.Automation.MinimumAutomationStrokeNumber && Settings.PowerPointSettings.IsAutoSaveScreenShotInPowerPoint && !_isPptClickingBtnTurned)
                         SaveScreenShot(true, Wn.Presentation.Name + "/" + Wn.View.CurrentShowPosition);
@@ -558,6 +597,7 @@ namespace Ink_Anything
                         {
                             inkCanvas.Strokes.Add(new StrokeCollection(memoryStreams[Wn.View.CurrentShowPosition]));
                         }
+                        LoadTextElementsToCanvas(pptTextElements[Wn.View.CurrentShowPosition]);
                         currentShowPosition = Wn.View.CurrentShowPosition;
                     }
                     catch

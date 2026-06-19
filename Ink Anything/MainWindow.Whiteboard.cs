@@ -18,6 +18,7 @@ namespace Ink_Anything
         StrokeCollection[] strokeCollections = new StrokeCollection[101];
         bool[] whiteboadLastModeIsRedo = new bool[101];
         StrokeCollection lastTouchDownStrokeCollection = new StrokeCollection();
+        List<TextElementData>[] textElementCollections = new List<TextElementData>[101];
 
         int CurrentWhiteboardIndex = 1;
         int WhiteboardTotalCount = 1;
@@ -30,13 +31,16 @@ namespace Ink_Anything
                 var timeMachineHistory = timeMachine.ExportTimeMachineHistory();
                 TimeMachineHistories[0] = timeMachineHistory;
                 timeMachine.ClearStrokeHistory();
-
+                textElementCollections[0] = GetCurrentTextElementDataList();
+                ClearTextElementsFromCanvas();
             }
             else
             {
                 var timeMachineHistory = timeMachine.ExportTimeMachineHistory();
                 TimeMachineHistories[CurrentWhiteboardIndex] = timeMachineHistory;
                 timeMachine.ClearStrokeHistory();
+                textElementCollections[CurrentWhiteboardIndex] = GetCurrentTextElementDataList();
+                ClearTextElementsFromCanvas();
             }
         }
 
@@ -46,6 +50,7 @@ namespace Ink_Anything
             _currentCommitType = CommitReason.ClearingCanvas;
             if (isErasedByCode) _currentCommitType = CommitReason.CodeInput;
             inkCanvas.Strokes.Clear();
+            ClearTextElementsFromCanvas();
             _currentCommitType = CommitReason.UserInput;
         }
 
@@ -61,6 +66,7 @@ namespace Ink_Anything
                     {
                         ApplyHistoryToCanvas(item);
                     }
+                    LoadTextElementsToCanvas(textElementCollections[0]);
                 }
                 else
                 {
@@ -69,6 +75,7 @@ namespace Ink_Anything
                     {
                         ApplyHistoryToCanvas(item);
                     }
+                    LoadTextElementsToCanvas(textElementCollections[CurrentWhiteboardIndex]);
                 }
             }
             catch { }
