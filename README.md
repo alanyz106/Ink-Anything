@@ -39,4 +39,4 @@ A fantastic Ink Anything in WPF/C#, with fantastic support for Seewo Boards.
 
 ## License
 
-MIT License
+GPL-3.0 License
