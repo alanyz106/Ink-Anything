@@ -408,9 +408,21 @@ namespace Ink_Anything
     
             #endregion
     
+            private void inkCanvas_PreviewTouchMove(object sender, TouchEventArgs e)
+            {
+                if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke)
+                {
+                    TryEraseTextAtPoint(e.GetTouchPoint(inkCanvas).Position);
+                }
+            }
+
             private void inkCanvas_TouchMove(object sender, TouchEventArgs e)
             {
                 if (isSingleFingerDragMode) return;
+                if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke)
+                {
+                    TryEraseTextAtPoint(e.GetTouchPoint(inkCanvas).Position);
+                }
                 if (drawingShapeMode != 0)
                 {
                     if (isLastTouchEraser)
@@ -1388,6 +1400,11 @@ namespace Ink_Anything
             bool isMouseDown = false;
             private void inkCanvas_MouseDown(object sender, MouseButtonEventArgs e)
             {
+                if (drawingShapeMode == 26)
+                {
+                    HandleTextModeClick(e.GetPosition(inkCanvas));
+                    return;
+                }
                 isMouseDown = true;
                 if (NeedUpdateIniP())
                 {
@@ -1395,10 +1412,23 @@ namespace Ink_Anything
                 }
             }
     
+            private void inkCanvas_PreviewMouseMove(object sender, MouseEventArgs e)
+            {
+                if (e.LeftButton == MouseButtonState.Pressed &&
+                    (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke))
+                {
+                    TryEraseTextAtPoint(e.GetPosition(inkCanvas));
+                }
+            }
+
             private void inkCanvas_MouseMove(object sender, MouseEventArgs e)
             {
                 if (isMouseDown)
                 {
+                    if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke)
+                    {
+                        TryEraseTextAtPoint(e.GetPosition(inkCanvas));
+                    }
                     MouseTouchMove(e.GetPosition(inkCanvas));
                 }
             }
@@ -1413,7 +1443,7 @@ namespace Ink_Anything
                                                 (circle.Stroke.StylusPoints[0].Y + circle.Stroke.StylusPoints[circle.Stroke.StylusPoints.Count / 2].Y) / 2);
                     circles.Add(circle);
                 }
-                if (drawingShapeMode != 9 && drawingShapeMode != 0 && drawingShapeMode != 24 && drawingShapeMode != 25)
+                if (drawingShapeMode != 9 && drawingShapeMode != 0 && drawingShapeMode != 24 && drawingShapeMode != 25 && drawingShapeMode != 26)
                 {
                     if (isLongPressSelected)
                     {

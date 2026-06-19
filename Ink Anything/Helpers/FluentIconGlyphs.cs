@@ -33,5 +33,6 @@ namespace Ink_Anything
         public const string TouchPointer = "\uE7C9";
         public const string Undo = "\uE7A7";
         public const string UnPin = "\uE77A";
+        public const string TextEdit = "\uEF60";
     }
 }

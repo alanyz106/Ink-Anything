@@ -124,7 +124,17 @@ namespace Ink_Anything
         {
             if (e.Key == Key.Escape)
             {
+                if (drawingShapeMode == 26)
+                {
+                    ExitTextMode();
+                    e.Handled = true;
+                    return;
+                }
                 KeyExit(null, null);
+            }
+            if (drawingShapeMode == 26)
+            {
+                HandleTextModeKeyDown(e);
             }
         }
 
@@ -237,6 +247,7 @@ namespace Ink_Anything
                 GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
                 inkCanvas.Select(new StrokeCollection());
             }
+            if (TryUndoText()) return;
             var item = timeMachine.Undo();
             ApplyHistoryToCanvas(item);
         }
@@ -247,6 +258,7 @@ namespace Ink_Anything
                 GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
                 inkCanvas.Select(new StrokeCollection());
             }
+            if (TryRedoText()) return;
             var item = timeMachine.Redo();
             ApplyHistoryToCanvas(item);
         }

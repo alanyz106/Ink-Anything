@@ -95,6 +95,7 @@
         <InkCanvas x:Name="inkCanvas" Background="Transparent" Cursor="Pen" ForceCursor="False"
                    TouchUp="Main_Grid_TouchUp" TouchDown="Main_Grid_TouchDown"
                    TouchMove="inkCanvas_TouchMove"
+                   PreviewTouchMove="inkCanvas_PreviewTouchMove"
                    ManipulationDelta="Main_Grid_ManipulationDelta"
                    ManipulationCompleted="Main_Grid_ManipulationCompleted"
                    ManipulationInertiaStarting="inkCanvas_ManipulationInertiaStarting"
@@ -104,6 +105,7 @@
                    PreviewTouchUp="inkCanvas_PreviewTouchUp"
                    MouseDown="inkCanvas_MouseDown"
                    MouseMove="inkCanvas_MouseMove"
+                   PreviewMouseMove="inkCanvas_PreviewMouseMove"
                    MouseUp="inkCanvas_MouseUp"
                    ManipulationStarting="inkCanvas_ManipulationStarting"
                    SelectionChanged="inkCanvas_SelectionChanged"
@@ -1264,6 +1266,22 @@
                                                     </StackPanel>
                                                 </ui:SimpleStackPanel>
                                             </Viewbox>
+                                            <Viewbox Margin="12,0,0,0" Height="38" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                                <ui:SimpleStackPanel>
+                                                    <Label Margin="0,0,0,-2" Content="文本大小" Foreground="{DynamicResource FloatBarForeground}" FontSize="13" VerticalAlignment="Center"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Slider x:Name="TextSizeSlider" HorizontalAlignment="Left"
+                                                                Minimum="12" Maximum="72" Value="24"
+                                                                Width="102"
+                                                                IsSnapToTickEnabled="True"
+                                                                TickFrequency="2" TickPlacement="Both"/>
+                                                        <TextBlock Text="{Binding Value, ElementName=TextSizeSlider, Mode=OneWay}"
+                                                                   Foreground="{DynamicResource FloatBarForeground}"
+                                                                   VerticalAlignment="Bottom" Margin="6,0,0,8"
+                                                                   Width="20" FontSize="13"/>
+                                                    </StackPanel>
+                                                </ui:SimpleStackPanel>
+                                            </Viewbox>
                                             <Viewbox Margin="12,0,0,0" Height="32" Width="50" HorizontalAlignment="Left" VerticalAlignment="Top">
                                                 <ui:SimpleStackPanel>
                                                     <Label Margin="0,0,0,-2" Content="墨迹识别" Foreground="{DynamicResource FloatBarForeground}" FontSize="13" VerticalAlignment="Center"/>
@@ -1330,6 +1348,10 @@
                                         </ui:SimpleStackPanel>
                                     </Border>
                                 </Grid>
+                                <ui:FontIcon x:Name="SymbolIconText" Glyph="{x:Static local:FluentIconGlyphs.TextEdit}"
+                                               Foreground="{DynamicResource FloatBarForeground}"
+                                               MouseDown="Border_MouseDown" MouseUp="SymbolIconText_MouseUp"
+                                               ToolTipService.ToolTip="文本输入：点击画板添加文字"/>
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Cancel}" Margin="0,0,0,0" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="BtnExit_Click"
                                                ToolTipService.ToolTip="退出程序"/>
                             </ui:SimpleStackPanel>
