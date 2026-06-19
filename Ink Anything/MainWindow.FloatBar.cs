@@ -22,7 +22,7 @@ namespace Ink_Anything
         private void HideSubPanels()
         {
             BorderClearInDelete.Visibility = Visibility.Collapsed;
-            BorderTools.Visibility = Visibility.Collapsed;
+            PopupTools.IsOpen = false;
         }
 
 
@@ -107,7 +107,7 @@ namespace Ink_Anything
                 inkCanvas.Strokes.Remove(inkCanvas.GetSelectedStrokes());
                 GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
             }
-            else if (inkCanvas.Strokes.Count > 0)
+            else if (inkCanvas.Strokes.Count > 0 || _textOverlayCanvas != null)
             {
                 if (Settings.Automation.IsAutoSaveStrokesAtClear && inkCanvas.Strokes.Count > Settings.Automation.MinimumAutomationStrokeNumber)
                 {
@@ -244,7 +244,7 @@ namespace Ink_Anything
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            BorderTools.Visibility = Visibility.Collapsed;
+            PopupTools.IsOpen = false;
             BtnCountdownTimer_Click(BtnCountdownTimer, null);
         }
 
@@ -252,7 +252,7 @@ namespace Ink_Anything
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            BorderTools.Visibility = Visibility.Collapsed;
+            PopupTools.IsOpen = false;
             BtnRand_Click(BtnRand, null);
         }
 
@@ -260,7 +260,7 @@ namespace Ink_Anything
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            BorderTools.Visibility = Visibility.Collapsed;
+            PopupTools.IsOpen = false;
             new RandWindow(true).ShowDialog();
         }
 
@@ -268,7 +268,7 @@ namespace Ink_Anything
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            BorderTools.Visibility = Visibility.Collapsed;
+            PopupTools.IsOpen = false;
             BorderDrawShape.Visibility = Visibility.Collapsed;
 
             InkCanvasForInkReplay.Visibility = Visibility.Visible;
@@ -363,13 +363,13 @@ namespace Ink_Anything
 
         private void SymbolIconTools_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (BorderTools.Visibility == Visibility.Visible)
+            if (PopupTools.IsOpen)
             {
-                BorderTools.Visibility = Visibility.Collapsed;
+                PopupTools.IsOpen = false;
             }
             else
             {
-                BorderTools.Visibility = Visibility.Visible;
+                PopupTools.IsOpen = true;
             }
         }
 
@@ -495,7 +495,7 @@ namespace Ink_Anything
         {
             if (lastBorderMouseDownObject != sender || inkCanvas.Visibility != Visibility.Visible) return;
 
-            BorderTools.Visibility = Visibility.Collapsed;
+            PopupTools.IsOpen = false;
 
             GridNotifications.Visibility = Visibility.Collapsed;
 
@@ -542,7 +542,7 @@ namespace Ink_Anything
         private void SymbolIconOpenStrokes_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (lastBorderMouseDownObject != sender) return;
-            BorderTools.Visibility = Visibility.Collapsed;
+            PopupTools.IsOpen = false;
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
             string defaultFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Ink Anything Strokes\User Saved";
