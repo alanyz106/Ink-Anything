@@ -29,7 +29,7 @@ namespace Ink_Anything
                 inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 inkCanvas.Children.Clear();
                 isInMultiTouchMode = false;
-                SymbolIconMultiTouchMode.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.People;
+                SymbolIconMultiTouchMode.Glyph = FluentIconGlyphs.People;
             }
             else
             {
@@ -41,7 +41,7 @@ namespace Ink_Anything
                 inkCanvas.EditingMode = InkCanvasEditingMode.None;
                 inkCanvas.Children.Clear();
                 isInMultiTouchMode = true;
-                SymbolIconMultiTouchMode.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Contact;
+                SymbolIconMultiTouchMode.Glyph = FluentIconGlyphs.Contact;
             }
         }
 

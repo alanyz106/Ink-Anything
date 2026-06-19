@@ -140,14 +140,14 @@
                         <Border Name="BorderStrokeSelectionClone" Margin="0,2,-9,2" Background="Transparent" CornerRadius="{Binding ElementName=BorderStrokeSelectionControl, Path=CornerRadius}"
                                 Width="40" MouseDown="Border_MouseDown" MouseUp="BorderStrokeSelectionClone_MouseUp">
                             <ui:SimpleStackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="5">
-                                <ui:SymbolIcon Symbol="Copy" Foreground="{DynamicResource FloatBarForeground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Copy}" Foreground="{DynamicResource FloatBarForeground}"/>
                                 <TextBlock Text="克隆" FontSize="10" Foreground="{DynamicResource FloatBarForeground}"/>
                             </ui:SimpleStackPanel>
                         </Border>
                         <Border Name="BorderStrokeSelectionCloneToNewBoard" Margin="0,2,-9,2" Background="Transparent" CornerRadius="{Binding ElementName=BorderStrokeSelectionControl, Path=CornerRadius}"
                                 Width="40" MouseDown="Border_MouseDown" MouseUp="BorderStrokeSelectionCloneToNewBoard_MouseUp" Visibility="{Binding Visibility, ElementName=GridBackgroundCover}">
                             <ui:SimpleStackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="5">
-                                <ui:SymbolIcon Symbol="Copy" Foreground="{DynamicResource FloatBarForeground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Copy}" Foreground="{DynamicResource FloatBarForeground}"/>
                                 <TextBlock Text="克隆至新页" FontSize="8" Foreground="{DynamicResource FloatBarForeground}"/>
                             </ui:SimpleStackPanel>
                         </Border>
@@ -186,19 +186,19 @@
                             <ui:SimpleStackPanel VerticalAlignment="Center" Spacing="5" Margin="0,-10">
                                 <ui:SimpleStackPanel Orientation="Horizontal" Spacing="13">
                                     <Grid MouseDown="Border_MouseDown" MouseUp="GridPenWidthDecrease_MouseUp">
-                                        <ui:SymbolIcon Symbol="Edit" Foreground="{DynamicResource FloatBarForeground}"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}" Foreground="{DynamicResource FloatBarForeground}"/>
                                         <TextBlock Text="-"  Foreground="{DynamicResource FloatBarForeground}"
                                                    VerticalAlignment="Bottom" HorizontalAlignment="Right"
                                                    Margin="0,0,-2,-7" FontSize="15"/>
                                     </Grid>
                                     <Grid MouseDown="Border_MouseDown" MouseUp="GridPenWidthIncrease_MouseUp">
-                                        <ui:SymbolIcon Symbol="Edit" Foreground="{DynamicResource FloatBarForeground}"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}" Foreground="{DynamicResource FloatBarForeground}"/>
                                         <TextBlock Text="+"  Foreground="{DynamicResource FloatBarForeground}"
                                                    VerticalAlignment="Bottom" HorizontalAlignment="Right"
                                                    Margin="0,0,-3,-4" FontSize="11"/>
                                     </Grid>
                                     <Grid MouseDown="Border_MouseDown" MouseUp="GridPenWidthRestore_MouseUp">
-                                        <ui:SymbolIcon Symbol="Edit" Foreground="{DynamicResource FloatBarForeground}"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}" Foreground="{DynamicResource FloatBarForeground}"/>
                                         <Image Source="{DynamicResource AndroidRefreshDrawingImage}" VerticalAlignment="Bottom" HorizontalAlignment="Right"
                                                Margin="0,0,-2,-2" Width="8">
                                         </Image>
@@ -210,7 +210,7 @@
                         <Border Width="1" Height="45" BorderBrush="{DynamicResource FloatBarForeground}" Background="{DynamicResource FloatBarForeground}"/>
                         <Border Margin="-8,0,0,0" CornerRadius="{Binding ElementName=BorderStrokeSelectionControl, Path=CornerRadius}" Width="40" MouseDown="Border_MouseDown" MouseUp="BorderStrokeSelectionDelete_MouseUp">
                             <ui:SimpleStackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="5">
-                                <ui:SymbolIcon Symbol="Delete" Foreground="{DynamicResource FloatBarForeground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Delete}" Foreground="{DynamicResource FloatBarForeground}"/>
                                 <TextBlock Text="删除" FontSize="10" Foreground="{DynamicResource FloatBarForeground}"/>
                             </ui:SimpleStackPanel>
                         </Border>
@@ -248,7 +248,7 @@
                     <Border Width="36" Height="36" MouseUp="BtnWhiteBoardAdd_Click" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}"
                             ToolTipService.ToolTip="添加新页面">
                         <Viewbox Margin="8">
-                            <ui:SymbolIcon Symbol="Add" Foreground="{DynamicResource FloatBarForeground}" />
+                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Add}" Foreground="{DynamicResource FloatBarForeground}" />
                         </Viewbox>
                     </Border>
                     <Border Width="36" MouseUp="BtnWhiteBoardSwitchPrevious_Click" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
@@ -276,7 +276,7 @@
                     <Border Width="36" Height="36" MouseUp="BorderMultiTouchMode_MouseUp" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}"
                             ToolTipService.ToolTip="多点触控模式：允许多人同时书写">
                         <Viewbox Margin="8">
-                            <ui:SymbolIcon Name="SymbolIconMultiTouchMode" Symbol="People" Foreground="{DynamicResource FloatBarForeground}" />
+                            <ui:FontIcon Name="SymbolIconMultiTouchMode" Glyph="{x:Static local:FluentIconGlyphs.People}" Foreground="{DynamicResource FloatBarForeground}" />
                         </Viewbox>
                     </Border>
                 </ui:SimpleStackPanel>
@@ -290,7 +290,7 @@
                     Width="50" Height="48" FontSize="26" Click="BtnWhiteBoardAdd_Click"
                     Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
                     Background="{Binding ElementName=BtnExit, Path=Background}">
-                    <ui:SymbolIcon Symbol="Add" />
+                    <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Add}" />
                 </Button>
                 <Button Name="BtnWhiteBoardSwitchPrevious" FontFamily="Symbol"
                     Width="50" Height="48" FontSize="25" Click="BtnWhiteBoardSwitchPrevious_Click"
@@ -359,7 +359,7 @@
                     Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
                     Background="{Binding ElementName=BtnExit, Path=Background}"
                     IsEnabled="False">
-                    <ui:SymbolIcon Symbol="Delete" />
+                    <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Delete}" />
                 </Button>
             </ui:SimpleStackPanel>
         </Grid>
@@ -553,7 +553,7 @@
                                         Text="重置设置为推荐设置"/>
                                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="12">
                                         <Button Content="重置" Width="100" FontFamily="Microsoft YaHei UI" Click="BtnResetToSuggestion_Click" Margin="0,0,0,0"/>
-                                        <ui:SymbolIcon Name="SymbolIconResetSuggestionComplete" Symbol="Accept" Visibility="Collapsed"/>
+                                        <ui:FontIcon Name="SymbolIconResetSuggestionComplete" Glyph="{x:Static local:FluentIconGlyphs.Accept}" Visibility="Collapsed"/>
                                     </ui:SimpleStackPanel>
                                 </StackPanel>
                                 <StackPanel>
@@ -561,7 +561,7 @@
                                         Text="重置设置为默认设置"/>
                                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="12">
                                         <Button Content="重置" Width="100" FontFamily="Microsoft YaHei UI" Click="BtnResetToDefault_Click" Margin="0,0,0,10"/>
-                                        <ui:SymbolIcon Name="SymbolIconResetDefaultComplete" Symbol="Accept" Visibility="Collapsed"/>
+                                        <ui:FontIcon Name="SymbolIconResetDefaultComplete" Glyph="{x:Static local:FluentIconGlyphs.Accept}" Visibility="Collapsed"/>
                                     </ui:SimpleStackPanel>
                                 </StackPanel>
                             </ui:SimpleStackPanel>
@@ -685,7 +685,7 @@
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Click="BtnColorBlack_Click">
                             <Viewbox Name="ViewboxBtnColorBlackContent" Opacity="0">
-                                <ui:SymbolIcon Symbol="Accept" Name="SymbolIconBtnColorBlackContent" Foreground="White"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Name="SymbolIconBtnColorBlackContent" Foreground="White"/>
                             </Viewbox>
                         </Button>
                         <Button Name="BtnColorRed" FontFamily="Microsoft YaHei UI" Background="Red"
@@ -693,7 +693,7 @@
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Click="BtnColorRed_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}">
                             <Viewbox Name="ViewboxBtnColorRedContent">
-                                <ui:SymbolIcon Symbol="Accept" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
                             </Viewbox>
                         </Button>
                         <Button Name="BtnColorGreen" FontFamily="Microsoft YaHei UI" Background="#169141"
@@ -701,7 +701,7 @@
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Click="BtnColorGreen_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}">
                             <Viewbox Name="ViewboxBtnColorGreenContent" Opacity="0">
-                                <ui:SymbolIcon Symbol="Accept" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
                             </Viewbox>
                         </Button>
                         <Button Name="BtnColorBlue" FontFamily="Microsoft YaHei UI" Background="#239AD6"
@@ -709,7 +709,7 @@
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Click="BtnColorBlue_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}">
                             <Viewbox Name="ViewboxBtnColorBlueContent" Opacity="0">
-                                <ui:SymbolIcon Symbol="Accept" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
                             </Viewbox>
                         </Button>
                         <Button Name="BtnColorYellow" FontFamily="Microsoft YaHei UI" Background="#F38B00"
@@ -717,7 +717,7 @@
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Click="BtnColorYellow_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}">
                             <Viewbox Name="ViewboxBtnColorYellowContent" Opacity="0">
-                                <ui:SymbolIcon Symbol="Accept" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
                             </Viewbox>
                         </Button>
                     </StackPanel>
@@ -805,7 +805,7 @@
                         Margin="0,10,0,5" Height="{Binding ElementName=BtnPen, Path=ActualHeight}" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                         Click="BtnPenWidthIncrease_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
                         Background="{Binding ElementName=BtnExit, Path=Background}">
-                    <!--<ui:SymbolIcon Symbol="Add"/>-->
+                    <!--<ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Add}"/>-->
                     <Grid Margin="0,2,-5,0">
                         <TextBlock Text="&lt;" FontFamily="Symbol" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock.LayoutTransform>
@@ -820,7 +820,7 @@
                         Margin="0,5,0,0" Height="{Binding ElementName=BtnPen, Path=ActualHeight}" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                         Click="BtnPenWidthDecrease_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
                         Background="{Binding ElementName=BtnExit, Path=Background}">
-                    <!--<ui:SymbolIcon Symbol="Remove"/>-->
+                    <!--<ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Remove}"/>-->
                     <Grid Margin="0,4,-5,0">
                         <TextBlock Text="&gt;" FontFamily="Symbol" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock.LayoutTransform>
@@ -841,7 +841,7 @@
                         Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                         Click="BtnPen_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
                         ToolTipService.ToolTip="画笔：切换到画笔书写模式">
-                    <ui:SymbolIcon Symbol="Edit"/>
+                    <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}"/>
                 </Button>
                 <Button Name="BtnErase" Content="橡皮" Visibility="Visible" FontFamily="Microsoft YaHei UI"
                         Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
@@ -882,7 +882,7 @@
                         Background="{Binding ElementName=BtnExit, Path=Background}"
                         IsEnabled="False" Visibility="Collapsed" IsEnabledChanged="Btn_IsEnabledChanged">
                     <StackPanel Opacity="0.2">
-                        <ui:SymbolIcon Symbol="Undo"/>
+                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Undo}"/>
                         <TextBlock Text="撤销" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Button>
@@ -892,7 +892,7 @@
                         Background="{Binding ElementName=BtnExit, Path=Background}"
                         IsEnabled="False" Visibility="Collapsed" IsEnabledChanged="Btn_IsEnabledChanged">
                     <StackPanel Opacity="0.2">
-                        <ui:SymbolIcon Symbol="Redo"/>
+                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Redo}"/>
                         <TextBlock Text="恢复" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Button>
@@ -958,7 +958,7 @@
                         ToolTipService.ToolTip="拖动：移动工具栏位置">
                     <ui:SimpleStackPanel Margin="0,5,0,5" Spacing="10" Orientation="Horizontal"
                                          HorizontalAlignment="Center">
-                        <ui:SymbolIcon Name="SymbolIconEmoji" Symbol="Emoji2" Foreground="{DynamicResource FloatBarForeground}"/>
+                        <ui:FontIcon Name="SymbolIconEmoji" Glyph="{x:Static local:FluentIconGlyphs.Emoji2}" Foreground="{DynamicResource FloatBarForeground}"/>
                     </ui:SimpleStackPanel>
                 </Border>
                 <Border Margin="5,0,0,0" Visibility="Visible" Height="36" Name="BorderFloatingBarMainControls" Background="{DynamicResource FloatBarBackground}" CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
@@ -971,57 +971,57 @@
                             </Grid>
                             <local:ClickSensitiveGrid Click="SymbolIconCursor_Click" Margin="-10,0,0,0"
                                                         ToolTipService.ToolTip="鼠标模式：切换到鼠标/光标模式">
-                                <ui:SymbolIcon Symbol="Edit" Foreground="{DynamicResource FloatBarForeground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}" Foreground="{DynamicResource FloatBarForeground}"/>
                             </local:ClickSensitiveGrid>
-                            <ui:SymbolIcon Symbol="Setting" Foreground="{DynamicResource FloatBarForeground}" MouseUp="SymbolIconSettings_Click"
+                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Setting}" Foreground="{DynamicResource FloatBarForeground}" MouseUp="SymbolIconSettings_Click"
                                            ToolTipService.ToolTip="设置：打开设置面板"/>
                         </ui:SimpleStackPanel>
                         <ui:SimpleStackPanel Name="StackPanelCanvasControls" Visibility="Visible" Margin="10,5,0,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
                             <local:ClickSensitiveGrid Click="SymbolIconCursor_Click"
                                                         ToolTipService.ToolTip="画笔模式：切换到触控书写模式">
-                                <ui:SymbolIcon Symbol="TouchPointer" Foreground="{DynamicResource FloatBarForeground}"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.TouchPointer}" Foreground="{DynamicResource FloatBarForeground}"/>
                             </local:ClickSensitiveGrid>
                             <ui:SimpleStackPanel Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}" Spacing="8" Margin="0,1">
                                 <Border Name="BorderPenColorBlack" Background="{Binding ElementName=BtnColorBlack, Path=Background}" MouseUp="BorderPenColorBlack_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorBlack, Path=ActualHeight}"
                                     ToolTipService.ToolTip="黑色画笔">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorBlackContent, Path=Opacity}" Margin="6">
-                                        <ui:SymbolIcon Symbol="Accept" Foreground="White"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorRed" Background="{Binding ElementName=BtnColorRed, Path=Background}" MouseUp="BorderPenColorRed_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorRed, Path=ActualHeight}"
                                     ToolTipService.ToolTip="红色画笔">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorRedContent, Path=Opacity}" Margin="6">
-                                        <ui:SymbolIcon Symbol="Accept" Foreground="White"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorGreen" Background="{Binding ElementName=BtnColorGreen, Path=Background}" MouseUp="BorderPenColorGreen_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorGreen, Path=ActualHeight}"
                                     ToolTipService.ToolTip="绿色画笔">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorGreenContent, Path=Opacity}" Margin="6">
-                                        <ui:SymbolIcon Symbol="Accept" Foreground="White"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorBlue" Background="{Binding ElementName=BtnColorBlue, Path=Background}" MouseUp="BorderPenColorBlue_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorBlue, Path=ActualHeight}"
                                     ToolTipService.ToolTip="蓝色画笔">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorBlueContent, Path=Opacity}" Margin="6">
-                                        <ui:SymbolIcon Symbol="Accept" Foreground="White"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorYellow" Background="{Binding ElementName=BtnColorYellow, Path=Background}" MouseUp="BorderPenColorYellow_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorYellow, Path=ActualHeight}"
                                     ToolTipService.ToolTip="黄色画笔">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorYellowContent, Path=Opacity}" Margin="6">
-                                        <ui:SymbolIcon Symbol="Accept" Foreground="White"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorWhite" Background="White" CornerRadius="100" MouseUp="BorderPenColorWhite_MouseUp"
                                     Width="{Binding ElementName=BorderPenColorYellow, Path=ActualHeight}"
                                     ToolTipService.ToolTip="白色画笔">
                                     <Viewbox Name="ViewboxBtnColorWhiteContent" Opacity="0" Margin="6">
-                                        <ui:SymbolIcon Symbol="Accept" Foreground="Black"/>
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="Black"/>
                                     </Viewbox>
                                 </Border>
                             </ui:SimpleStackPanel>
@@ -1080,7 +1080,7 @@
                                 </Image>
                             </Grid>
                             <Grid Margin="0,0,0,0" Width="20">
-                                <ui:SymbolIcon Name="SymbolIconDelete" Symbol="Delete" Foreground="{DynamicResource FloatBarForeground}"
+                                <ui:FontIcon Name="SymbolIconDelete" Glyph="{x:Static local:FluentIconGlyphs.Delete}" Foreground="{DynamicResource FloatBarForeground}"
                                                MouseDown="Border_MouseDown" MouseUp="SymbolIconDelete_MouseUp"
                                                ToolTipService.ToolTip="清屏：清除画布上所有墨迹"/>
                                 <Border x:Name="BorderClearInDelete" Visibility="Collapsed" Background="White" BorderBrush="{DynamicResource FloatBarBorderBrush}" BorderThickness="1"
@@ -1091,7 +1091,7 @@
                                         Click="BtnClear_Click"/>
                                 </Border>
                             </Grid>
-                            <ui:SymbolIcon Name="SymbolIconSelect" Symbol="SelectAll" Foreground="{DynamicResource FloatBarForeground}" MouseUp="SymbolIconSelect_MouseUp"
+                            <ui:FontIcon Name="SymbolIconSelect" Glyph="{x:Static local:FluentIconGlyphs.SelectAll}" Foreground="{DynamicResource FloatBarForeground}" MouseUp="SymbolIconSelect_MouseUp"
                                            ToolTipService.ToolTip="全选：选中所有墨迹进行操作"/>
                             <Grid Margin="3,5,0,5">
                                 <Image MouseUp="ImageDrawShape_MouseUp" MouseDown="Border_MouseDown" Margin="-2.5" Source="{DynamicResource DrawShapeImageSource.DrawShapeIcon}"
@@ -1105,7 +1105,7 @@
                                                 <Run Text="图形"/>
                                                 <Run Text="(第一行支持长按保持选中)" FontSize="10"/>
                                             </TextBlock>
-                                            <ui:SymbolIcon Margin="0,-20,8,15" Symbol="Pin" MouseDown="Border_MouseDown" MouseUp="SymbolIconPinBorderDrawShape_MouseUp" Foreground="{DynamicResource FloatBarForeground}" HorizontalAlignment="Right"/>
+                                            <ui:FontIcon Margin="0,-20,8,15" Glyph="{x:Static local:FluentIconGlyphs.Pin}" MouseDown="Border_MouseDown" MouseUp="SymbolIconPinBorderDrawShape_MouseUp" Foreground="{DynamicResource FloatBarForeground}" HorizontalAlignment="Right"/>
                                             <ui:SimpleStackPanel Margin="20,0,0,0" Orientation="Horizontal">
                                                 <ui:SimpleStackPanel Visibility="Collapsed" Margin="58,6,5,6" Width="54">
                                                     <Label Margin="0,0,0,-2" Content="自动隐藏" Foreground="{DynamicResource FloatBarForeground}" FontSize="13" VerticalAlignment="Center"/>
@@ -1202,18 +1202,18 @@
                                     </Viewbox>
                                 </Border>
                             </Grid>
-                            <ui:SymbolIcon Symbol="Undo" Foreground="{DynamicResource FloatBarForeground}" Margin="0,0,-2,0"
+                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Undo}" Foreground="{DynamicResource FloatBarForeground}" Margin="0,0,-2,0"
                                            Opacity="{Binding ElementName=BtnUndo, Path=IsEnabled, Converter={StaticResource IsEnabledToOpacityConverter}}"
                                            IsEnabled="{Binding ElementName=BtnUndo, Path=IsEnabled}"
                                            MouseUp="SymbolIconUndo_MouseUp" MouseDown="Border_MouseDown"
                                            ToolTipService.ToolTip="撤销：撤销上一步操作"/>
-                            <ui:SymbolIcon Symbol="Redo" Foreground="{DynamicResource FloatBarForeground}" Margin="-2,0,0,0"
+                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Redo}" Foreground="{DynamicResource FloatBarForeground}" Margin="-2,0,0,0"
                                            Opacity="{Binding ElementName=BtnRedo, Path=IsEnabled, Converter={StaticResource IsEnabledToOpacityConverter}}"
                                            IsEnabled="{Binding ElementName=BtnRedo, Path=IsEnabled}"
                                            MouseUp="SymbolIconRedo_MouseUp" MouseDown="Border_MouseDown"
                                            ToolTipService.ToolTip="恢复：恢复上一步撤销"/>
-                            <ui:SymbolIcon x:Name="LockSmithSymbol"
-                                           Symbol="Pin" Foreground="{DynamicResource FloatBarForeground}" Margin="-2,0,0,0"
+                            <ui:FontIcon x:Name="LockSmithSymbol"
+                                           Glyph="{x:Static local:FluentIconGlyphs.Pin}" Foreground="{DynamicResource FloatBarForeground}" Margin="-2,0,0,0"
                                            MouseUp="SymbolIconPin_MouseUp" MouseDown="Border_MouseDown"
                                            ToolTipService.ToolTip="锁定：锁定/解锁工具栏位置"/>
                         </ui:SimpleStackPanel>
@@ -1239,10 +1239,10 @@
                                        ToolTipService.ToolTip="结束幻灯片放映"/>
                             </Grid>
                             <ui:SimpleStackPanel Margin="0,5,10,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
-                                <ui:SymbolIcon Margin="0,0,0,0" Symbol="Camera" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconScreenshot_MouseUp"
+                                <ui:FontIcon Margin="0,0,0,0" Glyph="{x:Static local:FluentIconGlyphs.Camera}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconScreenshot_MouseUp"
                                                ToolTipService.ToolTip="截屏：截图并自动保存到图片文件夹"/>
                                 <Grid Height="24" Width="20">
-                                    <ui:SymbolIcon Symbol="Repair" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconTools_MouseUp"
+                                    <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Repair}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconTools_MouseUp"
                                                    ToolTipService.ToolTip="快捷设置：画笔粗细、墨迹识别、手指模式等"/>
                                     <Border Name="BorderTools" Margin="37,-195,-140,-6" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
                                         <ui:SimpleStackPanel>
@@ -1283,14 +1283,14 @@
                                             <Label Content="墨迹" FontSize="14" Foreground="{DynamicResource FloatBarForeground}"
                                                    HorizontalAlignment="Left" Margin="8,8"/>
                                             <ui:SimpleStackPanel Orientation="Horizontal" Margin="12,0,0,0" Spacing="11">
-                                                <ui:SymbolIcon Symbol="Save" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconSaveStrokes_MouseUp"
+                                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Save}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconSaveStrokes_MouseUp"
                                                                ToolTipService.ToolTip="保存墨迹：将当前墨迹保存到文件"/>
-                                                <ui:SymbolIcon Symbol="OpenFile" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconOpenStrokes_MouseUp"
+                                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.OpenFile}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconOpenStrokes_MouseUp"
                                                                ToolTipService.ToolTip="加载墨迹：从文件加载之前保存的墨迹"/>
                                                 <Border Width="1" Height="20" BorderBrush="{DynamicResource FloatBarForeground}" Background="{DynamicResource FloatBarForeground}"/>
                                                 <Grid MouseDown="Border_MouseDown" MouseUp="GridInkReplayButton_MouseUp"
                                                       ToolTipService.ToolTip="墨迹回放：自动重放画布上的墨迹">
-                                                    <ui:SymbolIcon Symbol="Edit" Foreground="{DynamicResource FloatBarForeground}"/>
+                                                    <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}" Foreground="{DynamicResource FloatBarForeground}"/>
                                                     <Image Source="{DynamicResource AndroidRefreshDrawingImage}" VerticalAlignment="Bottom" HorizontalAlignment="Right"
                                                            Margin="0,0,-3,-3" Width="11">
                                                     </Image>
@@ -1316,11 +1316,11 @@
                                                     </Image>
                                                 </Grid>
                                                 <Border Width="1" Height="20" BorderBrush="{DynamicResource FloatBarForeground}" Background="{DynamicResource FloatBarForeground}"/>
-                                                <ui:SymbolIcon Symbol="Shuffle" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconRand_MouseUp"
+                                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Shuffle}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconRand_MouseUp"
                                                                ToolTipService.ToolTip="随机点名：从名单中随机抽取"/>
                                                 <Grid MouseUp="SymbolIconRandOne_MouseUp" MouseDown="Border_MouseDown"
                                                       ToolTipService.ToolTip="随机抽取一人">
-                                                    <ui:SymbolIcon Symbol="Shuffle" Foreground="{DynamicResource FloatBarForeground}"/>
+                                                    <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Shuffle}" Foreground="{DynamicResource FloatBarForeground}"/>
                                                     <Border CornerRadius="50" BorderBrush="{DynamicResource FloatBarForeground}" BorderThickness="1"
                                                             HorizontalAlignment="Center" Margin="-2,0,0,-2" VerticalAlignment="Bottom" Height="9" Width="9">
                                                         <TextBlock Text="1" FontSize="7" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-0.8,0,0" Foreground="{DynamicResource FloatBarForeground}" />
@@ -1330,7 +1330,7 @@
                                         </ui:SimpleStackPanel>
                                     </Border>
                                 </Grid>
-                                <ui:SymbolIcon Symbol="Cancel" Margin="0,0,0,0" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="BtnExit_Click"
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Cancel}" Margin="0,0,0,0" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="BtnExit_Click"
                                                ToolTipService.ToolTip="退出程序"/>
                             </ui:SimpleStackPanel>
                         </ui:SimpleStackPanel>

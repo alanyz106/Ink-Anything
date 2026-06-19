@@ -302,6 +302,7 @@ paket-files/
 
 # Claude Code
 CLAUDE.md
+.claude/
 
 # JetBrains Rider
 .idea/

@@ -48,7 +48,7 @@ namespace Ink_Anything
                     TextBlockSecond.Text = "00";
                     timer.Stop();
                     isTimerRunning = false;
-                    SymbolIconStart.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Play;
+                    SymbolIconStart.Glyph = FluentIconGlyphs.Play;
                     BtnStartCover.Visibility = Visibility.Visible;
                     TextBlockHour.Foreground = new SolidColorBrush(StringToColor("#FF5B5D5F"));
                     BorderStopTime.Visibility = Visibility.Collapsed;
@@ -199,12 +199,12 @@ namespace Ink_Anything
             if (WindowState == WindowState.Normal)
             {
                 WindowState = WindowState.Maximized;
-                SymbolIconFullscreen.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.BackToWindow;
+                SymbolIconFullscreen.Glyph = FluentIconGlyphs.BackToWindow;
             }
             else
             {
                 WindowState = WindowState.Normal;
-                SymbolIconFullscreen.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.FullScreen;
+                SymbolIconFullscreen.Glyph = FluentIconGlyphs.FullScreen;
             }
         }
 
@@ -230,7 +230,7 @@ namespace Ink_Anything
                 BtnStartCover.Visibility = Visibility.Collapsed;
                 BorderStopTime.Visibility = Visibility.Collapsed;
                 TextBlockHour.Foreground = new SolidColorBrush(StringToColor("#FF5B5D5F"));
-                SymbolIconStart.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Play;
+                SymbolIconStart.Glyph = FluentIconGlyphs.Play;
                 isTimerRunning = false;
                 timer.Stop();
                 isPaused = false;
@@ -280,7 +280,7 @@ namespace Ink_Anything
                 startTime += DateTime.Now - pauseTime;
                 ProcessBarTime.IsPaused = false;
                 TextBlockHour.Foreground = Brushes.Black;
-                SymbolIconStart.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Pause;
+                SymbolIconStart.Glyph = FluentIconGlyphs.Pause;
                 isPaused = false;
                 timer.Start();
                 UpdateStopTime();
@@ -292,7 +292,7 @@ namespace Ink_Anything
                 pauseTime = DateTime.Now;
                 ProcessBarTime.IsPaused = true;
                 TextBlockHour.Foreground = new SolidColorBrush(StringToColor("#FF5B5D5F"));
-                SymbolIconStart.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Play;
+                SymbolIconStart.Glyph = FluentIconGlyphs.Play;
                 BorderStopTime.Visibility = Visibility.Collapsed;
                 isPaused = true;
                 timer.Stop();
@@ -304,7 +304,7 @@ namespace Ink_Anything
                 totalSeconds = ((hour * 60) + minute) * 60 + second;
                 ProcessBarTime.IsPaused = false;
                 TextBlockHour.Foreground = Brushes.Black;
-                SymbolIconStart.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Pause;
+                SymbolIconStart.Glyph = FluentIconGlyphs.Pause;
                 BtnResetCover.Visibility = Visibility.Collapsed;
 
                 if (totalSeconds <= 10)

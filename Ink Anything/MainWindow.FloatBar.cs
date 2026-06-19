@@ -431,7 +431,7 @@ namespace Ink_Anything
             downPos = e.GetPosition(null);
             GridForFloatingBarDraging.Visibility = Visibility.Visible;
 
-            SymbolIconEmoji.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Emoji;
+            SymbolIconEmoji.Glyph = FluentIconGlyphs.Emoji;
         }
 
         void SymbolIconEmoji_MouseUp(object sender, MouseButtonEventArgs e)
@@ -444,7 +444,7 @@ namespace Ink_Anything
             }
 
             GridForFloatingBarDraging.Visibility = Visibility.Collapsed;
-            SymbolIconEmoji.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Emoji2;
+            SymbolIconEmoji.Glyph = FluentIconGlyphs.Emoji2;
         }
 
         bool borderFloatingBarMainControlsVisibility = true;
@@ -535,8 +535,8 @@ namespace Ink_Anything
         private void SymbolIconPin_MouseUp(object sender, MouseButtonEventArgs e)
         {
             _lockSmith = !_lockSmith;
-            if (_lockSmith) LockSmithSymbol.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.UnPin;
-            else LockSmithSymbol.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Pin;
+            if (_lockSmith) LockSmithSymbol.Glyph = FluentIconGlyphs.UnPin;
+            else LockSmithSymbol.Glyph = FluentIconGlyphs.Pin;
         }
 
         private void SymbolIconOpenStrokes_MouseUp(object sender, MouseButtonEventArgs e)

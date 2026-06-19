@@ -30,10 +30,10 @@
             </Grid.ColumnDefinitions>
             <Image Source="Resources/InkCanvas.ico"/>
             <Viewbox Grid.Column="1" Margin="20">
-                <ui:SymbolIcon Symbol="Emoji2" Foreground="#0865B5"/>
+                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Emoji2}" Foreground="#0865B5"/>
             </Viewbox>
             <Viewbox Grid.Column="2" Margin="20">
-                <ui:SymbolIcon Symbol="Emoji" Foreground="#169141"/>
+                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Emoji}" Foreground="#169141"/>
             </Viewbox>
         </Grid>
         <ui:SimpleStackPanel VerticalAlignment="Bottom" Grid.Row="2" Margin="50,0">

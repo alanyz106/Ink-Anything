@@ -49,7 +49,7 @@ namespace Ink_Anything
             if (TotalCount >= PeopleCount) return;
             TotalCount++;
             LabelNumberCount.Content = TotalCount.ToString();
-            SymbolIconStart.Symbol = Symbol.People;
+            SymbolIconStart.Glyph = FluentIconGlyphs.People;
         }
 
         private void BorderBtnMinus_MouseUp(object sender, MouseButtonEventArgs e)
@@ -59,7 +59,7 @@ namespace Ink_Anything
             LabelNumberCount.Content = TotalCount.ToString();
             if (TotalCount == 1)
             {
-                SymbolIconStart.Symbol = Symbol.Contact;
+                SymbolIconStart.Glyph = FluentIconGlyphs.Contact;
             }
         }
 

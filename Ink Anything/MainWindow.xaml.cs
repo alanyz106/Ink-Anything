@@ -454,13 +454,13 @@ namespace Ink_Anything
             {
                 ToggleSwitchDisableLockSmithByDefault.IsOn = true;
                 _lockSmith = false;
-                LockSmithSymbol.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Pin;
+                LockSmithSymbol.Glyph = FluentIconGlyphs.Pin;
             }
             else
             {
                 ToggleSwitchDisableLockSmithByDefault.IsOn = false;
                 _lockSmith = true;
-                LockSmithSymbol.Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.UnPin;
+                LockSmithSymbol.Glyph = FluentIconGlyphs.UnPin;
             }
             if (Settings.Gesture.IsEnableTwoFingerZoom)
             {

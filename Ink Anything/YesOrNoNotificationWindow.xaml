@@ -14,7 +14,7 @@
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <Viewbox HorizontalAlignment="Left" Margin="10" Height="30">
-                <ui:SymbolIcon Symbol="SlideShow" Foreground="{Binding ElementName=Label, Path=Foreground}"/>
+                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.SlideShow}" Foreground="{Binding ElementName=Label, Path=Foreground}"/>
             </Viewbox>
             <Label Name="Label" Margin="60,20,0,20" VerticalAlignment="Center"/>
             <ui:SimpleStackPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="10">

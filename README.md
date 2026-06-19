@@ -33,6 +33,10 @@ A fantastic Ink Anything in WPF/C#, with fantastic support for Seewo Boards.
 - .NET Framework 4.7.2
 - Microsoft Office（PPT 集成需要）
 
+## 用户手册
+
+详细的使用说明请参阅 [用户手册](Manual.md)。
+
 ## 鸣谢
 
 本项目基于 [Ink Canvas](https://github.com/WXRIW/Ink-Canvas) 开发，感谢原项目作者及所有贡献者的辛勤付出。

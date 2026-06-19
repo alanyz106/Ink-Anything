@@ -46,11 +46,11 @@ namespace Ink_Anything
     
                 if (ToggleSwitchDrawShapeBorderAutoHide.IsOn)
                 {
-                    ((iNKORE.UI.WPF.Modern.Controls.SymbolIcon)sender).Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.Pin;
+                    ((iNKORE.UI.WPF.Modern.Controls.FontIcon)sender).Glyph = FluentIconGlyphs.Pin;
                 }
                 else
                 {
-                    ((iNKORE.UI.WPF.Modern.Controls.SymbolIcon)sender).Symbol = iNKORE.UI.WPF.Modern.Controls.Symbol.UnPin;
+                    ((iNKORE.UI.WPF.Modern.Controls.FontIcon)sender).Glyph = FluentIconGlyphs.UnPin;
                 }
             }
     

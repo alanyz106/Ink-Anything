@@ -29,7 +29,7 @@
                             <DropShadowEffect Direction="0" ShadowDepth="0" Opacity="0.15" BlurRadius="3"/>
                         </Border.Effect>
                         <Viewbox Margin="20">
-                            <ui:SymbolIcon Symbol="Remove" Foreground="Black"/>
+                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Remove}" Foreground="Black"/>
                         </Viewbox>
                     </Border>
                     <Label Name="LabelNumberCount" Content="1" FontFamily="Segeo UI" FontSize="55" Margin="30"/>
@@ -38,7 +38,7 @@
                             <DropShadowEffect Direction="0" ShadowDepth="0" Opacity="0.15" BlurRadius="3"/>
                         </Border.Effect>
                         <Viewbox Margin="20">
-                            <ui:SymbolIcon Symbol="Add" Foreground="Black"/>
+                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Add}" Foreground="Black"/>
                         </Viewbox>
                     </Border>
                 </StackPanel>
@@ -47,7 +47,7 @@
                         Height="70" Width="200" CornerRadius="10">
                         <ui:SimpleStackPanel Margin="3,0" Spacing="20" Orientation="Horizontal" HorizontalAlignment="Center">
                             <Viewbox Margin="0,20">
-                                <ui:SymbolIcon Name="SymbolIconStart" Symbol="Contact" Foreground="White"/>
+                                <ui:FontIcon Name="SymbolIconStart" Glyph="{x:Static local:FluentIconGlyphs.Contact}" Foreground="White"/>
                             </Viewbox>
                             <TextBlock Text="抽奖" Foreground="White" FontSize="35" Margin="-1,-1,4,0" VerticalAlignment="Center"/>
                         </ui:SimpleStackPanel>
@@ -56,7 +56,7 @@
                         Height="70" Width="200" CornerRadius="10">
                         <ui:SimpleStackPanel Margin="3,0" Spacing="20" Orientation="Horizontal" HorizontalAlignment="Center">
                             <Viewbox Margin="0,20">
-                                <ui:SymbolIcon Symbol="{Binding ElementName=SymbolIconStart, Path=Symbol}" Foreground="White"/>
+                                <ui:FontIcon Glyph="{Binding ElementName=SymbolIconStart, Path=Glyph}" Foreground="White"/>
                             </Viewbox>
                             <TextBlock Text="抽奖" Foreground="White" FontSize="35" Margin="-1,-1,4,0" VerticalAlignment="Center"/>
                         </ui:SimpleStackPanel>
@@ -72,7 +72,7 @@
                 </Border.Effect>
                 <ui:SimpleStackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Viewbox Margin="15,12">
-                        <ui:SymbolIcon Symbol="People" Foreground="Black"/>
+                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.People}" Foreground="Black"/>
                     </Viewbox>
                     <TextBlock Margin="-5,12,15,12" Name="TextBlockPeopleCount" Text="点击此处以导入名单" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </ui:SimpleStackPanel>
@@ -85,7 +85,7 @@
                     <DropShadowEffect Direction="0" ShadowDepth="0" Opacity="0.1" BlurRadius="3"/>
                 </Border.Effect>
                 <Viewbox Margin="14">
-                    <ui:SymbolIcon Symbol="Clear" Foreground="White"/>
+                    <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Clear}" Foreground="White"/>
                 </Viewbox>
             </Border>
         </Grid>
