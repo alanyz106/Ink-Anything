@@ -63,25 +63,39 @@ namespace Ink_Anything
 
         private void BtnErase_Click(object sender, RoutedEventArgs e)
         {
-            forceEraser = true;
-            forcePointEraser = !forcePointEraser;
-            switch (Settings.Canvas.EraserType)
+            if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint)
             {
-                case 1:
-                    forcePointEraser = true;
-                    break;
-                case 2:
-                    forcePointEraser = false;
-                    break;
+                // 第三态：退出橡皮擦，回到画笔
+                forceEraser = false;
+                forcePointEraser = false;
+                inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                drawingShapeMode = 0;
+                ImageEraser.Visibility = Visibility.Visible;
+                GeometryDrawingEraser.Brush = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66));
+                ToolTipService.SetToolTip(EraserContainer, "橡皮擦：点击切换到笔画擦除");
             }
-            inkCanvas.EraserShape = forcePointEraser ? new EllipseStylusShape(50, 50) : new EllipseStylusShape(5, 5);
-            inkCanvas.EditingMode =
-                forcePointEraser ? InkCanvasEditingMode.EraseByPoint : InkCanvasEditingMode.EraseByStroke;
-            drawingShapeMode = 0;
-            GeometryDrawingEraser.Brush = forcePointEraser
-                ? new SolidColorBrush(Color.FromRgb(0x23, 0xA9, 0xF2))
-                : new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66));
-            ImageEraser.Visibility = Visibility.Collapsed;
+            else if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke)
+            {
+                // 第二态：部分擦除
+                forcePointEraser = true;
+                inkCanvas.EraserShape = new EllipseStylusShape(50, 50);
+                inkCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                GeometryDrawingEraser.Brush = new SolidColorBrush(Color.FromRgb(0x23, 0xA9, 0xF2));
+                ImageEraser.Visibility = Visibility.Collapsed;
+                ToolTipService.SetToolTip(EraserContainer, "部分擦除：点击退出橡皮擦");
+            }
+            else
+            {
+                // 第一态：笔画擦除
+                forceEraser = true;
+                forcePointEraser = false;
+                inkCanvas.EraserShape = new EllipseStylusShape(5, 5);
+                inkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                drawingShapeMode = 0;
+                GeometryDrawingEraser.Brush = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66));
+                ImageEraser.Visibility = Visibility.Collapsed;
+                ToolTipService.SetToolTip(EraserContainer, "笔画擦除：点击切换到部分擦除");
+            }
             inkCanvas_EditingModeChanged(inkCanvas, null);
             CancelSingleFingerDragMode();
         }
@@ -118,7 +132,7 @@ namespace Ink_Anything
             }
 
             ClearStrokes(false);
-            inkCanvas.Children.Clear();
+            ClearTextElementsFromCanvas();
 
             CancelSingleFingerDragMode();
         }
@@ -551,8 +565,11 @@ namespace Ink_Anything
             else
             {
                 inkCanvas.IsManipulationEnabled = true;
-                drawingShapeMode = 0;
-                inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                if (drawingShapeMode != 26)
+                {
+                    drawingShapeMode = 0;
+                    inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                }
                 CancelSingleFingerDragMode();
                 forceEraser = false;
 
