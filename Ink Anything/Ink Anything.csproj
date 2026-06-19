@@ -11,26 +11,9 @@
 		<ApplicationIcon>Resources\InkCanvas.ico</ApplicationIcon>
 	</PropertyGroup>
 
-	<!--ClickOnce Stuff-->
 	<PropertyGroup>
-		<IsWebBootstrapper>false</IsWebBootstrapper>
-		<PublishUrl>publish\</PublishUrl>
-		<Install>true</Install>
-		<InstallFrom>Disk</InstallFrom>
-		<UpdateEnabled>false</UpdateEnabled>
-		<UpdateMode>Foreground</UpdateMode>
-		<UpdateInterval>7</UpdateInterval>
-		<UpdateIntervalUnits>Days</UpdateIntervalUnits>
-		<UpdatePeriodically>false</UpdatePeriodically>
-		<UpdateRequired>false</UpdateRequired>
-		<MapFileExtensions>true</MapFileExtensions>
-		<ApplicationRevision>2</ApplicationRevision>
-		<ApplicationVersion>2.0.2.%2a</ApplicationVersion>
-		<UseApplicationTrust>false</UseApplicationTrust>
-		<BootstrapperEnabled>false</BootstrapperEnabled>
 		<Platforms>AnyCPU;x86;x64;ARM64</Platforms>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
-
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <Prefer32Bit>True</Prefer32Bit>
