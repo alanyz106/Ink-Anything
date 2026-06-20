@@ -4,13 +4,15 @@
 
 # Ink-Anything
 
-A fantastic Ink Anything in WPF/C#, with fantastic support for Seewo Boards.
+基于 WPF/C# 的轻量级数字画板，支持文本输入，针对希沃白板和 PowerPoint 放映深度优化。
 
 </div>
 
+[English](README_EN.md) | 中文
+
 ## 特性
 
-- 对 Microsoft PowerPoint 有优化支持，放映时自动切换画板模式，支持翻页控制和墨迹保存
+- 对 Microsoft PowerPoint 有优化支持，放映时自动切换画板模式，支持翻页控制和墨迹/文本保存
 - 支持 Active Pen（压感支持）
 - 笔细的一头写字，反过来粗的一头是橡皮擦（希沃白板本身不支持此功能）
 - 手指直接触摸擦除墨迹
@@ -24,10 +26,27 @@ A fantastic Ink Anything in WPF/C#, with fantastic support for Seewo Boards.
 - 截图并自动保存
 - 墨迹保存与加载
 - 墨迹回放功能
-- 深色/浅色主题切换
+- 深色/浅色/跟随系统主题切换
 - 开机自启动
-- 全局热键支持
+- 全局热键支持（Alt+S/D/E/C/V/L/T，Alt+1~6 快速切换画笔颜色）
 - 对其他红外触控屏也可提供相似功能
+
+## 键盘快捷键
+
+| 快捷键 | 功能 |
+|---|---|
+| Alt+S | 切换画笔/鼠标模式 |
+| Alt+D | 清屏 |
+| Alt+E | 橡皮擦循环切换（笔画擦 → 部分擦 → 退出） |
+| Alt+C | 截屏 |
+| Alt+V | 显示/隐藏浮动工具栏 |
+| Alt+L | 画直线 |
+| Alt+T | 文本输入模式 |
+| Alt+1~6 | 切换画笔颜色（黑/红/绿/蓝/黄/白） |
+| Ctrl+Z | 撤销 |
+| Ctrl+Y | 恢复 |
+| Shift+Esc | 退出/结束放映 |
+| Escape | 退出当前模式 |
 
 ## 运行环境
 

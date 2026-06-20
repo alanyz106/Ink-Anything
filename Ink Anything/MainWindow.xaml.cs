@@ -254,6 +254,8 @@ namespace Ink_Anything
                 PreloadIALibrary();
             }
 
+            TextBlockSettingsVersion.Text = "Ink Anything v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+
             isLoaded = true;
         }
 
