@@ -8,7 +8,7 @@
 		<UseWPF>true</UseWPF>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<ApplicationIcon>Resources\InkCanvas.ico</ApplicationIcon>
+		<ApplicationIcon>Resources\Ink Anything.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -83,17 +83,7 @@
 		<WCFMetadata Include="Connected Services\" />
 	</ItemGroup>
 	<ItemGroup>
-		<Resource Include="Resources\InkCanvas.ico" />
-	</ItemGroup>
-	<ItemGroup>
-		<Resource Include="Resources\logo.png" />
-		<Resource Include="Resources\text.png" />
-	</ItemGroup>
-	<ItemGroup>
-		<Resource Include="Resources\textCN.png" />
-	</ItemGroup>
-	<ItemGroup>
-		<Resource Include="Resources\logo2.png" />
+		<Resource Include="Resources\Ink Anything.ico" />
 	</ItemGroup>
 	<ItemGroup>
 		<BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

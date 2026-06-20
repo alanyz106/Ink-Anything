@@ -1,6 +1,6 @@
 <div align="center">
 
-[![LOGO](Ink%20Anything/Resources/InkCanvas.png?raw=true "LOGO")](# "LOGO")
+<img src="Ink%20Anything/Resources/Ink%20Anything.png?raw=true" alt="LOGO" width="256" height="256"/>
 
 # Ink-Anything
 
@@ -61,6 +61,14 @@ For detailed usage instructions, please see [User Manual (English)](Manual_EN.md
 ## Acknowledgements
 
 This project is based on [Ink Canvas](https://github.com/WXRIW/Ink-Canvas). Thanks to the original author and all contributors.
+
+## Donation
+
+If you find this project helpful, feel free to buy the author a coffee~
+
+<img src="Ink%20Anything/Resources/alipay.jpg?raw=true" alt="Alipay" width="256"/>
+
+<img src="Ink%20Anything/Resources/wxpay.png?raw=true" alt="WeChat Pay" width="256"/>
 
 ## License
 

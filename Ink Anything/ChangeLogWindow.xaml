@@ -28,7 +28,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Image Source="Resources/InkCanvas.ico"/>
+            <Image Source="Resources/Ink Anything.ico"/>
             <Viewbox Grid.Column="1" Margin="20">
                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Emoji2}" Foreground="#0865B5"/>
             </Viewbox>

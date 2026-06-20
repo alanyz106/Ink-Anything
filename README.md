@@ -1,6 +1,6 @@
 <div align="center">
 
-[![LOGO](Ink%20Anything/Resources/InkCanvas.png?raw=true "LOGO")](# "LOGO")
+<img src="Ink%20Anything/Resources/Ink%20Anything.png?raw=true" alt="LOGO" width="256" height="256"/>
 
 # Ink-Anything
 
@@ -61,6 +61,14 @@
 ## 鸣谢
 
 本项目基于 [Ink Canvas](https://github.com/WXRIW/Ink-Canvas) 开发，感谢原项目作者及所有贡献者的辛勤付出。
+
+## 赞赏
+
+如果觉得这个项目对你有帮助，欢迎请作者喝杯咖啡~
+
+<img src="Ink%20Anything/Resources/alipay.jpg?raw=true" alt="支付宝赞赏码" width="256"/>
+
+<img src="Ink%20Anything/Resources/wxpay.png?raw=true" alt="微信赞赏码" width="256"/>
 
 ## License
 

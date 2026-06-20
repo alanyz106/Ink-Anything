@@ -166,23 +166,6 @@ namespace Ink_Anything
                     if (response.Contains("Special Version"))
                     {
                         //isAutoUpdateEnabled = true;
-
-                        if (response.Contains("<notice>"))
-                        {
-                            string str = Strings.Mid(response, response.IndexOf("<notice>") + 9);
-                            if (str.Contains("<notice>"))
-                            {
-                                str = Strings.Left(str, str.IndexOf("<notice>")).Trim();
-                                if (str.Length > 0)
-                                {
-                                    Application.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        GroupBoxMASEZVersion.Visibility = Visibility.Visible;
-                                        TextBlockMASEZNotice.Text = str;
-                                    });
-                                }
-                            }
-                        }
                     }
 
                     Application.Current.Dispatcher.Invoke(() =>
