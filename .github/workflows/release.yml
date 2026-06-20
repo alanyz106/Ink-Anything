@@ -1,0 +1,77 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Extract version from tag
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = $tag -replace '^v', ''
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "Extracted version: $version"
+
+      - name: Restore dependencies
+        run: dotnet restore "Ink Anything/Ink Anything.csproj"
+
+      - name: Build x64
+        run: dotnet build "Ink Anything/Ink Anything.csproj" -c Release -p:Platform=x64 --no-restore
+
+      - name: Build ARM64
+        run: dotnet build "Ink Anything/Ink Anything.csproj" -c Release -p:Platform=ARM64 --no-restore
+
+      - name: Create x64 zip
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          Compress-Archive -Path "Ink Anything/bin/x64/Release/*" -DestinationPath "Ink-Anything-x64-v$version.zip"
+
+      - name: Create ARM64 zip
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          Compress-Archive -Path "Ink Anything/bin/ARM64/Release/*" -DestinationPath "Ink-Anything-ARM64-v$version.zip"
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+
+      - name: Update installer version
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          (Get-Content installer.iss) -replace '#define MyAppVersion ".*"', "#define MyAppVersion `"$version`"" | Set-Content installer.iss
+
+      - name: Build installer
+        run: iscc installer.iss
+
+      - name: Create GitHub Release
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          gh release create "v$version" `
+            --title "Ink Anything v$version" `
+            --generate-notes `
+            "Ink-Anything-x64-v$version.zip" `
+            "Ink-Anything-ARM64-v$version.zip" `
+            "installer_output/Ink-Anything-Setup-$version-x64.exe"
+        env:
+          GH_TOKEN: ${{ github.token }}
