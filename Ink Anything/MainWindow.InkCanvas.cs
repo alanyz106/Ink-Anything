@@ -22,7 +22,7 @@ namespace Ink_Anything
             {
                 //drawingAttributes = new DrawingAttributes();
                 drawingAttributes = inkCanvas.DefaultDrawingAttributes;
-                drawingAttributes.Color = ((SolidColorBrush)BtnColorRed.Background).Color;
+                drawingAttributes.Color = ColorPenRed;
 
                 drawingAttributes.Height = 2.5;
                 drawingAttributes.Width = 2.5;
@@ -42,15 +42,15 @@ namespace Ink_Anything
                 foreach (GestureRecognitionResult gest in gestures)
                 {
                     //Trace.WriteLine(string.Format("Gesture: {0}, Confidence: {1}", gest.ApplicationGesture, gest.RecognitionConfidence));
-                    if (StackPanelPPTControls.Visibility == Visibility.Visible)
+                    if (PptNavigationBtn.Visibility == Visibility.Visible)
                     {
                         if (gest.ApplicationGesture == ApplicationGesture.Left)
                         {
-                            BtnPPTSlidesDown_Click(BtnPPTSlidesDown, null);
+                            BtnPPTSlidesDown_Click(null, null);
                         }
                         if (gest.ApplicationGesture == ApplicationGesture.Right)
                         {
-                            BtnPPTSlidesUp_Click(BtnPPTSlidesUp, null);
+                            BtnPPTSlidesUp_Click(null, null);
                         }
                     }
                 }
@@ -95,28 +95,28 @@ namespace Ink_Anything
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (StackPanelPPTControls.Visibility != Visibility.Visible || currentMode != 0) return;
+            if (PptNavigationBtn.Visibility != Visibility.Visible || currentMode != 0) return;
             if (e.Delta >= 120)
             {
-                BtnPPTSlidesUp_Click(BtnPPTSlidesUp, null);
+                BtnPPTSlidesUp_Click(null, null);
             }
             else if (e.Delta <= -120)
             {
-                BtnPPTSlidesDown_Click(BtnPPTSlidesDown, null);
+                BtnPPTSlidesDown_Click(null, null);
             }
         }
 
         private void Main_Grid_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (StackPanelPPTControls.Visibility != Visibility.Visible || currentMode != 0) return;
+            if (PptNavigationBtn.Visibility != Visibility.Visible || currentMode != 0) return;
 
             if (e.Key == Key.Down || e.Key == Key.PageDown || e.Key == Key.Right || e.Key == Key.N || e.Key == Key.Space)
             {
-                BtnPPTSlidesDown_Click(BtnPPTSlidesDown, null);
+                BtnPPTSlidesDown_Click(null, null);
             }
             if (e.Key == Key.Up || e.Key == Key.PageUp || e.Key == Key.Left || e.Key == Key.P)
             {
-                BtnPPTSlidesUp_Click(BtnPPTSlidesUp, null);
+                BtnPPTSlidesUp_Click(null, null);
             }
         }
 
@@ -145,16 +145,17 @@ namespace Ink_Anything
 
         private void back_HotKey(object sender, ExecutedRoutedEventArgs e)
         {
-            try
-            {
-                inkCanvas.Strokes.Remove(inkCanvas.Strokes[inkCanvas.Strokes.Count - 1]);
-            }
-            catch { }
+            BtnUndo_Click(sender, e);
+        }
+
+        private void redo_HotKey(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnRedo_Click(sender, e);
         }
 
         private void KeyExit(object sender, ExecutedRoutedEventArgs e)
         {
-            BtnPPTSlideShowEnd_Click(BtnPPTSlideShowEnd, null);
+            BtnPPTSlideShowEnd_Click(null, null);
         }
 
         private void KeyChangeToDrawTool(object sender, ExecutedRoutedEventArgs e)
@@ -164,7 +165,7 @@ namespace Ink_Anything
 
         private void KeyClear(object sender, ExecutedRoutedEventArgs e)
         {
-            BtnClear_Click(BtnClear, null);
+            BtnClear_Click(null, null);
         }
 
         private void KeyText(object sender, ExecutedRoutedEventArgs e)
@@ -210,27 +211,27 @@ namespace Ink_Anything
 
         private void KeyChangeToPen1(object sender, ExecutedRoutedEventArgs e)
         {
-            BtnColorBlack_Click(BtnColorBlack, null);
+            BtnColorBlack_Click(null, null);
         }
 
         private void KeyChangeToPen2(object sender, ExecutedRoutedEventArgs e)
         {
-            BtnColorRed_Click(BtnColorRed, null);
+            BtnColorRed_Click(null, null);
         }
 
         private void KeyChangeToPen3(object sender, ExecutedRoutedEventArgs e)
         {
-            BtnColorGreen_Click(BtnColorGreen, null);
+            BtnColorGreen_Click(null, null);
         }
 
         private void KeyChangeToPen4(object sender, ExecutedRoutedEventArgs e)
         {
-            BtnColorBlue_Click(BtnColorBlue, null);
+            BtnColorBlue_Click(null, null);
         }
 
         private void KeyChangeToPen5(object sender, ExecutedRoutedEventArgs e)
         {
-            BtnColorYellow_Click(BtnColorYellow, null);
+            BtnColorYellow_Click(null, null);
         }
 
         private void KeyChangeToPen6(object sender, ExecutedRoutedEventArgs e)
@@ -268,12 +269,10 @@ namespace Ink_Anything
             if (isSingleFingerDragMode)
             {
                 isSingleFingerDragMode = false;
-                BtnFingerDragMode.Content = "单指\n拖动";
             }
             else
             {
                 isSingleFingerDragMode = true;
-                BtnFingerDragMode.Content = "多指\n拖动";
             }
         }
 
@@ -286,7 +285,7 @@ namespace Ink_Anything
             }
             if (TryUndoText()) return;
             var item = timeMachine.Undo();
-            ApplyHistoryToCanvas(item);
+            if (item != null) ApplyHistoryToCanvas(item);
         }
         private void BtnRedo_Click(object sender, RoutedEventArgs e)
         {
@@ -297,7 +296,7 @@ namespace Ink_Anything
             }
             if (TryRedoText()) return;
             var item = timeMachine.Redo();
-            ApplyHistoryToCanvas(item);
+            if (item != null) ApplyHistoryToCanvas(item);
         }
         private void Btn_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

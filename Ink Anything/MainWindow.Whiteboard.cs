@@ -15,6 +15,11 @@ namespace Ink_Anything
     {
         #region Whiteboard Controls
 
+        static Color ColorPenRed = Colors.Red;
+        static Color ColorPenGreen = Colors.Green;
+        static Color ColorPenBlue = Colors.Blue;
+        static Color ColorPenYellow = Colors.Yellow;
+
         StrokeCollection[] strokeCollections = new StrokeCollection[101];
         bool[] whiteboadLastModeIsRedo = new bool[101];
         StrokeCollection lastTouchDownStrokeCollection = new StrokeCollection();
@@ -211,19 +216,19 @@ namespace Ink_Anything
                     try
                     {
                         string[] lightColors = File.ReadAllLines(App.RootPath + "Colors\\Light.ini");
-                        BtnColorRed.Background = new SolidColorBrush(StringToColor(lightColors[0]));
-                        BtnColorGreen.Background = new SolidColorBrush(StringToColor(lightColors[1]));
-                        BtnColorBlue.Background = new SolidColorBrush(StringToColor(lightColors[2]));
-                        BtnColorYellow.Background = new SolidColorBrush(StringToColor(lightColors[3]));
+                        ColorPenRed = StringToColor(lightColors[0]);
+                        ColorPenGreen = StringToColor(lightColors[1]);
+                        ColorPenBlue = StringToColor(lightColors[2]);
+                        ColorPenYellow = StringToColor(lightColors[3]);
                     }
                     catch (Exception) { ShowNotification("读取亮色画笔颜色配置文件时遇到问题"); }
                 }
                 else
                 {
-                    BtnColorRed.Background = new SolidColorBrush(StringToColor("#FFFF3333"));
-                    BtnColorGreen.Background = new SolidColorBrush(StringToColor("#FF1ED760"));
-                    BtnColorBlue.Background = new SolidColorBrush(StringToColor("#FF239AD6"));
-                    BtnColorYellow.Background = new SolidColorBrush(StringToColor("#FFFFC000"));
+                    ColorPenRed = StringToColor("#FFFF3333");
+                    ColorPenGreen = StringToColor("#FF1ED760");
+                    ColorPenBlue = StringToColor("#FF239AD6");
+                    ColorPenYellow = StringToColor("#FFFFC000");
                 }
             }
             else
@@ -233,19 +238,19 @@ namespace Ink_Anything
                     try
                     {
                         string[] darkColors = File.ReadAllLines(App.RootPath + "Colors\\Dark.ini");
-                        BtnColorRed.Background = new SolidColorBrush(StringToColor(darkColors[0]));
-                        BtnColorGreen.Background = new SolidColorBrush(StringToColor(darkColors[1]));
-                        BtnColorBlue.Background = new SolidColorBrush(StringToColor(darkColors[2]));
-                        BtnColorYellow.Background = new SolidColorBrush(StringToColor(darkColors[3]));
+                        ColorPenRed = StringToColor(darkColors[0]);
+                        ColorPenGreen = StringToColor(darkColors[1]);
+                        ColorPenBlue = StringToColor(darkColors[2]);
+                        ColorPenYellow = StringToColor(darkColors[3]);
                     }
                     catch (Exception) { ShowNotification("读取深色画笔颜色配置文件时遇到问题"); }
                 }
                 else
                 {
-                    BtnColorRed.Background = new SolidColorBrush(Colors.Red);
-                    BtnColorGreen.Background = new SolidColorBrush(StringToColor("#FF169141"));
-                    BtnColorBlue.Background = new SolidColorBrush(StringToColor("#FF239AD6"));
-                    BtnColorYellow.Background = new SolidColorBrush(StringToColor("#FFF38B00"));
+                    ColorPenRed = Colors.Red;
+                    ColorPenGreen = StringToColor("#FF169141");
+                    ColorPenBlue = StringToColor("#FF239AD6");
+                    ColorPenYellow = StringToColor("#FFF38B00");
                 }
             }
         }

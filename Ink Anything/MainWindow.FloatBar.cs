@@ -19,6 +19,8 @@ namespace Ink_Anything
     {
         #region Float Bar
 
+        bool isInSlideShow = false;
+
         private void HideSubPanels()
         {
             BorderClearInDelete.Visibility = Visibility.Collapsed;
@@ -28,31 +30,31 @@ namespace Ink_Anything
 
         private void BorderPenColorBlack_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnColorBlack_Click(BtnColorBlack, null);
+            BtnColorBlack_Click(null, null);
             HideSubPanels();
         }
 
         private void BorderPenColorRed_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnColorRed_Click(BtnColorRed, null);
+            BtnColorRed_Click(null, null);
             HideSubPanels();
         }
 
         private void BorderPenColorGreen_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnColorGreen_Click(BtnColorGreen, null);
+            BtnColorGreen_Click(null, null);
             HideSubPanels();
         }
 
         private void BorderPenColorBlue_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnColorBlue_Click(BtnColorBlue, null);
+            BtnColorBlue_Click(null, null);
             HideSubPanels();
         }
 
         private void BorderPenColorYellow_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnColorYellow_Click(BtnColorYellow, null);
+            BtnColorYellow_Click(null, null);
             HideSubPanels();
         }
 
@@ -66,13 +68,13 @@ namespace Ink_Anything
 
         private void SymbolIconUndo_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnUndo_Click(BtnUndo, null);
+            BtnUndo_Click(null, null);
             HideSubPanels();
         }
 
         private void SymbolIconRedo_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnRedo_Click(BtnRedo, null);
+            BtnRedo_Click(null, null);
             HideSubPanels();
         }
 
@@ -84,9 +86,9 @@ namespace Ink_Anything
             }
             else
             {
-                BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
+                BtnHideInkCanvas_Click(null, null);
 
-                if (BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
+                if (isInSlideShow)
                 {
                     if (ViewboxFloatingBar.Margin == new Thickness((SystemParameters.PrimaryScreenWidth - ViewboxFloatingBar.ActualWidth) / 2, SystemParameters.PrimaryScreenHeight - 60, -2000, -200))
                     {
@@ -111,31 +113,31 @@ namespace Ink_Anything
             {
                 if (Settings.Automation.IsAutoSaveStrokesAtClear && inkCanvas.Strokes.Count > Settings.Automation.MinimumAutomationStrokeNumber)
                 {
-                    if (BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
+                    if (isInSlideShow)
                         SaveScreenShot(true, $"{pptName}/{previousSlideID}_{DateTime.Now:HH-mm-ss}");
                     else
                         SaveScreenShot(true);
                 }
-                BtnClear_Click(BtnClear, null);
+                BtnClear_Click(null, null);
             }
             else
             {
-                if (currentMode == 0 && BtnPPTSlideShowEnd.Visibility != Visibility.Visible)
+                if (currentMode == 0 && !isInSlideShow)
                 {
-                    BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
+                    BtnHideInkCanvas_Click(null, null);
                 }
             }
         }
 
         private void SymbolIconSettings_Click(object sender, RoutedEventArgs e)
         {
-            BtnSettings_Click(BtnSettings, null);
+            BtnSettings_Click(null, null);
             HideSubPanels();
         }
 
         private void SymbolIconSelect_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnSelect_Click(BtnSelect, null);
+            BtnSelect_Click(null, null);
 
             ImageEraser.Visibility = Visibility.Visible;
             ViewboxBtnColorBlackContent.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(ColorSwiftOpacityDurationOff)));
@@ -150,7 +152,7 @@ namespace Ink_Anything
 
         private void SymbolIconScreenshot_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnScreenshot_Click(BtnScreenshot, null);
+            BtnScreenshot_Click(null, null);
         }
 
         Point pointDesktop = new Point(-1, -1); //用于记录上次进入PPT或白板时的坐标
@@ -161,7 +163,7 @@ namespace Ink_Anything
             if (currentMode == 0)
             {
                 //进入黑板
-                if (BtnPPTSlideShowEnd.Visibility == Visibility.Collapsed)
+                if (!isInSlideShow)
                 {
                     pointDesktop = new Point(ViewboxFloatingBar.Margin.Left, ViewboxFloatingBar.Margin.Top);
                 }
@@ -181,11 +183,11 @@ namespace Ink_Anything
                 })).Start();
                 if (Settings.Canvas.UsingWhiteboard)
                 {
-                    BorderPenColorBlack_MouseUp(BorderPenColorBlack, null);
+                    BorderPenColorBlack_MouseUp(null, null);
                 }
                 else
                 {
-                    BorderPenColorWhite_MouseUp(BorderPenColorWhite, null);
+                    BorderPenColorWhite_MouseUp(null, null);
                 }
             }
             else
@@ -193,7 +195,7 @@ namespace Ink_Anything
                 //关闭黑板
                 if (isInMultiTouchMode) BorderMultiTouchMode_MouseUp(null, null);
 
-                if (BtnPPTSlideShowEnd.Visibility == Visibility.Collapsed)
+                if (!isInSlideShow)
                 {
                     if (pointDesktop != new Point(-1, -1))
                     {
@@ -212,23 +214,22 @@ namespace Ink_Anything
                         });
                     })).Start();
                 }
-                BorderPenColorRed_MouseUp(BorderPenColorRed, null);
+                BorderPenColorRed_MouseUp(null, null);
             }
-            BtnSwitch_Click(BtnSwitch, null);
+            BtnSwitch_Click(null, null);
 
-            BtnExit.Foreground = Brushes.White;
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
             SetColors();
             SetColorByIndex();
-            if (currentMode == 0 && inkCanvas.Strokes.Count == 0 && BtnPPTSlideShowEnd.Visibility != Visibility.Visible)
+            if (currentMode == 0 && inkCanvas.Strokes.Count == 0 && !isInSlideShow)
             {
-                BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
+                BtnHideInkCanvas_Click(null, null);
             }
         }
 
         private void ImageEraser_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnErase_Click(BtnErase, e);
+            BtnErase_Click(null, e);
 
             ViewboxBtnColorBlackContent.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(ColorSwiftOpacityDurationOff)));
             ViewboxBtnColorBlueContent.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(ColorSwiftOpacityDurationOff)));
@@ -245,7 +246,7 @@ namespace Ink_Anything
             if (lastBorderMouseDownObject != sender) return;
 
             PopupTools.IsOpen = false;
-            BtnCountdownTimer_Click(BtnCountdownTimer, null);
+            BtnCountdownTimer_Click(null, null);
         }
 
         private void SymbolIconRand_MouseUp(object sender, MouseButtonEventArgs e)
@@ -253,7 +254,7 @@ namespace Ink_Anything
             if (lastBorderMouseDownObject != sender) return;
 
             PopupTools.IsOpen = false;
-            BtnRand_Click(BtnRand, null);
+            BtnRand_Click(null, null);
         }
 
         private void SymbolIconRandOne_MouseUp(object sender, MouseButtonEventArgs e)
@@ -474,17 +475,17 @@ namespace Ink_Anything
 
         private void GridPPTControlPrevious_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnPPTSlidesUp_Click(BtnPPTSlidesUp, null);
+            BtnPPTSlidesUp_Click(null, null);
         }
 
         private void GridPPTControlNext_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnPPTSlidesDown_Click(BtnPPTSlidesDown, null);
+            BtnPPTSlidesDown_Click(null, null);
         }
 
         private void ImagePPTControlEnd_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            BtnPPTSlideShowEnd_Click(BtnPPTSlideShowEnd, null);
+            BtnPPTSlideShowEnd_Click(null, null);
         }
 
         #endregion

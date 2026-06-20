@@ -48,7 +48,6 @@ namespace Ink_Anything
 
             BorderSettings.Opacity = 0;
             BorderSettings.Visibility = Visibility.Collapsed;
-            StackPanelToolButtons.Visibility = Visibility.Collapsed;
             BorderDrawShape.Visibility = Visibility.Collapsed;
             GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
 
@@ -61,21 +60,7 @@ namespace Ink_Anything
                 Topmost = false;
             }
 
-            if (!App.StartArgs.Contains("-o")) //-old ui
-            {
-                GroupBoxAppearance.Visibility = Visibility.Collapsed;
-                ViewBoxStackPanelMain.Visibility = Visibility.Collapsed;
-                ViewBoxStackPanelShapes.Visibility = Visibility.Collapsed;
-                HideSubPanels();
-
-                ViewboxFloatingBar.Margin = new Thickness((SystemParameters.WorkArea.Width - 284) / 2, SystemParameters.WorkArea.Height - 80, -2000, -200);
-            }
-            else
-            {
-                GroupBoxAppearanceNewUI.Visibility = Visibility.Collapsed;
-                ViewboxFloatingBar.Visibility = Visibility.Collapsed;
-                GridForRecoverOldUI.Visibility = Visibility.Collapsed;
-            }
+            ViewboxFloatingBar.Margin = new Thickness((SystemParameters.WorkArea.Width - 284) / 2, SystemParameters.WorkArea.Height - 80, -2000, -200);
 
             if (File.Exists("debug.ini")) Label.Visibility = Visibility.Visible;
 
@@ -142,7 +127,7 @@ namespace Ink_Anything
                     if (arg.Contains("EasiNote"))
                     {
 
-                        BtnSwitch_Click(BtnSwitch, null);
+                        BtnSwitch_Click(null, null);
                         MessageBox.Show("“希沃白板 5”已自动关闭");
                     }
                 }
@@ -331,7 +316,6 @@ namespace Ink_Anything
 
             if (Settings.Startup.IsAutoEnterModeFinger)
             {
-                ToggleSwitchModeFinger.IsOn = true;
                 ToggleSwitchAutoEnterModeFinger.IsOn = true;
             }
             else
@@ -342,7 +326,7 @@ namespace Ink_Anything
             {
                 if (isStartup)
                 {
-                    BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
+                    BtnHideInkCanvas_Click(null, null);
                 }
                 ToggleSwitchAutoHideCanvas.IsOn = true;
             }
@@ -350,85 +334,19 @@ namespace Ink_Anything
             {
                 if (isStartup)
                 {
-                    BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
-                    BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
+                    BtnHideInkCanvas_Click(null, null);
+                    BtnHideInkCanvas_Click(null, null);
                 }
                 ToggleSwitchAutoHideCanvas.IsOn = false;
             }
 
-            if (Settings.Appearance.IsShowEraserButton)
-            {
-                BtnErase.Visibility = Visibility.Visible;
-                ToggleSwitchShowButtonEraser.IsOn = true;
-            }
-            else
-            {
-                BtnErase.Visibility = Visibility.Collapsed;
-                ToggleSwitchShowButtonEraser.IsOn = false;
-            }
-            if (Settings.Appearance.IsShowExitButton)
-            {
-                BtnExit.Visibility = Visibility.Visible;
-                ToggleSwitchShowButtonExit.IsOn = true;
-            }
-            else
-            {
-                BtnExit.Visibility = Visibility.Collapsed;
-                ToggleSwitchShowButtonExit.IsOn = false;
-            }
+            ToggleSwitchShowButtonEraser.IsOn = Settings.Appearance.IsShowEraserButton;
 
             PptNavigationBtn.Visibility =
                 Settings.PowerPointSettings.IsShowPPTNavigation ? Visibility.Visible : Visibility.Collapsed;
             ToggleSwitchShowButtonPPTNavigation.IsOn = Settings.PowerPointSettings.IsShowPPTNavigation;
 
             ComboBoxTheme.SelectedIndex = Settings.Appearance.Theme;
-            if (Settings.Appearance.IsShowHideControlButton)
-            {
-                BtnHideControl.Visibility = Visibility.Visible;
-                ToggleSwitchShowButtonHideControl.IsOn = true;
-            }
-            else
-            {
-                BtnHideControl.Visibility = Visibility.Collapsed;
-                ToggleSwitchShowButtonHideControl.IsOn = false;
-            }
-            if (Settings.Appearance.IsShowLRSwitchButton)
-            {
-                BtnSwitchSide.Visibility = Visibility.Visible;
-                ToggleSwitchShowButtonLRSwitch.IsOn = true;
-            }
-            else
-            {
-                BtnSwitchSide.Visibility = Visibility.Collapsed;
-                ToggleSwitchShowButtonLRSwitch.IsOn = false;
-            }
-            if (Settings.Appearance.IsShowModeFingerToggleSwitch)
-            {
-                StackPanelModeFinger.Visibility = Visibility.Visible;
-                ToggleSwitchShowButtonModeFinger.IsOn = true;
-            }
-            else
-            {
-                StackPanelModeFinger.Visibility = Visibility.Collapsed;
-                ToggleSwitchShowButtonModeFinger.IsOn = false;
-            }
-            if (Settings.Appearance.IsTransparentButtonBackground)
-            {
-                BtnExit.Background = new SolidColorBrush(StringToColor("#7F909090"));
-            }
-            else
-            {
-                if (BtnSwitchTheme.Content.ToString() == "深色")
-                {
-                    //Light
-                    BtnExit.Background = new SolidColorBrush(StringToColor("#FFCCCCCC"));
-                }
-                else
-                {
-                    //Dark
-                    BtnExit.Background = new SolidColorBrush(StringToColor("#FF555555"));
-                }
-            }
 
             if (Settings.PowerPointSettings.PowerPointSupport)
             {
@@ -691,8 +609,7 @@ namespace Ink_Anything
                 }
                 if (Settings.Canvas.UsingWhiteboard)
                 {
-                    BtnSwitchTheme.Content = "深色";
-                    BtnSwitchTheme_Click(null, null);
+                    SystemEvents_UserPreferenceChanged(null, null);
                 }
 
                 switch (Settings.Canvas.EraserType)

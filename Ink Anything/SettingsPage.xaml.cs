@@ -15,13 +15,6 @@ namespace Ink_Anything
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            this.Dispatcher.Invoke(() =>
-            {
-                var MW = Application.Current.MainWindow as MainWindow;
-                MW.BtnExit.Visibility = Visibility.Visible;
-            });
-
-
         }
     }
 }

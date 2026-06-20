@@ -31,6 +31,7 @@
         <c:IsEnabledToOpacityConverter x:Key="IsEnabledToOpacityConverter"/>
         <RoutedUICommand x:Key="KeyExit" Text=" "/>
         <RoutedUICommand x:Key="back_HotKey_Command" Text=" "/>
+        <RoutedUICommand x:Key="redo_HotKey_Command" Text=" "/>
         <RoutedUICommand x:Key="HotKey_Capture" Text=" "/>
         <RoutedUICommand x:Key="HotKey_Hide" Text=" "/>
         <RoutedUICommand x:Key="HotKey_ChangeToDrawTool" Text=" "/>
@@ -50,6 +51,7 @@
     <Window.InputBindings>
         <KeyBinding Gesture="Shift+Esc" Command="{StaticResource KeyExit}"/>
         <KeyBinding Modifiers="Control" Key="Z" Command="{StaticResource back_HotKey_Command}"/>
+        <KeyBinding Modifiers="Control" Key="Y" Command="{StaticResource redo_HotKey_Command}"/>
         <KeyBinding Modifiers="Alt" Key="S" Command="{StaticResource HotKey_ChangeToDrawTool}" />
         <KeyBinding Modifiers="Alt" Key="D" Command="{StaticResource HotKey_Clear}" />
         <KeyBinding Modifiers="Alt" Key="E" Command="{StaticResource HotKey_ChangeToEraser}" />
@@ -69,6 +71,9 @@
         <CommandBinding Command="{StaticResource back_HotKey_Command}"
                     CanExecute="CommandBinding_CanExecute"
                     Executed="back_HotKey"/>
+        <CommandBinding Command="{StaticResource redo_HotKey_Command}"
+                    CanExecute="CommandBinding_CanExecute"
+                    Executed="redo_HotKey"/>
         <CommandBinding Command="{StaticResource KeyExit}"
                     CanExecute="CommandBinding_CanExecute"
                     Executed="KeyExit"/>
@@ -316,14 +321,14 @@
                              Visibility="Collapsed">
                 <Button Name="BtnWhiteBoardAdd" FontFamily="Microsoft YaHei UI"
                     Width="50" Height="48" FontSize="26" Click="BtnWhiteBoardAdd_Click"
-                    Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                    Background="{Binding ElementName=BtnExit, Path=Background}">
+                    Foreground="{DynamicResource FloatBarForeground}"
+                    Background="{DynamicResource FloatBarBackground}">
                     <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Add}" />
                 </Button>
                 <Button Name="BtnWhiteBoardSwitchPrevious" FontFamily="Symbol"
                     Width="50" Height="48" FontSize="25" Click="BtnWhiteBoardSwitchPrevious_Click"
-                    Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                    Background="{Binding ElementName=BtnExit, Path=Background}"
+                    Foreground="{DynamicResource FloatBarForeground}"
+                    Background="{DynamicResource FloatBarBackground}"
                     VerticalContentAlignment="Center"
                     IsEnabled="False" IsEnabledChanged="Btn_IsEnabledChanged">
                     <Image RenderTransformOrigin="0.5,0.5" Opacity="0.25">
@@ -340,7 +345,7 @@
                                 <DrawingImage.Drawing>
                                     <DrawingGroup ClipGeometry="M0,0 V64 H64 V0 H0 Z">
                                         <DrawingGroup Opacity="1">
-                                            <GeometryDrawing Brush="{Binding ElementName=BtnExit, Path=Foreground}" Geometry="F1 M64,64z M0,0z M32,26.41L16.566,41.844 14.439,39.717 32,22.156 49.561,39.717 47.434,41.844 32,26.41z" />
+                                            <GeometryDrawing Brush="{DynamicResource FloatBarForeground}" Geometry="F1 M64,64z M0,0z M32,26.41L16.566,41.844 14.439,39.717 32,22.156 49.561,39.717 47.434,41.844 32,26.41z" />
                                         </DrawingGroup>
                                     </DrawingGroup>
                                 </DrawingImage.Drawing>
@@ -351,13 +356,13 @@
                 <Border Height="48" CornerRadius="2" Margin="3,0">
                     <TextBlock Name="TextBlockWhiteBoardIndexInfo"
                                Text="1 / 1"
-                               Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
+                               Foreground="{DynamicResource FloatBarForeground}"
                                VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Microsoft YaHei UI" FontSize="18"/>
                 </Border>
                 <Button Name="BtnWhiteBoardSwitchNext" FontFamily="Symbol"
                     Width="50" Height="48" FontSize="25" Click="BtnWhiteBoardSwitchNext_Click"
-                    Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                    Background="{Binding ElementName=BtnExit, Path=Background}"
+                    Foreground="{DynamicResource FloatBarForeground}"
+                    Background="{DynamicResource FloatBarBackground}"
                     VerticalContentAlignment="Center"
                     IsEnabled="False" IsEnabledChanged="Btn_IsEnabledChanged">
                     <Image RenderTransformOrigin="0.5,0.5" Opacity="0.25">
@@ -374,7 +379,7 @@
                                 <DrawingImage.Drawing>
                                     <DrawingGroup ClipGeometry="M0,0 V64 H64 V0 H0 Z">
                                         <DrawingGroup Opacity="1">
-                                            <GeometryDrawing Brush="{Binding ElementName=BtnExit, Path=Foreground}" Geometry="F1 M64,64z M0,0z M32,26.41L16.566,41.844 14.439,39.717 32,22.156 49.561,39.717 47.434,41.844 32,26.41z" />
+                                            <GeometryDrawing Brush="{DynamicResource FloatBarForeground}" Geometry="F1 M64,64z M0,0z M32,26.41L16.566,41.844 14.439,39.717 32,22.156 49.561,39.717 47.434,41.844 32,26.41z" />
                                         </DrawingGroup>
                                     </DrawingGroup>
                                 </DrawingImage.Drawing>
@@ -384,8 +389,8 @@
                 </Button>
                 <Button Name="BtnWhiteBoardDelete" Click="BtnWhiteBoardDelete_Click"
                     FontFamily="Microsoft YaHei UI" Width="50" Height="48" FontSize="26"
-                    Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                    Background="{Binding ElementName=BtnExit, Path=Background}"
+                    Foreground="{DynamicResource FloatBarForeground}"
+                    Background="{DynamicResource FloatBarBackground}"
                     IsEnabled="False">
                     <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Delete}" />
                 </Button>
@@ -442,7 +447,7 @@
                                     <ComboBoxItem Content="模拟笔锋（根据速度计算）" FontFamily="Microsoft YaHei UI"/>
                                     <ComboBoxItem Content="无笔锋"  FontFamily="Microsoft YaHei UI"/>
                                 </ComboBox>
-                                <ui:ToggleSwitch Header="手指模式" IsOn="{Binding ElementName=ToggleSwitchModeFinger, Path=IsOn}" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关"/>
+                                <ui:ToggleSwitch Name="ToggleSwitchFloatBarModeFinger" Header="手指模式" IsOn="False" Toggled="ToggleSwitchModeFinger_Toggled" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关"/>
                                 <TextBlock Text="此选项仅适用于可获取触摸面积的屏幕" TextWrapping="Wrap" Foreground="#666666"/>
                                 <TextBlock Text="橡皮模式"  FontFamily="Microsoft YaHei UI" FontSize="14"/>
                                 <ComboBox Name="ComboBoxEraserType" FontFamily="Microsoft YaHei UI" SelectedIndex="0" SelectionChanged="ComboBoxEraserType_OnSelectionChanged">
@@ -484,33 +489,9 @@
                                 <ui:ToggleSwitch Name="ToggleSwitchEnableInkToShape" Header="启用墨迹识别" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchEnableInkToShape_Toggled" IsOn="True"/>
                             </ui:SimpleStackPanel>
                         </GroupBox>
-                        <GroupBox Name="GroupBoxAppearance" Header="外观">
-                            <ui:SimpleStackPanel Spacing="12">
-                                <ui:ToggleSwitch Name="ToggleSwitchTransparentButtonBackground" Header="按钮背景半透明" IsOn="True" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchTransparentButtonBackground_Toggled"/>
-                                <ui:ToggleSwitch Name="ToggleSwitchShowButtonExit" Header="显示“退出”按钮" IsOn="True" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowButtonExit_Toggled"/>
-                                <Button Content="立即退出" Width="120" Visibility="Collapsed" FontFamily="Microsoft YaHei UI" Click="BtnExit_Click" Margin="0,0,0,10"/>
-                                <ui:ToggleSwitch Name="ToggleSwitchShowButtonEraser" Header="显示“橡皮”按钮" IsOn="True" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowButtonEraser_Toggled"/>
-                                <ui:ToggleSwitch Name="ToggleSwitchShowButtonHideControl" Header="显示“⇅ (显示或隐藏控制按钮)”按钮" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowButtonHideControl_Toggled"/>
-                                <ui:ToggleSwitch Name="ToggleSwitchShowButtonLRSwitch" Header="显示“⇆ (左右切换)”按钮" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowButtonLRSwitch_Toggled"/>
-                                <ui:ToggleSwitch Name="ToggleSwitchShowButtonModeFinger" Header="显示“手指模式”切换按钮" IsOn="True" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowButtonModeFinger_Toggled"/>
-                                <StackPanel Visibility="Collapsed" Orientation="Horizontal">
-                                    <Slider x:Name="SideControlOpacitySlider"
-                                            HorizontalAlignment="Left"
-                                            Minimum="1" Maximum="100"
-                                            Width="320" FontFamily="Microsoft YaHei UI" 
-                                            ui:ControlHelper.Header="控制栏透明度"
-                                            IsSnapToTickEnabled="True" Value="100"
-                                            TickFrequency="10" TickPlacement="Both"
-                                            ValueChanged="SideControlOpacitySlider_ValueChanged"/>
-                                    <TextBlock Text="{Binding Value, ElementName=SideControlOpacitySlider, Mode=OneWay}"
-                                               VerticalAlignment="Bottom" Margin="10,0,0,8"
-                                               FontSize="14" Width="25" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ui:SimpleStackPanel>
-                        </GroupBox>
                         <GroupBox Name="GroupBoxAppearanceNewUI" Header="外观">
                             <ui:SimpleStackPanel Spacing="12">
-                                <ui:ToggleSwitch Header="显示“橡皮”按钮" IsOn="{Binding ElementName=ToggleSwitchShowButtonEraser, Path=IsOn}" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关"/>
+                                <ui:ToggleSwitch Name="ToggleSwitchShowButtonEraser" Header="显示&#x201C;橡皮&#x201D;按钮" IsOn="True" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowButtonEraser_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchShowButtonPPTNavigation" Header="显示 PPT 浏览切页按钮" IsOn="True" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowButtonPPTNavigation_OnToggled"/>
                                 <TextBlock Text="颜色主题" FontFamily="Microsoft YaHei UI" FontSize="14"/>
                                 <ComboBox Name="ComboBoxTheme" FontFamily="Microsoft YaHei UI" SelectedIndex="0" SelectionChanged="ComboBoxTheme_SelectionChanged">
@@ -666,320 +647,13 @@
             </Border>
         </Grid>
 
-        <Viewbox Name="ViewBoxStackPanelMain" Visibility="Visible" Margin="10,10,10,55" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="46">
-            <StackPanel Name="StackPanelMain" Width="46">
-                <StackPanel Name="StackPanelControl">
-                    <Button Name="BtnExit" Content="退出" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnExit_Click" Background="#7F909090"
-                        ToolTipService.ToolTip="退出画板程序"/>
-                    <Button Name="BtnSettings" Content="设置" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnSettings_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="设置：打开画板设置面板"/>
-                    <TextBlock Text="自动&#x000A;粗细" Visibility="Collapsed" Margin="0,10,0,0"
-                           FontSize="14" HorizontalAlignment="Center"
-                           Foreground="{Binding ElementName=BtnExit, Path=Foreground}"/>
-                    <!--<Viewbox Height="30" Visibility="Collapsed">
-                        <ui:ToggleSwitch Name="ToggleSwitchAutoWeight" Header="" Width="40.5" 
-                                     FontFamily="Microsoft YaHei UI" FontSize="19"
-                                     OnContent="" OffContent="" Toggled="ToggleSwitchAutoWeight_Toggled"/>
-                    </Viewbox>-->
-                    <StackPanel Name="StackPanelModeFinger" Background="#01000000">
-                        <TextBlock Text="手指&#x000A;模式" Margin="0,10,0,0"
-                           FontSize="14" HorizontalAlignment="Center"
-                           Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                           ToolTipService.ToolTip="手指模式：允许手指触控书写（需屏幕支持触摸面积检测）"/>
-                        <Viewbox Height="30">
-                            <ui:ToggleSwitch Name="ToggleSwitchModeFinger" Header="" Width="40.5"
-                                     FontFamily="Microsoft YaHei UI" FontSize="19"
-                                     OnContent="" OffContent="" Toggled="ToggleSwitchModeFinger_Toggled"/>
-                        </Viewbox>
-                    </StackPanel>
-                    <Button Name="BtnThickness" Content="粗细" Visibility="Collapsed" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnThickness_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                    <Button Name="BtnSwitchTheme" Content="深色" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnSwitchTheme_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="切换深色/浅色主题"/>
-                    <Button Name="BtnSwitch" Content="背景" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnSwitch_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="切换背景：黑板/白板/透明"/>
-                    <StackPanel Name="StackPanelColors" Margin="7,0,7,0">
-                        <Button Name="BtnColorBlack" FontFamily="Microsoft YaHei UI" Background="Black"
-                                Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorBlack_Click"
-                                ToolTipService.ToolTip="黑色画笔 (Alt+1)">
-                            <Viewbox Name="ViewboxBtnColorBlackContent" Opacity="0">
-                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Name="SymbolIconBtnColorBlackContent" Foreground="White"/>
-                            </Viewbox>
-                        </Button>
-                        <Button Name="BtnColorRed" FontFamily="Microsoft YaHei UI" Background="Red"
-                                Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorRed_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                                ToolTipService.ToolTip="红色画笔 (Alt+2)">
-                            <Viewbox Name="ViewboxBtnColorRedContent">
-                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
-                            </Viewbox>
-                        </Button>
-                        <Button Name="BtnColorGreen" FontFamily="Microsoft YaHei UI" Background="#169141"
-                                Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorGreen_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                                ToolTipService.ToolTip="绿色画笔 (Alt+3)">
-                            <Viewbox Name="ViewboxBtnColorGreenContent" Opacity="0">
-                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
-                            </Viewbox>
-                        </Button>
-                        <Button Name="BtnColorBlue" FontFamily="Microsoft YaHei UI" Background="#239AD6"
-                                Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorBlue_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                                ToolTipService.ToolTip="蓝色画笔 (Alt+4)">
-                            <Viewbox Name="ViewboxBtnColorBlueContent" Opacity="0">
-                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
-                            </Viewbox>
-                        </Button>
-                        <Button Name="BtnColorYellow" FontFamily="Microsoft YaHei UI" Background="#F38B00"
-                                Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorYellow_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                                ToolTipService.ToolTip="黄色画笔 (Alt+5)">
-                            <Viewbox Name="ViewboxBtnColorYellowContent" Opacity="0">
-                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
-                            </Viewbox>
-                        </Button>
-                    </StackPanel>
-                    <Button Name="BtnClear" Content="清屏" FontFamily="Microsoft YaHei UI"
-                            Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                            Click="BtnClear_Click" MouseDoubleClick="BtnClear_MouseDoubleClick" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                            ToolTipService.ToolTip="清屏：清除画布上所有墨迹（双击可同时隐藏画板） (Alt+D)"/>
-                    <Button x:Name="BtnHideInkCanvas" Content="隐藏&#x000A;画板" FontFamily="Microsoft YaHei UI"
-                            Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                            Click="BtnHideInkCanvas_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                            ToolTipService.ToolTip="隐藏画板：隐藏画板但保留墨迹 (Alt+V)"/>
-                    <Button x:Name="BtnTools" Content="工具" FontFamily="Microsoft YaHei UI"
-                            Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                            Click="BtnTools_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                            ToolTipService.ToolTip="工具：倒计时、随机点名"/>
-                    <Grid Name="StackPanelToolButtons" Margin="-127,-30.5,56,0">
-                        <Border CornerRadius="5" Margin="-7"
-                                Background="White" Visibility="Collapsed"
-                                BorderBrush="#0066BF" BorderThickness="1"/>
-                        <ui:SimpleStackPanel  Orientation="Horizontal" Spacing="10">
-                            <Button x:Name="BtnCountdownTimer" Content="计时器" FontFamily="Microsoft YaHei UI"
-                                    Margin="0,0,0,0"
-                                    Click="BtnCountdownTimer_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                            <Button x:Name="BtnRand" Content="抽奖" FontFamily="Microsoft YaHei UI"
-                                    Margin="0,0,0,0"
-                                    Click="BtnRand_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                        </ui:SimpleStackPanel>
-                    </Grid>
-                    <Button x:Name="BtnScreenshot" Content="截屏" FontFamily="Microsoft YaHei UI"
-                            Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                            Click="BtnScreenshot_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                            ToolTipService.ToolTip="截屏：截图并自动保存到图片文件夹 (Alt+C)"/>
-                    <Button x:Name="BtnCheckPPT" Visibility="Collapsed" Content="检查" FontFamily="Microsoft YaHei UI"
-                            Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                            Click="BtnCheckPPT_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                    <StackPanel Name="StackPanelPPTButtons">
-                        <Button x:Name="BtnPPTSlideShow" Visibility="Collapsed" Content="从头&#x000A;放映" FontFamily="Microsoft YaHei UI"
-                                Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                                Click="BtnPPTSlideShow_Click"  Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                        <Button x:Name="BtnPPTSlideShowEnd" Visibility="Collapsed" Content="结束&#x000A;放映" FontFamily="Microsoft YaHei UI"
-                                Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                                Click="BtnPPTSlideShowEnd_Click"  Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                        <StackPanel Name="StackPanelPPTControls" Visibility="Collapsed">
-                            <Button x:Name="BtnPPTSlidesUp" Content="↑" FontFamily="Microsoft YaHei UI"
-                                    Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                                    Click="BtnPPTSlidesUp_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                            <Button x:Name="BtnPPTSlidesDown" Content="↓" FontFamily="Microsoft YaHei UI"
-                                    Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                                    Click="BtnPPTSlidesDown_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                        </StackPanel>
-                    </StackPanel>
-                    <Button x:Name="BtnSwitchSide" Content="⇆" FontFamily="Microsoft YaHei UI"
-                            Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                            Click="BtnSwitchSide_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                            ToolTipService.ToolTip="左右切换：将工具栏切换到屏幕另一侧"/>
-                </StackPanel>
-                <Button x:Name="BtnHideControl" Content="⇅" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnHideControl_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="显示/隐藏控制按钮"/>
-                <StackPanel>
-                    <TextBlock Visibility="{Binding ElementName=GroupBoxMASEZVersion, Path=Visibility}" Text="二中专版" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"/>
-                    <Image Visibility="{Binding ElementName=GroupBoxMASEZVersion, Path=Visibility}" Source="Resources/logo2.png" Margin="0,-5,0,-15"/>
-                    <StackPanel x:Name="StackPanelInfo">
-                        <TextBlock Text="Developer" FontSize="8.5" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,0" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"/>
-                        <TextBlock Text="XY Wang" FontSize="9" HorizontalAlignment="Center" Margin="0,3,0,0" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"/>
-                    </StackPanel>
-                </StackPanel>
-            </StackPanel>
-        </Viewbox>
-        <Viewbox Name="ViewBoxStackPanelShapes" Margin="{Binding ElementName=ViewBoxStackPanelMain, Path=Margin}" Width="46" HorizontalAlignment="Left" VerticalAlignment="Bottom" Visibility="Visible">
-            <StackPanel Name="StackPanelShapes" Width="46">
-                <Slider HorizontalAlignment="Center" Visibility="Collapsed"
-                        Minimum="1" Maximum="20" Orientation="Vertical" 
-                        Height="330" FontFamily="Microsoft YaHei UI" 
-                        ui:ControlHelper.Header="画笔&#x000A;粗细"
-                        IsSnapToTickEnabled="True"
-                        TickFrequency="1" TickPlacement="Both" 
-                        RenderTransformOrigin="0.5,0.5"
-                        Value="{Binding ElementName=InkWidthSlider, Path=Value, Mode=TwoWay}">
-                </Slider>
-                <TextBlock Text="画笔&#x000A;粗细" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                           FontSize="14" Margin="0,10,0,0" HorizontalAlignment="Center"/>
-                <Button Name="BtnPenWidthIncrease" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,5" Height="{Binding ElementName=BtnPen, Path=ActualHeight}" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnPenWidthIncrease_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                        Background="{Binding ElementName=BtnExit, Path=Background}">
-                    <!--<ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Add}"/>-->
-                    <Grid Margin="0,2,-5,0">
-                        <TextBlock Text="&lt;" FontFamily="Symbol" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock.LayoutTransform>
-                                <RotateTransform Angle="90"/>
-                            </TextBlock.LayoutTransform>
-                        </TextBlock>
-                    </Grid>
-                </Button>
-                <TextBlock Visibility="Visible" Text="{Binding Value, ElementName=InkWidthSlider, Mode=OneWay}"
-                           FontSize="14" HorizontalAlignment="Center" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"/>
-                <Button Name="BtnPenWidthDecrease" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,5,0,0" Height="{Binding ElementName=BtnPen, Path=ActualHeight}" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnPenWidthDecrease_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                        Background="{Binding ElementName=BtnExit, Path=Background}">
-                    <!--<ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Remove}"/>-->
-                    <Grid Margin="0,4,-5,0">
-                        <TextBlock Text="&gt;" FontFamily="Symbol" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock.LayoutTransform>
-                                <RotateTransform Angle="90"/>
-                            </TextBlock.LayoutTransform>
-                        </TextBlock>
-                    </Grid>
-                </Button>
-                <Button Name="BtnFingerDragMode" Content="单指&#x000A;拖动" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,25,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnFingerDragMode_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="单指拖动：拖动画板到屏幕任意位置"/>
-                <Button Name="BtnSelect" Content="选择&#x000A;墨迹" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnSelect_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="选择墨迹：选中墨迹进行移动、缩放、旋转等操作 (Alt+S)"/>
-                <Button Name="BtnPen" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnPen_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="画笔：切换到画笔书写模式 (Alt+D)">
-                    <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}"/>
-                </Button>
-                <Button Name="BtnErase" Content="橡皮" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnErase_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="橡皮擦：切换到擦除模式（点击切换笔迹擦/范围擦） (Alt+E)"/>
-                <Button Name="BtnDrawLine" Content="直线" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,25,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnDrawLine_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="绘制直线 (Alt+L)"/>
-                <Button Name="BtnDrawArrow" Content="箭头" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnDrawArrow_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="绘制带箭头直线"/>
-                <Button Name="BtnDrawRectangle" Content="矩形" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnDrawRectangle_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="绘制矩形"/>
-                <Button Name="BtnDrawEllipse" Content="椭圆" Visibility="Visible" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,15" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnDrawEllipse_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="绘制椭圆"/>
-                <StackPanel IsVisibleChanged="StackPanel_IsVisibleChanged" Visibility="{Binding ElementName=StackPanelPPTButtons, Path=Visibility}">
-                    <StackPanel Visibility="{Binding ElementName=StackPanelPPTControls, Path=Visibility}">
-                        <Button Content="↑" FontFamily="Microsoft YaHei UI"
-                            Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                            Click="BtnPPTSlidesUp_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                        <Button Content="↓" FontFamily="Microsoft YaHei UI"
-                            Margin="0,10,0,15" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                            Click="BtnPPTSlidesDown_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                    </StackPanel>
-                </StackPanel>
-                <Button Content="清屏" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnClear_Click" MouseDoubleClick="BtnClear_MouseDoubleClick" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                <Button x:Name="BtnUndo" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnUndo_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                        Background="{Binding ElementName=BtnExit, Path=Background}"
-                        IsEnabled="False" Visibility="Collapsed" IsEnabledChanged="Btn_IsEnabledChanged">
-                    <StackPanel Opacity="0.2">
-                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Undo}"/>
-                        <TextBlock Text="撤销" Margin="0,4,0,0"/>
-                    </StackPanel>
-                </Button>
-                <Button x:Name="BtnRedo" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
-                        Click="BtnRedo_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
-                        Background="{Binding ElementName=BtnExit, Path=Background}"
-                        IsEnabled="False" Visibility="Collapsed" IsEnabledChanged="Btn_IsEnabledChanged">
-                    <StackPanel Opacity="0.2">
-                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Redo}"/>
-                        <TextBlock Text="恢复" Margin="0,4,0,0"/>
-                    </StackPanel>
-                </Button>
-                <Button Name="BtnClearAndHideCanvas" Content="清屏&#x000A;&amp;&#x000A;隐藏" Visibility="Collapsed" FontFamily="Microsoft YaHei UI"
-                        Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}" Block.TextAlignment="Center"
-                        Click="BtnSelect_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
-                <Grid Name="GridForLeftSideReservedSpace" Height="{Binding ElementName=StackPanelInfo, Path=ActualHeight}"/>
-            </StackPanel>
-        </Viewbox>
 
-        <Grid Name="GridForRecoverOldUI">
-            <Grid Visibility="{Binding ElementName=StackPanelPPTControls, Path=Visibility}">
-                <Viewbox Name="ViewboxPPTSidesControl" Visibility="{Binding ElementName=StackPanelPPTButtons, Path=Visibility}" Opacity="0.7" Margin="10" Height="50" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
-                        <Border Width="36" MouseUp="GridPPTControlPrevious_MouseUp" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
-                            <Grid Margin="6">
-                                <Image Name="ImagePPTControlPreviousPressed" Visibility="Collapsed" Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalPreviousSlideSelected}"/>
-                                <Image Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalPreviousSlideNormal}"/>
-                            </Grid>
-                        </Border>
-                        <Border x:Name="PptNavigationBtn" Width="Auto" MinWidth="36" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
-                            <Grid MouseUp="PPTNavigationBtn_Click">
-                                <TextBlock Name="PptNavigationTextBlock" FontSize="10" Foreground="{DynamicResource FloatBarForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="0/0" Margin="2"/>
-                            </Grid>
-                        </Border>
-                        <Border Width="36" MouseUp="GridPPTControlNext_MouseUp" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
-                            <Grid Margin="6">
-                                <Image Name="ImagePPTControlNextPressed" Visibility="Collapsed" Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalNextSlideSelected}"/>
-                                <Image Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalNextSlideNormal}"/>
-                            </Grid>
-                        </Border>
-                    </ui:SimpleStackPanel>
-                </Viewbox>
-                <Viewbox Visibility="{Binding ElementName=StackPanelPPTButtons, Path=Visibility}" Opacity="{Binding ElementName=ViewboxPPTSidesControl, Path=Opacity}" Margin="10" Height="50" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
-                        <Border Width="36" MouseUp="GridPPTControlPrevious_MouseUp" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
-                            <Grid Margin="6">
-                                <Image Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalPreviousSlideNormal}"/>
-                            </Grid>
-                        </Border>
-                        <Border Width="Auto" MinWidth="36" Visibility="{Binding ElementName=PptNavigationBtn, Path=Visibility}" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
-                            <Grid MouseUp="PPTNavigationBtn_Click">
-                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{Binding ElementName=PptNavigationTextBlock, Path=Foreground}" FontSize="{Binding ElementName=PptNavigationTextBlock, Path=FontSize}" Text="{Binding ElementName=PptNavigationTextBlock, Path=Text}" Margin="2"/>
-                            </Grid>
-                        </Border>
-                        <Border Width="36" MouseUp="GridPPTControlNext_MouseUp" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
-                            <Grid Margin="6">
-                                <Image Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalNextSlideNormal}"/>
-                            </Grid>
-                        </Border>
-                    </ui:SimpleStackPanel>
-                </Viewbox>
+        <Border x:Name="PptNavigationBtn" Visibility="Collapsed" Width="Auto" MinWidth="36" Height="36" CornerRadius="5" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
+            <Grid MouseUp="PPTNavigationBtn_Click">
+                <TextBlock Name="PptNavigationTextBlock" FontSize="10" Foreground="{DynamicResource FloatBarForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="0/0" Margin="2"/>
             </Grid>
-        </Grid>
+        </Border>
 
         <Viewbox Name="ViewboxFloatingBar" Margin="100,10,-2000,-200" 
                  HorizontalAlignment="Left" Height="50" VerticalAlignment="Top">
@@ -988,7 +662,7 @@
             </Viewbox.LayoutTransform>
             <ui:SimpleStackPanel Orientation="Horizontal">
                 <Border Width="36" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}" MouseDown="SymbolIconEmoji_MouseDown" MouseUp="SymbolIconEmoji_MouseUp"
-                        ToolTipService.ToolTip="拖动：移动工具栏位置">
+                        ToolTipService.ToolTip="按住可拖动，点击可隐藏工具栏（Alt+V）">
                     <ui:SimpleStackPanel Margin="0,5,0,5" Spacing="10" Orientation="Horizontal"
                                          HorizontalAlignment="Center">
                         <ui:FontIcon Name="SymbolIconEmoji" Glyph="{x:Static local:FluentIconGlyphs.Emoji2}" Foreground="{DynamicResource FloatBarForeground}"/>
@@ -1015,39 +689,39 @@
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.TouchPointer}" Foreground="{DynamicResource FloatBarForeground}"/>
                             </local:ClickSensitiveGrid>
                             <ui:SimpleStackPanel Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}" Spacing="8" Margin="0,1">
-                                <Border Name="BorderPenColorBlack" Background="{Binding ElementName=BtnColorBlack, Path=Background}" MouseUp="BorderPenColorBlack_MouseUp" CornerRadius="100"
+                                <Border Name="BorderPenColorBlack" Background="Black" MouseUp="BorderPenColorBlack_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorBlack, Path=ActualHeight}"
                                     ToolTipService.ToolTip="黑色画笔 (Alt+1)">
-                                    <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorBlackContent, Path=Opacity}" Margin="6">
+                                    <Viewbox Name="ViewboxBtnColorBlackContent" Opacity="0" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
-                                <Border Name="BorderPenColorRed" Background="{Binding ElementName=BtnColorRed, Path=Background}" MouseUp="BorderPenColorRed_MouseUp" CornerRadius="100"
+                                <Border Name="BorderPenColorRed" Background="Red" MouseUp="BorderPenColorRed_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorRed, Path=ActualHeight}"
                                     ToolTipService.ToolTip="红色画笔 (Alt+2)">
-                                    <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorRedContent, Path=Opacity}" Margin="6">
+                                    <Viewbox Name="ViewboxBtnColorRedContent" Opacity="0" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
-                                <Border Name="BorderPenColorGreen" Background="{Binding ElementName=BtnColorGreen, Path=Background}" MouseUp="BorderPenColorGreen_MouseUp" CornerRadius="100"
+                                <Border Name="BorderPenColorGreen" Background="Green" MouseUp="BorderPenColorGreen_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorGreen, Path=ActualHeight}"
                                     ToolTipService.ToolTip="绿色画笔 (Alt+3)">
-                                    <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorGreenContent, Path=Opacity}" Margin="6">
+                                    <Viewbox Name="ViewboxBtnColorGreenContent" Opacity="0" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
-                                <Border Name="BorderPenColorBlue" Background="{Binding ElementName=BtnColorBlue, Path=Background}" MouseUp="BorderPenColorBlue_MouseUp" CornerRadius="100"
+                                <Border Name="BorderPenColorBlue" Background="Blue" MouseUp="BorderPenColorBlue_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorBlue, Path=ActualHeight}"
                                     ToolTipService.ToolTip="蓝色画笔 (Alt+4)">
-                                    <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorBlueContent, Path=Opacity}" Margin="6">
+                                    <Viewbox Name="ViewboxBtnColorBlueContent" Opacity="0" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
-                                <Border Name="BorderPenColorYellow" Background="{Binding ElementName=BtnColorYellow, Path=Background}" MouseUp="BorderPenColorYellow_MouseUp" CornerRadius="100"
+                                <Border Name="BorderPenColorYellow" Background="Yellow" MouseUp="BorderPenColorYellow_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorYellow, Path=ActualHeight}"
                                     ToolTipService.ToolTip="黄色画笔 (Alt+5)">
-                                    <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorYellowContent, Path=Opacity}" Margin="6">
-                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
+                                    <Viewbox Name="ViewboxBtnColorYellowContent" Opacity="0" Margin="6">
+                                        <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="Black"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorWhite" Background="White" CornerRadius="100" MouseUp="BorderPenColorWhite_MouseUp"
@@ -1058,7 +732,7 @@
                                     </Viewbox>
                                 </Border>
                             </ui:SimpleStackPanel>
-                            <Grid x:Name="EraserContainer" Width="21" Height="24" Margin="0,1.5,-2,0" MouseDown="Border_MouseDown" MouseUp="ImageEraser_MouseUp" Visibility="{Binding ElementName=BtnErase, Path=Visibility}"
+                            <Grid x:Name="EraserContainer" Width="21" Height="24" Margin="0,1.5,-2,0" MouseDown="Border_MouseDown" MouseUp="ImageEraser_MouseUp" Visibility="Visible"
                                   ToolTipService.ToolTip="橡皮擦：擦除墨迹（点击切换笔迹擦/范围擦） (Alt+E)">
                                 <Image Name="ImageEraser" Margin="0,-4,-1,-2" Source="{DynamicResource ImageSource.RubberNormal}" RenderTransformOrigin="0.5,0.5"/>
                                 <Image Name="ImageEraserMask" Visibility="{Binding Visibility, ElementName=ImageEraser, Converter={StaticResource VisibilityConverter}}" Margin="0,-2.5,0,0" RenderTransformOrigin="0.5,0.5">
@@ -1235,16 +909,14 @@
                                     </Viewbox>
                                 </Border>
                             </Grid>
-                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Undo}" Foreground="{DynamicResource FloatBarForeground}" Margin="0,0,-2,0"
-                                           Opacity="{Binding ElementName=BtnUndo, Path=IsEnabled, Converter={StaticResource IsEnabledToOpacityConverter}}"
-                                           IsEnabled="{Binding ElementName=BtnUndo, Path=IsEnabled}"
+                            <ui:FontIcon x:Name="FloatBarUndoIcon" Glyph="{x:Static local:FluentIconGlyphs.Undo}" Foreground="{DynamicResource FloatBarForeground}" Margin="0,0,-2,0"
+                                           Opacity="0.4"
                                            MouseUp="SymbolIconUndo_MouseUp" MouseDown="Border_MouseDown"
-                                           ToolTipService.ToolTip="撤销：撤销上一步操作"/>
-                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Redo}" Foreground="{DynamicResource FloatBarForeground}" Margin="-2,0,0,0"
-                                           Opacity="{Binding ElementName=BtnRedo, Path=IsEnabled, Converter={StaticResource IsEnabledToOpacityConverter}}"
-                                           IsEnabled="{Binding ElementName=BtnRedo, Path=IsEnabled}"
+                                           ToolTipService.ToolTip="撤销：撤销上一步操作 (Ctrl+Z)"/>
+                            <ui:FontIcon x:Name="FloatBarRedoIcon" Glyph="{x:Static local:FluentIconGlyphs.Redo}" Foreground="{DynamicResource FloatBarForeground}" Margin="-2,0,0,0"
+                                           Opacity="0.4"
                                            MouseUp="SymbolIconRedo_MouseUp" MouseDown="Border_MouseDown"
-                                           ToolTipService.ToolTip="恢复：恢复上一步撤销"/>
+                                           ToolTipService.ToolTip="恢复：恢复上一步撤销 (Ctrl+Y)"/>
                             <ui:FontIcon x:Name="LockSmithSymbol"
                                            Glyph="{x:Static local:FluentIconGlyphs.Pin}" Foreground="{DynamicResource FloatBarForeground}" Margin="-2,0,0,0"
                                            MouseUp="SymbolIconPin_MouseUp" MouseDown="Border_MouseDown"
@@ -1267,8 +939,8 @@
                                     </Image.Source>
                                 </Image>
                             </Grid>
-                            <Grid Margin="0,5,0,5" Visibility="{Binding ElementName=StackPanelPPTButtons, Path=Visibility}">
-                                <Image Source="{DynamicResource ResourceKey=SeewoImageSource.PPTExitNormal}" Visibility="{Binding ElementName=BtnPPTSlideShowEnd, Path=Visibility}" MouseDown="Border_MouseDown" MouseUp="ImagePPTControlEnd_MouseUp" Margin="-2,1,10,2"
+                            <Grid x:Name="FloatBarPPTExitContainer" Margin="0,5,0,5" Visibility="Collapsed">
+                                <Image x:Name="FloatBarPPTExitImage" Source="{DynamicResource ResourceKey=SeewoImageSource.PPTExitNormal}" Visibility="Visible" MouseDown="Border_MouseDown" MouseUp="ImagePPTControlEnd_MouseUp" Margin="-2,1,10,2"
                                        ToolTipService.ToolTip="结束幻灯片放映 (Shift+Esc)"/>
                             </Grid>
                             <ui:SimpleStackPanel Margin="0,5,10,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
@@ -1326,7 +998,7 @@
                                                     <ui:SimpleStackPanel>
                                                         <Label Margin="0,0,0,-2" Content="手指模式" Foreground="{DynamicResource FloatBarForeground}" FontSize="13" VerticalAlignment="Center"/>
                                                         <Viewbox Height="25">
-                                                            <ui:ToggleSwitch Foreground="{DynamicResource FloatBarForeground}" IsOn="{Binding ElementName=ToggleSwitchModeFinger, Path=IsOn}" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" MinWidth="0" Width="70"/>
+                                                            <ui:ToggleSwitch Name="ToggleSwitchFloatBarQuickModeFinger" Foreground="{DynamicResource FloatBarForeground}" IsOn="False" Toggled="ToggleSwitchModeFinger_Toggled" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" MinWidth="0" Width="70"/>
                                                         </Viewbox>
                                                     </ui:SimpleStackPanel>
                                                 </Viewbox>

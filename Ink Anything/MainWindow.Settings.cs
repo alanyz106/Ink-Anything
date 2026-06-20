@@ -79,43 +79,12 @@ namespace Ink_Anything
         #region Appearance
 
 
-        private void SideControlOpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
-        }
-
-        private void ToggleSwitchShowButtonExit_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.Appearance.IsShowExitButton = ToggleSwitchShowButtonExit.IsOn;
-            SaveSettingsToFile();
-
-            if (ToggleSwitchShowButtonExit.IsOn)
-            {
-                BtnExit.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                BtnExit.Visibility = Visibility.Collapsed;
-            }
-        }
-
         private void ToggleSwitchShowButtonEraser_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
 
             Settings.Appearance.IsShowEraserButton = ToggleSwitchShowButtonEraser.IsOn;
             SaveSettingsToFile();
-
-            if (ToggleSwitchShowButtonEraser.IsOn)
-            {
-                BtnErase.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                BtnErase.Visibility = Visibility.Collapsed;
-            }
         }
         private void ToggleSwitchShowButtonPPTNavigation_OnToggled(object sender, RoutedEventArgs e)
         {
@@ -136,83 +105,6 @@ namespace Ink_Anything
             SaveSettingsToFile();
         }
 
-
-        private void ToggleSwitchShowButtonHideControl_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.Appearance.IsShowHideControlButton = ToggleSwitchShowButtonHideControl.IsOn;
-            SaveSettingsToFile();
-
-            if (ToggleSwitchShowButtonHideControl.IsOn)
-            {
-                BtnHideControl.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                BtnHideControl.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void ToggleSwitchShowButtonLRSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.Appearance.IsShowLRSwitchButton = ToggleSwitchShowButtonLRSwitch.IsOn;
-            SaveSettingsToFile();
-
-            if (ToggleSwitchShowButtonLRSwitch.IsOn)
-            {
-                BtnSwitchSide.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                BtnSwitchSide.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void ToggleSwitchShowButtonModeFinger_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.Appearance.IsShowModeFingerToggleSwitch = ToggleSwitchShowButtonModeFinger.IsOn;
-            SaveSettingsToFile();
-
-            if (ToggleSwitchShowButtonModeFinger.IsOn)
-            {
-                StackPanelModeFinger.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                StackPanelModeFinger.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void ToggleSwitchTransparentButtonBackground_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.Appearance.IsTransparentButtonBackground = ToggleSwitchTransparentButtonBackground.IsOn;
-            if (Settings.Appearance.IsTransparentButtonBackground)
-            {
-                BtnExit.Background = new SolidColorBrush(StringToColor("#7F909090"));
-            }
-            else
-            {
-                if (BtnSwitchTheme.Content.ToString() == "深色")
-                {
-                    //Light
-                    BtnExit.Background = new SolidColorBrush(StringToColor("#FFCCCCCC"));
-                }
-                else
-                {
-                    //Dark
-                    BtnExit.Background = new SolidColorBrush(StringToColor("#FF555555"));
-                }
-            }
-
-            SaveSettingsToFile();
-        }
 
         private void ToggleSwitchShowCursor_Toggled(object sender, RoutedEventArgs e)
         {
@@ -347,15 +239,7 @@ namespace Ink_Anything
         {
             if (!isLoaded) return;
             Settings.Canvas.UsingWhiteboard = ToggleSwitchUsingWhiteboard.IsOn;
-            if (!Settings.Canvas.UsingWhiteboard)
-            {
-                BtnSwitchTheme.Content = "浅色";
-            }
-            else
-            {
-                BtnSwitchTheme.Content = "深色";
-            }
-            BtnSwitchTheme_Click(sender, e);
+            SystemEvents_UserPreferenceChanged(null, null);
             SaveSettingsToFile();
         }
 

@@ -96,7 +96,7 @@ namespace Ink_Anything
                     isLongPressSelected = true;
                     if (isSingleFingerDragMode)
                     {
-                        BtnFingerDragMode_Click(BtnFingerDragMode, null);
+                        BtnFingerDragMode_Click(null, null);
                     }
                 }
             }

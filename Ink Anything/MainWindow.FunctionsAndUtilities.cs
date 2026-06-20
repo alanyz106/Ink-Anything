@@ -189,7 +189,7 @@ namespace Ink_Anything
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        if (BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
+                        if (isInSlideShow)
                             SaveScreenShot(isHideNotification, $"{pptName}/{previousSlideID}_{DateTime.Now:HH-mm-ss}");
                         else
                             SaveScreenShot(isHideNotification);
@@ -217,7 +217,7 @@ namespace Ink_Anything
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        BtnClear_Click(BtnClear, null);
+                        BtnClear_Click(null, null);
                     });
                 }
             })).Start();
@@ -315,25 +315,15 @@ namespace Ink_Anything
 
         private void BtnTools_Click(object sender, RoutedEventArgs e)
         {
-            if (StackPanelToolButtons.Visibility == Visibility.Visible)
-            {
-                StackPanelToolButtons.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                StackPanelToolButtons.Visibility = Visibility.Visible;
-            }
         }
 
         private void BtnCountdownTimer_Click(object sender, RoutedEventArgs e)
         {
-            StackPanelToolButtons.Visibility = Visibility.Collapsed;
             new CountdownTimerWindow().Show();
         }
 
         private void BtnRand_Click(object sender, RoutedEventArgs e)
         {
-            StackPanelToolButtons.Visibility = Visibility.Collapsed;
             new RandWindow().Show();
         }
 

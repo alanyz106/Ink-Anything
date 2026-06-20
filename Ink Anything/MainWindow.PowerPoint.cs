@@ -62,12 +62,10 @@ namespace Ink_Anything
 
                 if (pptApplication == null) throw new Exception();
                 //BtnCheckPPT.Visibility = Visibility.Collapsed;
-                StackPanelPPTControls.Visibility = Visibility.Visible;
             }
             catch
             {
                 //BtnCheckPPT.Visibility = Visibility.Visible;
-                StackPanelPPTControls.Visibility = Visibility.Collapsed;
                 MessageBox.Show("未找到幻灯片");
             }
         }
@@ -202,7 +200,6 @@ namespace Ink_Anything
 
 
 
-                        BtnPPTSlideShow.Visibility = Visibility.Visible;
                     }));
                 }
 
@@ -215,10 +212,6 @@ namespace Ink_Anything
             catch
             {
                 //StackPanelPPTControls.Visibility = Visibility.Collapsed;
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    BtnPPTSlideShow.Visibility = Visibility.Collapsed;
-                });
                 timerCheckPPT.Start();
             }
         }
@@ -234,7 +227,8 @@ namespace Ink_Anything
             Application.Current.Dispatcher.Invoke(() =>
             {
                 //BtnPPTSlideShow.Visibility = Visibility.Collapsed;
-                BtnPPTSlideShowEnd.Visibility = Visibility.Collapsed;
+                isInSlideShow = false;
+                FloatBarPPTExitContainer.Visibility = Visibility.Collapsed;
             });
         }
 
@@ -262,21 +256,7 @@ namespace Ink_Anything
                     if (Wn.Presentation.PageSetup.SlideWidth / Wn.Presentation.PageSetup.SlideHeight < 1.65)
                     {
                         isPresentationHaveBlackSpace = true;
-                        //isButtonBackgroundTransparent = ToggleSwitchTransparentButtonBackground.IsOn;
-
-                        if (BtnSwitchTheme.Content.ToString() == "深色")
-                        {
-                            //Light
-                            BtnExit.Foreground = Brushes.White;
-                            SymbolIconBtnColorBlackContent.Foreground = Brushes.White;
-                            ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
-                            //BtnExit.Background = new SolidColorBrush(StringToColor("#AACCCCCC"));
-                        }
-                        else
-                        {
-                            //Dark
-                            //BtnExit.Background = new SolidColorBrush(StringToColor("#AA555555"));
-                        }
+                        ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
                     }
                 }
                 else if (screenRatio == -256 / 135)
@@ -347,10 +327,8 @@ namespace Ink_Anything
                 pointDesktop = new Point(ViewboxFloatingBar.Margin.Left, ViewboxFloatingBar.Margin.Top);
                 pointPPT = new Point(-1, -1);
 
-                StackPanelPPTControls.Visibility = Visibility.Visible;
-                BtnPPTSlideShow.Visibility = Visibility.Collapsed;
-                BtnPPTSlideShowEnd.Visibility = Visibility.Visible;
-                ViewBoxStackPanelMain.Margin = new Thickness(10, 10, 10, 10);
+                isInSlideShow = true;
+                FloatBarPPTExitContainer.Visibility = Visibility.Visible;
 
                 if (Settings.PowerPointSettings.IsShowCanvasAtNewSlideShow && Main_Grid.Background == Brushes.Transparent)
                 {
@@ -361,18 +339,8 @@ namespace Ink_Anything
 
                         //SaveStrokes();
                         ClearStrokes(true);
-
-                        if (BtnSwitchTheme.Content.ToString() == "浅色")
-                        {
-                            BtnSwitch.Content = "黑板";
-                        }
-                        else
-                        {
-                            BtnSwitch.Content = "白板";
-                        }
-                        StackPanelPPTButtons.Visibility = Visibility.Visible;
                     }
-                    BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
+                    BtnHideInkCanvas_Click(null, null);
                 }
                 //if (GridBackgroundCover.Visibility == Visibility.Visible)
                 //{
@@ -388,7 +356,7 @@ namespace Ink_Anything
 
                 if (Settings.PowerPointSettings.IsShowCanvasAtNewSlideShow == false)
                 {
-                    BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
+                    BtnHideInkCanvas_Click(null, null);
                 }
 
                 isEnteredSlideShowEndEvent = false;
@@ -509,23 +477,10 @@ namespace Ink_Anything
             Application.Current.Dispatcher.Invoke(() =>
             {
                 isPresentationHaveBlackSpace = false;
+                ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
 
-                if (BtnSwitchTheme.Content.ToString() == "深色")
-                {
-                    //Light
-                    BtnExit.Foreground = Brushes.Black;
-                    SymbolIconBtnColorBlackContent.Foreground = Brushes.White;
-                    ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
-                }
-                else
-                {
-                    //Dark
-                }
-
-                BtnPPTSlideShow.Visibility = Visibility.Visible;
-                BtnPPTSlideShowEnd.Visibility = Visibility.Collapsed;
-                StackPanelPPTControls.Visibility = Visibility.Collapsed;
-                ViewBoxStackPanelMain.Margin = new Thickness(10, 10, 10, 55);
+                isInSlideShow = false;
+                FloatBarPPTExitContainer.Visibility = Visibility.Collapsed;
 
                 if (currentMode != 0)
                 {
@@ -535,16 +490,6 @@ namespace Ink_Anything
                     //SaveStrokes();
                     ClearStrokes(true);
                     //RestoreStrokes(true);
-
-                    if (BtnSwitchTheme.Content.ToString() == "浅色")
-                    {
-                        BtnSwitch.Content = "黑板";
-                    }
-                    else
-                    {
-                        BtnSwitch.Content = "白板";
-                    }
-                    StackPanelPPTButtons.Visibility = Visibility.Visible;
                 }
                 //if (GridBackgroundCover.Visibility == Visibility.Visible)
                 //{
@@ -556,7 +501,7 @@ namespace Ink_Anything
 
                 if (Main_Grid.Background != Brushes.Transparent)
                 {
-                    BtnHideInkCanvas_Click(BtnHideInkCanvas, null);
+                    BtnHideInkCanvas_Click(null, null);
                 }
 
                 if (pointDesktop != new Point(-1, -1))
@@ -635,7 +580,6 @@ namespace Ink_Anything
             catch
             {
                 //BtnCheckPPT.Visibility = Visibility.Visible;
-                StackPanelPPTControls.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -660,7 +604,6 @@ namespace Ink_Anything
             }
             catch
             {
-                StackPanelPPTControls.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -671,7 +614,7 @@ namespace Ink_Anything
             BtnHideInkCanvas_Click(sender, e);
             pptApplication.SlideShowWindows[1].SlideNavigation.Visible = true;
             // 控制居中
-            if (BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
+            if (isInSlideShow)
             {
                 if (ViewboxFloatingBar.Margin == new Thickness((SystemParameters.PrimaryScreenWidth - ViewboxFloatingBar.ActualWidth) / 2, SystemParameters.PrimaryScreenHeight - 60, -2000, -200))
                 {

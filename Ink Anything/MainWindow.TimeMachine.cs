@@ -186,16 +186,14 @@ namespace Ink_Anything
 
         private void TimeMachine_OnUndoStateChanged(bool status)
         {
-            var result = status ? Visibility.Visible : Visibility.Collapsed;
-            BtnUndo.Visibility = result;
-            BtnUndo.IsEnabled = status;
+            FloatBarUndoIcon.IsEnabled = status;
+            FloatBarUndoIcon.Opacity = status ? 1.0 : 0.4;
         }
 
         private void TimeMachine_OnRedoStateChanged(bool status)
         {
-            var result = status ? Visibility.Visible : Visibility.Collapsed;
-            BtnRedo.Visibility = result;
-            BtnRedo.IsEnabled = status;
+            FloatBarRedoIcon.IsEnabled = status;
+            FloatBarRedoIcon.Opacity = status ? 1.0 : 0.4;
         }
 
         private void StrokesOnStrokesChanged(object sender, StrokeCollectionChangedEventArgs e)
