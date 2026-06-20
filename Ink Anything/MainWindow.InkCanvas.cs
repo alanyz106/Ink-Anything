@@ -159,10 +159,17 @@ namespace Ink_Anything
 
         private void KeyChangeToDrawTool(object sender, ExecutedRoutedEventArgs e)
         {
-            if (inkCanvas.Visibility == Visibility.Collapsed)
-            {
-                BtnHideInkCanvas_Click(sender, e);
-            }
+            BtnHideInkCanvas_Click(sender, e);
+        }
+
+        private void KeyClear(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnClear_Click(BtnClear, null);
+        }
+
+        private void KeyText(object sender, ExecutedRoutedEventArgs e)
+        {
+            SymbolIconText_MouseUp(sender, null);
         }
 
         private void KeyChangeToSelect(object sender, ExecutedRoutedEventArgs e)
@@ -199,6 +206,36 @@ namespace Ink_Anything
         private void KeyHide(object sender, ExecutedRoutedEventArgs e)
         {
             SymbolIconEmoji_MouseUp(sender, null);
+        }
+
+        private void KeyChangeToPen1(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnColorBlack_Click(BtnColorBlack, null);
+        }
+
+        private void KeyChangeToPen2(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnColorRed_Click(BtnColorRed, null);
+        }
+
+        private void KeyChangeToPen3(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnColorGreen_Click(BtnColorGreen, null);
+        }
+
+        private void KeyChangeToPen4(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnColorBlue_Click(BtnColorBlue, null);
+        }
+
+        private void KeyChangeToPen5(object sender, ExecutedRoutedEventArgs e)
+        {
+            BtnColorYellow_Click(BtnColorYellow, null);
+        }
+
+        private void KeyChangeToPen6(object sender, ExecutedRoutedEventArgs e)
+        {
+            BorderPenColorWhite_MouseUp(null, null);
         }
 
         #endregion Hotkeys

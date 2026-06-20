@@ -41,14 +41,17 @@
         <RoutedUICommand x:Key="HotKey_ChangeToPen3" Text=" "/>
         <RoutedUICommand x:Key="HotKey_ChangeToPen4" Text=" "/>
         <RoutedUICommand x:Key="HotKey_ChangeToPen5" Text=" "/>
+        <RoutedUICommand x:Key="HotKey_ChangeToPen6" Text=" "/>
         <RoutedUICommand x:Key="HotKey_DrawLine" Text=" "/>
+        <RoutedUICommand x:Key="HotKey_Clear" Text=" "/>
+        <RoutedUICommand x:Key="HotKey_Text" Text=" "/>
     </Window.Resources>
     <!--输入命令绑定-->
     <Window.InputBindings>
         <KeyBinding Gesture="Shift+Esc" Command="{StaticResource KeyExit}"/>
         <KeyBinding Modifiers="Control" Key="Z" Command="{StaticResource back_HotKey_Command}"/>
-        <KeyBinding Modifiers="Alt" Key="S" Command="{StaticResource HotKey_ChangeToSelect}" />
-        <KeyBinding Modifiers="Alt" Key="D" Command="{StaticResource HotKey_ChangeToDrawTool}" />
+        <KeyBinding Modifiers="Alt" Key="S" Command="{StaticResource HotKey_ChangeToDrawTool}" />
+        <KeyBinding Modifiers="Alt" Key="D" Command="{StaticResource HotKey_Clear}" />
         <KeyBinding Modifiers="Alt" Key="E" Command="{StaticResource HotKey_ChangeToEraser}" />
         <KeyBinding Modifiers="Alt" Key="C" Command="{StaticResource HotKey_Capture}" />
         <KeyBinding Modifiers="Alt" Key="D1" Command="{StaticResource HotKey_ChangeToPen1}" />
@@ -56,8 +59,10 @@
         <KeyBinding Modifiers="Alt" Key="D3" Command="{StaticResource HotKey_ChangeToPen3}" />
         <KeyBinding Modifiers="Alt" Key="D4" Command="{StaticResource HotKey_ChangeToPen4}" />
         <KeyBinding Modifiers="Alt" Key="D5" Command="{StaticResource HotKey_ChangeToPen5}" />
+        <KeyBinding Modifiers="Alt" Key="D6" Command="{StaticResource HotKey_ChangeToPen6}" />
         <KeyBinding Modifiers="Alt" Key="V" Command="{StaticResource HotKey_Hide}" />
         <KeyBinding Modifiers="Alt" Key="L" Command="{StaticResource HotKey_DrawLine}" />
+        <KeyBinding Modifiers="Alt" Key="T" Command="{StaticResource HotKey_Text}" />
     </Window.InputBindings>
     <!--命令执行方法绑定-->
     <Window.CommandBindings>
@@ -70,9 +75,12 @@
         <CommandBinding Command="{StaticResource HotKey_ChangeToDrawTool}"
                         CanExecute="CommandBinding_CanExecute"
                         Executed="KeyChangeToDrawTool"/>
-        <CommandBinding Command="{StaticResource HotKey_ChangeToSelect}"
+        <CommandBinding Command="{StaticResource HotKey_Clear}"
                         CanExecute="CommandBinding_CanExecute"
-                        Executed="KeyChangeToSelect"/>
+                        Executed="KeyClear"/>
+        <CommandBinding Command="{StaticResource HotKey_Text}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeyText"/>
         <CommandBinding Command="{StaticResource HotKey_ChangeToEraser}"
                         CanExecute="CommandBinding_CanExecute"
                         Executed="KeyChangeToEraser"/>
@@ -85,6 +93,24 @@
         <CommandBinding Command="{StaticResource HotKey_DrawLine}"
                         CanExecute="CommandBinding_CanExecute"
                         Executed="KeyDrawLine"/>
+        <CommandBinding Command="{StaticResource HotKey_ChangeToPen1}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeyChangeToPen1"/>
+        <CommandBinding Command="{StaticResource HotKey_ChangeToPen2}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeyChangeToPen2"/>
+        <CommandBinding Command="{StaticResource HotKey_ChangeToPen3}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeyChangeToPen3"/>
+        <CommandBinding Command="{StaticResource HotKey_ChangeToPen4}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeyChangeToPen4"/>
+        <CommandBinding Command="{StaticResource HotKey_ChangeToPen5}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeyChangeToPen5"/>
+        <CommandBinding Command="{StaticResource HotKey_ChangeToPen6}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeyChangeToPen6"/>
     </Window.CommandBindings>
     <Grid x:Name="Main_Grid" Background="#01FFFFFF">
         <Grid Name="GridBackgroundCoverHolder">
@@ -685,7 +711,8 @@
                         <Button Name="BtnColorBlack" FontFamily="Microsoft YaHei UI" Background="Black"
                                 Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorBlack_Click">
+                                Click="BtnColorBlack_Click"
+                                ToolTipService.ToolTip="黑色画笔 (Alt+1)">
                             <Viewbox Name="ViewboxBtnColorBlackContent" Opacity="0">
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Name="SymbolIconBtnColorBlackContent" Foreground="White"/>
                             </Viewbox>
@@ -693,7 +720,8 @@
                         <Button Name="BtnColorRed" FontFamily="Microsoft YaHei UI" Background="Red"
                                 Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorRed_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}">
+                                Click="BtnColorRed_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
+                                ToolTipService.ToolTip="红色画笔 (Alt+2)">
                             <Viewbox Name="ViewboxBtnColorRedContent">
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
                             </Viewbox>
@@ -701,7 +729,8 @@
                         <Button Name="BtnColorGreen" FontFamily="Microsoft YaHei UI" Background="#169141"
                                 Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorGreen_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}">
+                                Click="BtnColorGreen_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
+                                ToolTipService.ToolTip="绿色画笔 (Alt+3)">
                             <Viewbox Name="ViewboxBtnColorGreenContent" Opacity="0">
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
                             </Viewbox>
@@ -709,7 +738,8 @@
                         <Button Name="BtnColorBlue" FontFamily="Microsoft YaHei UI" Background="#239AD6"
                                 Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorBlue_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}">
+                                Click="BtnColorBlue_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
+                                ToolTipService.ToolTip="蓝色画笔 (Alt+4)">
                             <Viewbox Name="ViewboxBtnColorBlueContent" Opacity="0">
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
                             </Viewbox>
@@ -717,7 +747,8 @@
                         <Button Name="BtnColorYellow" FontFamily="Microsoft YaHei UI" Background="#F38B00"
                                 Margin="0,10,0,0" Width="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
                                 Height="{Binding ElementName=StackPanelColors, Path=ActualWidth}"
-                                Click="BtnColorYellow_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}">
+                                Click="BtnColorYellow_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}"
+                                ToolTipService.ToolTip="黄色画笔 (Alt+5)">
                             <Viewbox Name="ViewboxBtnColorYellowContent" Opacity="0">
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="{Binding ElementName=SymbolIconBtnColorBlackContent, Path=Foreground}"/>
                             </Viewbox>
@@ -726,11 +757,11 @@
                     <Button Name="BtnClear" Content="清屏" FontFamily="Microsoft YaHei UI"
                             Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                             Click="BtnClear_Click" MouseDoubleClick="BtnClear_MouseDoubleClick" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                            ToolTipService.ToolTip="清屏：清除画布上所有墨迹（双击可同时隐藏画板）"/>
+                            ToolTipService.ToolTip="清屏：清除画布上所有墨迹（双击可同时隐藏画板） (Alt+D)"/>
                     <Button x:Name="BtnHideInkCanvas" Content="隐藏&#x000A;画板" FontFamily="Microsoft YaHei UI"
                             Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                             Click="BtnHideInkCanvas_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                            ToolTipService.ToolTip="隐藏画板：隐藏画板但保留墨迹"/>
+                            ToolTipService.ToolTip="隐藏画板：隐藏画板但保留墨迹 (Alt+V)"/>
                     <Button x:Name="BtnTools" Content="工具" FontFamily="Microsoft YaHei UI"
                             Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                             Click="BtnTools_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
@@ -751,7 +782,7 @@
                     <Button x:Name="BtnScreenshot" Content="截屏" FontFamily="Microsoft YaHei UI"
                             Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                             Click="BtnScreenshot_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                            ToolTipService.ToolTip="截屏：截图并自动保存到图片文件夹"/>
+                            ToolTipService.ToolTip="截屏：截图并自动保存到图片文件夹 (Alt+C)"/>
                     <Button x:Name="BtnCheckPPT" Visibility="Collapsed" Content="检查" FontFamily="Microsoft YaHei UI"
                             Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                             Click="BtnCheckPPT_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"/>
@@ -838,21 +869,21 @@
                 <Button Name="BtnSelect" Content="选择&#x000A;墨迹" Visibility="Visible" FontFamily="Microsoft YaHei UI"
                         Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                         Click="BtnSelect_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="选择墨迹：选中墨迹进行移动、缩放、旋转等操作"/>
+                        ToolTipService.ToolTip="选择墨迹：选中墨迹进行移动、缩放、旋转等操作 (Alt+S)"/>
                 <Button Name="BtnPen" Visibility="Visible" FontFamily="Microsoft YaHei UI"
                         Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                         Click="BtnPen_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="画笔：切换到画笔书写模式">
+                        ToolTipService.ToolTip="画笔：切换到画笔书写模式 (Alt+D)">
                     <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}"/>
                 </Button>
                 <Button Name="BtnErase" Content="橡皮" Visibility="Visible" FontFamily="Microsoft YaHei UI"
                         Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                         Click="BtnErase_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="橡皮擦：切换到擦除模式（点击切换笔迹擦/范围擦）"/>
+                        ToolTipService.ToolTip="橡皮擦：切换到擦除模式（点击切换笔迹擦/范围擦） (Alt+E)"/>
                 <Button Name="BtnDrawLine" Content="直线" Visibility="Visible" FontFamily="Microsoft YaHei UI"
                         Margin="0,25,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                         Click="BtnDrawLine_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
-                        ToolTipService.ToolTip="绘制直线"/>
+                        ToolTipService.ToolTip="绘制直线 (Alt+L)"/>
                 <Button Name="BtnDrawArrow" Content="箭头" Visibility="Visible" FontFamily="Microsoft YaHei UI"
                         Margin="0,10,0,0" Width="{Binding ElementName=StackPanelMain, Path=ActualWidth}"
                         Click="BtnDrawArrow_Click" Foreground="{Binding ElementName=BtnExit, Path=Foreground}" Background="{Binding ElementName=BtnExit, Path=Background}"
@@ -971,64 +1002,64 @@
                         <ui:SimpleStackPanel Name="StackPanelCanvacMain" Margin="10,5,0,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
                             <Grid Height="24" Width="0">
                             </Grid>
-                            <local:ClickSensitiveGrid Click="SymbolIconCursor_Click" Margin="-10,0,0,0"
-                                                        ToolTipService.ToolTip="鼠标模式：切换到鼠标/光标模式">
+                            <local:ClickSensitiveGrid x:Name="GridModeToggleMouse" Click="SymbolIconCursor_Click" Margin="-10,0,0,0"
+                                                        ToolTipService.ToolTip="当前是鼠标模式，点击切换到画笔模式 (Alt+S)">
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}" Foreground="{DynamicResource FloatBarForeground}"/>
                             </local:ClickSensitiveGrid>
                             <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Setting}" Foreground="{DynamicResource FloatBarForeground}" MouseUp="SymbolIconSettings_Click"
                                            ToolTipService.ToolTip="设置：打开设置面板"/>
                         </ui:SimpleStackPanel>
                         <ui:SimpleStackPanel Name="StackPanelCanvasControls" Visibility="Visible" Margin="10,5,0,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
-                            <local:ClickSensitiveGrid Click="SymbolIconCursor_Click"
-                                                        ToolTipService.ToolTip="画笔模式：切换到触控书写模式">
+                            <local:ClickSensitiveGrid x:Name="GridModeToggle" Click="SymbolIconCursor_Click"
+                                                        ToolTipService.ToolTip="当前是画笔模式，点击切换到鼠标模式 (Alt+S)">
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.TouchPointer}" Foreground="{DynamicResource FloatBarForeground}"/>
                             </local:ClickSensitiveGrid>
                             <ui:SimpleStackPanel Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}" Spacing="8" Margin="0,1">
                                 <Border Name="BorderPenColorBlack" Background="{Binding ElementName=BtnColorBlack, Path=Background}" MouseUp="BorderPenColorBlack_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorBlack, Path=ActualHeight}"
-                                    ToolTipService.ToolTip="黑色画笔">
+                                    ToolTipService.ToolTip="黑色画笔 (Alt+1)">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorBlackContent, Path=Opacity}" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorRed" Background="{Binding ElementName=BtnColorRed, Path=Background}" MouseUp="BorderPenColorRed_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorRed, Path=ActualHeight}"
-                                    ToolTipService.ToolTip="红色画笔">
+                                    ToolTipService.ToolTip="红色画笔 (Alt+2)">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorRedContent, Path=Opacity}" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorGreen" Background="{Binding ElementName=BtnColorGreen, Path=Background}" MouseUp="BorderPenColorGreen_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorGreen, Path=ActualHeight}"
-                                    ToolTipService.ToolTip="绿色画笔">
+                                    ToolTipService.ToolTip="绿色画笔 (Alt+3)">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorGreenContent, Path=Opacity}" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorBlue" Background="{Binding ElementName=BtnColorBlue, Path=Background}" MouseUp="BorderPenColorBlue_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorBlue, Path=ActualHeight}"
-                                    ToolTipService.ToolTip="蓝色画笔">
+                                    ToolTipService.ToolTip="蓝色画笔 (Alt+4)">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorBlueContent, Path=Opacity}" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorYellow" Background="{Binding ElementName=BtnColorYellow, Path=Background}" MouseUp="BorderPenColorYellow_MouseUp" CornerRadius="100"
                                     Width="{Binding ElementName=BorderPenColorYellow, Path=ActualHeight}"
-                                    ToolTipService.ToolTip="黄色画笔">
+                                    ToolTipService.ToolTip="黄色画笔 (Alt+5)">
                                     <Viewbox Opacity="{Binding ElementName=ViewboxBtnColorYellowContent, Path=Opacity}" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="White"/>
                                     </Viewbox>
                                 </Border>
                                 <Border Name="BorderPenColorWhite" Background="White" CornerRadius="100" MouseUp="BorderPenColorWhite_MouseUp"
                                     Width="{Binding ElementName=BorderPenColorYellow, Path=ActualHeight}"
-                                    ToolTipService.ToolTip="白色画笔">
+                                    ToolTipService.ToolTip="白色画笔 (Alt+6)">
                                     <Viewbox Name="ViewboxBtnColorWhiteContent" Opacity="0" Margin="6">
                                         <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Accept}" Foreground="Black"/>
                                     </Viewbox>
                                 </Border>
                             </ui:SimpleStackPanel>
                             <Grid x:Name="EraserContainer" Width="21" Height="24" Margin="0,1.5,-2,0" MouseDown="Border_MouseDown" MouseUp="ImageEraser_MouseUp" Visibility="{Binding ElementName=BtnErase, Path=Visibility}"
-                                  ToolTipService.ToolTip="橡皮擦：擦除墨迹（点击切换笔迹擦/范围擦）">
+                                  ToolTipService.ToolTip="橡皮擦：擦除墨迹（点击切换笔迹擦/范围擦） (Alt+E)">
                                 <Image Name="ImageEraser" Margin="0,-4,-1,-2" Source="{DynamicResource ImageSource.RubberNormal}" RenderTransformOrigin="0.5,0.5"/>
                                 <Image Name="ImageEraserMask" Visibility="{Binding Visibility, ElementName=ImageEraser, Converter={StaticResource VisibilityConverter}}" Margin="0,-2.5,0,0" RenderTransformOrigin="0.5,0.5">
                                     <Image.Source>
@@ -1084,7 +1115,7 @@
                             <Grid Margin="0,0,0,0" Width="20">
                                 <ui:FontIcon Name="SymbolIconDelete" Glyph="{x:Static local:FluentIconGlyphs.Delete}" Foreground="{DynamicResource FloatBarForeground}"
                                                MouseDown="Border_MouseDown" MouseUp="SymbolIconDelete_MouseUp"
-                                               ToolTipService.ToolTip="清屏：清除画布上所有墨迹"/>
+                                               ToolTipService.ToolTip="清屏：清除画布上所有墨迹 (Alt+D)"/>
                                 <Border x:Name="BorderClearInDelete" Visibility="Collapsed" Background="White" BorderBrush="{DynamicResource FloatBarBorderBrush}" BorderThickness="1"
                                     CornerRadius="5" Margin="-40,-60,-40,35">
                                     <Button Content="点击清屏" ui:ThemeManager.RequestedTheme="Light"
@@ -1238,11 +1269,11 @@
                             </Grid>
                             <Grid Margin="0,5,0,5" Visibility="{Binding ElementName=StackPanelPPTButtons, Path=Visibility}">
                                 <Image Source="{DynamicResource ResourceKey=SeewoImageSource.PPTExitNormal}" Visibility="{Binding ElementName=BtnPPTSlideShowEnd, Path=Visibility}" MouseDown="Border_MouseDown" MouseUp="ImagePPTControlEnd_MouseUp" Margin="-2,1,10,2"
-                                       ToolTipService.ToolTip="结束幻灯片放映"/>
+                                       ToolTipService.ToolTip="结束幻灯片放映 (Shift+Esc)"/>
                             </Grid>
                             <ui:SimpleStackPanel Margin="0,5,10,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
                                 <ui:FontIcon Margin="0,0,0,0" Glyph="{x:Static local:FluentIconGlyphs.Camera}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconScreenshot_MouseUp"
-                                               ToolTipService.ToolTip="截屏：截图并自动保存到图片文件夹"/>
+                                               ToolTipService.ToolTip="截屏：截图并自动保存到图片文件夹 (Alt+C)"/>
                                 <Grid Height="24" Width="20">
                                     <ui:FontIcon x:Name="SymbolIconTools" Glyph="{x:Static local:FluentIconGlyphs.Repair}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconTools_MouseUp"
                                                    ToolTipService.ToolTip="快捷设置：画笔粗细、墨迹识别、手指模式等"/>
@@ -1353,7 +1384,7 @@
                                 <ui:FontIcon x:Name="SymbolIconText" Glyph="{x:Static local:FluentIconGlyphs.TextEdit}"
                                                Foreground="{DynamicResource FloatBarForeground}"
                                                MouseDown="Border_MouseDown" MouseUp="SymbolIconText_MouseUp"
-                                               ToolTipService.ToolTip="文本输入：点击画板添加文字"/>
+                                               ToolTipService.ToolTip="文本输入：点击画板添加文字 (Alt+T)"/>
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Cancel}" Margin="0,0,0,0" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="BtnExit_Click"
                                                ToolTipService.ToolTip="退出程序"/>
                             </ui:SimpleStackPanel>

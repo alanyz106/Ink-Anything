@@ -61,7 +61,7 @@ namespace Ink_Anything
             inkCanvas.IsManipulationEnabled = true;
             CancelSingleFingerDragMode();
             SymbolIconText.Foreground = new SolidColorBrush(Color.FromRgb(0x40, 0x9E, 0xFF));
-            ToolTipService.SetToolTip(SymbolIconText, "文本模式：点击退出文本模式");
+            ToolTipService.SetToolTip(SymbolIconText, "文本模式：点击退出文本模式 (Alt+T)");
         }
 
         private void ExitTextMode()
@@ -70,7 +70,7 @@ namespace Ink_Anything
             drawingShapeMode = 0;
             forceEraser = false;
             SymbolIconText.Foreground = (Brush)FindResource("FloatBarForeground");
-            ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式");
+            ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式 (Alt+T)");
             ClearResizeHandles();
             BtnPen_Click(null, null);
         }
