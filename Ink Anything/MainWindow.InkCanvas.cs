@@ -123,6 +123,13 @@ namespace Ink_Anything
                 return;
             }
 
+            if (e.Key == Key.A && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            {
+                KeySelectAll(sender, null);
+                e.Handled = true;
+                return;
+            }
+
             if (PptNavigationBtn.Visibility != Visibility.Visible || currentMode != 0) return;
 
             if (e.Key == Key.Down || e.Key == Key.PageDown || e.Key == Key.Right || e.Key == Key.N || e.Key == Key.Space)
