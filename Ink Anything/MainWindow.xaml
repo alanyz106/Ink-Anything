@@ -208,7 +208,7 @@
             <Border Name="BorderStrokeSelectionControl"
                     HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,900,0,0"
                     CornerRadius="5" Height="80"
-                    Background="{DynamicResource FloatBarBackground}" Visibility="{Binding ElementName=GridInkCanvasSelectionCover, Path=Visibility}"
+                    Background="{DynamicResource FloatBarBackground}" Visibility="Collapsed"
                     BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
                 <Viewbox Margin="0,-2.5">
                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10" Height="60">

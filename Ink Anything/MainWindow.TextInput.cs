@@ -134,6 +134,27 @@ namespace Ink_Anything
 
         private void inkCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            // 选择模式下：检查是否点击了文字 Border
+            if (_isInSelectionMode && _textOverlayCanvas != null)
+            {
+                var selPos = e.GetPosition(inkCanvas);
+                bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+                Border hitBorder = FindTextBorderAtPoint(selPos);
+                if (hitBorder != null)
+                {
+                    if (inkCanvas.GetSelectedStrokes().Count > 0)
+                    {
+                        // 有墨迹选中：让 cover 的 handler 统一处理墨迹+文字拖拽
+                        return;
+                    }
+                    // 纯文字选中：preview handler 处理选中和拖拽
+                    HandleSelectionTextClick(hitBorder, isCtrlDown, selPos);
+                    e.Handled = true;
+                    return;
+                }
+                ClearTextSelection();
+            }
+
             if (drawingShapeMode != 26) return;
 
             // 检查点击是否在某个文字边框上

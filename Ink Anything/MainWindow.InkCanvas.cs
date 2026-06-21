@@ -160,10 +160,20 @@ namespace Ink_Anything
             }
             if (e.Key == Key.Back || e.Key == Key.Delete)
             {
+                bool handled = false;
                 var selected = inkCanvas.GetSelectedStrokes();
                 if (selected.Count > 0)
                 {
                     inkCanvas.Strokes.Remove(selected);
+                    handled = true;
+                }
+                if (selectedTextBorders.Count > 0)
+                {
+                    DeleteSelectedTextBorders();
+                    handled = true;
+                }
+                if (handled)
+                {
                     GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
                     e.Handled = true;
                 }
@@ -207,8 +217,12 @@ namespace Ink_Anything
 
         private void KeySelectAll(object sender, ExecutedRoutedEventArgs e)
         {
-            if (inkCanvas.Strokes.Count == 0) return;
-            inkCanvas.EditingMode = InkCanvasEditingMode.Select;
+            if (inkCanvas.Strokes.Count == 0 && (_textOverlayCanvas == null || _textOverlayCanvas.Children.Count == 0)) return;
+            _isInSelectionMode = true;
+            inkCanvas.EditingMode = InkCanvasEditingMode.None;
+            if (_textOverlayCanvas != null)
+                _textOverlayCanvas.Background = null;
+            RegisterRubberBandHandlers();
             _isSelectAllActive = true;
             StrokeCollection allStrokes = new StrokeCollection();
             foreach (Stroke stroke in inkCanvas.Strokes)
@@ -222,6 +236,7 @@ namespace Ink_Anything
             {
                 inkCanvas.Select(allStrokes);
             }
+            SelectAllTextElements();
             UpdateSelectIconState();
         }
 

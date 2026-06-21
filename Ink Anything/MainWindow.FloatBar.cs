@@ -104,10 +104,13 @@ namespace Ink_Anything
         private void SymbolIconDelete_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (sender != lastBorderMouseDownObject) return;
-            if (inkCanvas.GetSelectedStrokes().Count > 0)
+            if (inkCanvas.GetSelectedStrokes().Count > 0 || selectedTextBorders.Count > 0)
             {
-                inkCanvas.Strokes.Remove(inkCanvas.GetSelectedStrokes());
-                GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
+                if (inkCanvas.GetSelectedStrokes().Count > 0)
+                    inkCanvas.Strokes.Remove(inkCanvas.GetSelectedStrokes());
+                if (selectedTextBorders.Count > 0)
+                    DeleteSelectedTextBorders();
+                UpdateSelectionControlVisibility();
             }
             else if (inkCanvas.Strokes.Count > 0 || _textOverlayCanvas != null)
             {
