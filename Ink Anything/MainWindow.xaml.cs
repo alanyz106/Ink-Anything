@@ -1,3 +1,4 @@
+using AutoUpdaterDotNET;
 using Ink_Anything.Helpers;
 using iNKORE.UI.WPF.Modern;
 using iNKORE.UI.WPF.Modern.Helpers;
@@ -146,6 +147,8 @@ namespace Ink_Anything
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            AutoUpdater.SetOwner(this);
+
             //new CountdownTimerWindow().ShowDialog();
             //检查
             new Thread(new ThreadStart(() =>

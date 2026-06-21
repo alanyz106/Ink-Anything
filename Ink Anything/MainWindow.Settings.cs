@@ -568,6 +568,7 @@ namespace Ink_Anything
                                 Mandatory = new Mandatory { Value = false },
                                 InstallerArgs = "/VERYSILENT /SUPPRESSMSGBOXES /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS"
                             };
+                            AutoUpdater.SetOwner(this);
                             AutoUpdater.ShowUpdateForm(updateArgs);
                         });
                     }
