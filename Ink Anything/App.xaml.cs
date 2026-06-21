@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows;
 using MessageBox = System.Windows.MessageBox;
 
@@ -76,15 +75,13 @@ namespace Ink_Anything
                 string tagName = release["tag_name"]?.ToString() ?? "";
                 string version = tagName.TrimStart('v');
 
-                string archSuffix = RuntimeInformation.OSArchitecture == Architecture.Arm64 ? "ARM64" : "x64";
-
                 string downloadUrl = "";
                 string changelog = release["html_url"]?.ToString() ?? "";
 
                 foreach (var asset in release["assets"] ?? new JArray())
                 {
                     string name = asset["name"]?.ToString() ?? "";
-                    if (name.Contains(archSuffix) && name.EndsWith(".zip"))
+                    if (name.Contains("Setup") && name.EndsWith(".exe"))
                     {
                         downloadUrl = asset["browser_download_url"]?.ToString() ?? "";
                         break;
@@ -98,7 +95,8 @@ namespace Ink_Anything
                         CurrentVersion = version,
                         DownloadURL = downloadUrl,
                         ChangelogURL = changelog,
-                        Mandatory = new Mandatory { Value = false }
+                        Mandatory = new Mandatory { Value = false },
+                        InstallerArgs = "/VERYSILENT /SUPPRESSMSGBOXES /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS"
                     };
                 }
             }

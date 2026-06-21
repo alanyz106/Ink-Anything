@@ -2,7 +2,7 @@
 ; 使用 Inno Setup 6 编译
 
 #define MyAppName "Ink Anything"
-#define MyAppVersion "4.2.0"
+#define MyAppVersion "4.2.2"
 #define MyAppPublisher "Ink Anything"
 #define MyAppExeName "Ink Anything.exe"
 
@@ -22,6 +22,8 @@ WizardStyle=modern
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 PrivilegesRequired=lowest
+CloseApplications=yes
+RestartApplications=no
 UninstallDisplayName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 SetupIconFile=Ink Anything\Resources\Ink Anything.ico
