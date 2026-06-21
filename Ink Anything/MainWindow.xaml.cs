@@ -224,7 +224,8 @@ namespace Ink_Anything
             LoadSettings();
             if (Environment.Is64BitProcess)
             {
-                GroupBoxInkRecognition.Visibility = Visibility.Collapsed;
+                TabBtnInkToShape.Visibility = Visibility.Collapsed;
+                PanelInkToShape.Visibility = Visibility.Collapsed;
             }
 
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;

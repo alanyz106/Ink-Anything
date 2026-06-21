@@ -1,9 +1,13 @@
 ﻿using AutoUpdaterDotNET;
 using Ink_Anything.Helpers;
 using iNKORE.UI.WPF.Modern.Controls;
+using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using MessageBox = System.Windows.MessageBox;
 
@@ -51,13 +55,55 @@ namespace Ink_Anything
 
             StartArgs = e.Args;
 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             if (!StoreHelper.IsStoreApp)
             {
-                AutoUpdater.Start($"http://ink.wxriw.cn:1957/update");
+                AutoUpdater.ParseUpdateInfoEvent += AutoUpdater_ParseUpdateInfoEvent;
+                AutoUpdater.Start("https://api.github.com/repos/alanyz106/Ink-Anything/releases/latest");
                 AutoUpdater.ApplicationExitEvent += () =>
                 {
                     Environment.Exit(0);
                 };
+            }
+        }
+
+        private static void AutoUpdater_ParseUpdateInfoEvent(ParseUpdateInfoEventArgs args)
+        {
+            try
+            {
+                JObject release = JObject.Parse(args.RemoteData);
+                string tagName = release["tag_name"]?.ToString() ?? "";
+                string version = tagName.TrimStart('v');
+
+                string archSuffix = RuntimeInformation.OSArchitecture == Architecture.Arm64 ? "ARM64" : "x64";
+
+                string downloadUrl = "";
+                string changelog = release["html_url"]?.ToString() ?? "";
+
+                foreach (var asset in release["assets"] ?? new JArray())
+                {
+                    string name = asset["name"]?.ToString() ?? "";
+                    if (name.Contains(archSuffix) && name.EndsWith(".zip"))
+                    {
+                        downloadUrl = asset["browser_download_url"]?.ToString() ?? "";
+                        break;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(downloadUrl) && !string.IsNullOrEmpty(version))
+                {
+                    args.UpdateInfo = new UpdateInfoEventArgs
+                    {
+                        CurrentVersion = version,
+                        DownloadURL = downloadUrl,
+                        ChangelogURL = changelog,
+                        Mandatory = new Mandatory { Value = false }
+                    };
+                }
+            }
+            catch
+            {
             }
         }
 

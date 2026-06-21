@@ -2,7 +2,7 @@
 ; 使用 Inno Setup 6 编译
 
 #define MyAppName "Ink Anything"
-#define MyAppVersion "4.1.2"
+#define MyAppVersion "4.2.0"
 #define MyAppPublisher "Ink Anything"
 #define MyAppExeName "Ink Anything.exe"
 

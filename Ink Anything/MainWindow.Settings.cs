@@ -1,3 +1,5 @@
+using AutoUpdaterDotNET;
+using Ink_Anything.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -483,6 +485,72 @@ namespace Ink_Anything
             if (!isLoaded) return;
             Settings.Advanced.IsLogEnabled = ToggleSwitchIsLogEnabled.IsOn;
             SaveSettingsToFile();
+        }
+
+        #endregion
+
+        #region Check Update
+
+        private void BtnCheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            if (StoreHelper.IsStoreApp)
+            {
+                ShowNewMessage("请通过 Microsoft Store 检查更新");
+                return;
+            }
+
+            BtnCheckUpdate.IsEnabled = false;
+            BtnCheckUpdate.Content = "检查中...";
+
+            AutoUpdater.CheckForUpdateEvent += OnCheckForUpdateComplete;
+            AutoUpdater.Start("https://api.github.com/repos/alanyz106/Ink-Anything/releases/latest");
+        }
+
+        private void OnCheckForUpdateComplete(UpdateInfoEventArgs args)
+        {
+            AutoUpdater.CheckForUpdateEvent -= OnCheckForUpdateComplete;
+            Dispatcher.Invoke(() =>
+            {
+                BtnCheckUpdate.IsEnabled = true;
+                BtnCheckUpdate.Content = "检查更新";
+                if (!args.IsUpdateAvailable)
+                {
+                    ShowNewMessage("当前已是最新版本");
+                }
+            });
+        }
+
+        #endregion
+
+        #region Settings Tab
+
+        private void SettingsTab_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded) return;
+
+            // 隐藏所有面板
+            PanelBehavior.Visibility = Visibility.Collapsed;
+            PanelStartup.Visibility = Visibility.Collapsed;
+            PanelCanvas.Visibility = Visibility.Collapsed;
+            PanelGesture.Visibility = Visibility.Collapsed;
+            PanelInkToShape.Visibility = Visibility.Collapsed;
+            PanelAppearance.Visibility = Visibility.Collapsed;
+            PanelPowerPoint.Visibility = Visibility.Collapsed;
+            PanelAdvanced.Visibility = Visibility.Collapsed;
+            PanelReset.Visibility = Visibility.Collapsed;
+            PanelAutomation.Visibility = Visibility.Collapsed;
+
+            // 根据选中的 RadioButton 显示对应面板
+            if (TabBtnBehavior.IsChecked == true) PanelBehavior.Visibility = Visibility.Visible;
+            else if (TabBtnStartup.IsChecked == true) PanelStartup.Visibility = Visibility.Visible;
+            else if (TabBtnCanvas.IsChecked == true) PanelCanvas.Visibility = Visibility.Visible;
+            else if (TabBtnGesture.IsChecked == true) PanelGesture.Visibility = Visibility.Visible;
+            else if (TabBtnInkToShape.IsChecked == true) PanelInkToShape.Visibility = Visibility.Visible;
+            else if (TabBtnAppearance.IsChecked == true) PanelAppearance.Visibility = Visibility.Visible;
+            else if (TabBtnPowerPoint.IsChecked == true) PanelPowerPoint.Visibility = Visibility.Visible;
+            else if (TabBtnAdvanced.IsChecked == true) PanelAdvanced.Visibility = Visibility.Visible;
+            else if (TabBtnReset.IsChecked == true) PanelReset.Visibility = Visibility.Visible;
+            else if (TabBtnAutomation.IsChecked == true) PanelAutomation.Visibility = Visibility.Visible;
         }
 
         #endregion
