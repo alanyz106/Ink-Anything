@@ -28,6 +28,8 @@ namespace Ink_Anything
         public double InkWidth { get; set; } = 2.5;
         [JsonProperty("isShowCursor")]
         public bool IsShowCursor { get; set; } = false;
+        [JsonProperty("textCursorType")]
+        public int TextCursorType { get; set; } = 0; // 0-箭头  1-文本(I)
         [JsonProperty("inkStyle")]
         public int InkStyle { get; set; } = 0;
         [JsonProperty("eraserSize")]
