@@ -1405,6 +1405,16 @@ namespace Ink_Anything
                     HandleTextModeClick(e.GetPosition(inkCanvas));
                     return;
                 }
+                if (inkCanvas.EditingMode == InkCanvasEditingMode.Select && GridInkCanvasSelectionCover.Visibility == Visibility.Visible)
+                {
+                    var pos = e.GetPosition(inkCanvas);
+                    var bounds = inkCanvas.GetSelectionBounds();
+                    if (!double.IsNaN(bounds.Left) && (pos.X < bounds.Left || pos.X > bounds.Right || pos.Y < bounds.Top || pos.Y > bounds.Bottom))
+                    {
+                        inkCanvas.Select(new StrokeCollection());
+                        GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
+                    }
+                }
                 isMouseDown = true;
                 if (NeedUpdateIniP())
                 {

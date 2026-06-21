@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Ink;
@@ -245,20 +246,100 @@ namespace Ink_Anything
 
         bool isGridInkCanvasSelectionCoverMouseDown = false;
         StrokeCollection StrokesSelectionClone = new StrokeCollection();
+        bool isDraggingSelection = false;
+        Point selectionDragStartPoint;
+        Dictionary<Stroke, Point[]> strokeDragStartPositions;
 
         private void GridInkCanvasSelectionCover_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            // 点击在选中区域外 → 取消选中并收起覆盖层
+            var pos = e.GetPosition(inkCanvas);
+            var bounds = inkCanvas.GetSelectionBounds();
+            if (!double.IsNaN(bounds.Left) && (pos.X < bounds.Left - 5 || pos.X > bounds.Right + 5 || pos.Y < bounds.Top - 5 || pos.Y > bounds.Bottom + 5))
+            {
+                inkCanvas.Select(new StrokeCollection());
+                GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
+                e.Handled = true;
+                return;
+            }
+
+            bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            if (isStrokeSelectionCloneOn || isCtrlDown)
+            {
+                // 克隆模式（按钮开启或按住 Ctrl）：复制一份，拖动副本
+                StrokeCollection strokes = inkCanvas.GetSelectedStrokes();
+                isProgramChangeStrokeSelection = true;
+                inkCanvas.Select(new StrokeCollection());
+                StrokesSelectionClone = strokes.Clone();
+                inkCanvas.Select(strokes);
+                isProgramChangeStrokeSelection = false;
+                inkCanvas.Strokes.Add(StrokesSelectionClone);
+                // 记录克隆的初始位置用于拖动
+                strokeDragStartPositions = new Dictionary<Stroke, Point[]>();
+                foreach (Stroke stroke in StrokesSelectionClone)
+                {
+                    var points = stroke.StylusPoints.ToArray();
+                    strokeDragStartPositions[stroke] = points.Select(p => new Point(p.X, p.Y)).ToArray();
+                }
+            }
+            else
+            {
+                strokeDragStartPositions = new Dictionary<Stroke, Point[]>();
+                foreach (Stroke stroke in inkCanvas.GetSelectedStrokes())
+                {
+                    var points = stroke.StylusPoints.ToArray();
+                    strokeDragStartPositions[stroke] = points.Select(p => new Point(p.X, p.Y)).ToArray();
+                }
+            }
+
             isGridInkCanvasSelectionCoverMouseDown = true;
+            isDraggingSelection = false;
+            selectionDragStartPoint = e.GetPosition(inkCanvas);
+            GridInkCanvasSelectionCover.CaptureMouse();
+            e.Handled = true;
+        }
+
+        private void GridInkCanvasSelectionCover_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!isGridInkCanvasSelectionCoverMouseDown) return;
+            var currentPoint = e.GetPosition(inkCanvas);
+            var dx = currentPoint.X - selectionDragStartPoint.X;
+            var dy = currentPoint.Y - selectionDragStartPoint.Y;
+
+            if (!isDraggingSelection && (Math.Abs(dx) > 2 || Math.Abs(dy) > 2))
+            {
+                isDraggingSelection = true;
+            }
+
+            if (isDraggingSelection)
+            {
+                foreach (var kvp in strokeDragStartPositions)
+                {
+                    var stroke = kvp.Key;
+                    var originalPoints = kvp.Value;
+                    var newPoints = new StylusPointCollection();
+                    for (int i = 0; i < originalPoints.Length; i++)
+                    {
+                        newPoints.Add(new StylusPoint(originalPoints[i].X + dx, originalPoints[i].Y + dy));
+                    }
+                    stroke.StylusPoints = newPoints;
+                }
+                updateBorderStrokeSelectionControlLocation();
+            }
         }
 
         private void GridInkCanvasSelectionCover_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (isGridInkCanvasSelectionCoverMouseDown)
+            if (e.LeftButton == MouseButtonState.Released && isGridInkCanvasSelectionCoverMouseDown)
             {
+                GridInkCanvasSelectionCover.ReleaseMouseCapture();
                 isGridInkCanvasSelectionCoverMouseDown = false;
-                GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
+                isDraggingSelection = false;
+                StrokesSelectionClone = new StrokeCollection();
             }
         }
+
+        private bool _isSelectAllActive = false;
 
         private void BtnSelect_Click(object sender, RoutedEventArgs e)
         {
@@ -267,13 +348,17 @@ namespace Ink_Anything
             inkCanvas.IsManipulationEnabled = false;
             if (inkCanvas.EditingMode == InkCanvasEditingMode.Select)
             {
-                if (inkCanvas.GetSelectedStrokes().Count == inkCanvas.Strokes.Count)
+                if (_isSelectAllActive)
                 {
+                    // 全选状态 → 退出选择模式
+                    _isSelectAllActive = false;
                     inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                     inkCanvas.IsManipulationEnabled = true;
                 }
                 else
                 {
+                    // 部分选中状态 → 全选
+                    _isSelectAllActive = true;
                     StrokeCollection selectedStrokes = new StrokeCollection();
                     foreach (Stroke stroke in inkCanvas.Strokes)
                     {
@@ -287,8 +372,29 @@ namespace Ink_Anything
             }
             else
             {
+                // 非选择模式 → 进入选择模式
+                _isSelectAllActive = false;
                 inkCanvas.EditingMode = InkCanvasEditingMode.Select;
+            }
+            UpdateSelectIconState();
+        }
 
+        internal void UpdateSelectIconState()
+        {
+            if (inkCanvas.EditingMode != InkCanvasEditingMode.Select)
+            {
+                // 非选择模式：默认颜色
+                SymbolIconSelect.Foreground = new SolidColorBrush(FloatBarForegroundColor);
+            }
+            else if (_isSelectAllActive)
+            {
+                // 全选状态：深蓝高亮
+                SymbolIconSelect.Foreground = new SolidColorBrush(Color.FromRgb(0, 136, 255));
+            }
+            else
+            {
+                // 部分选中状态：浅蓝高亮
+                SymbolIconSelect.Foreground = new SolidColorBrush(Color.FromRgb(0x7C, 0xB9, 0xE8));
             }
         }
 
@@ -302,14 +408,17 @@ namespace Ink_Anything
             if (inkCanvas.GetSelectedStrokes().Count == 0)
             {
                 GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
+                _isSelectAllActive = false;
             }
             else
             {
                 GridInkCanvasSelectionCover.Visibility = Visibility.Visible;
+                inkCanvas.ReleaseMouseCapture();
                 BorderStrokeSelectionClone.Background = Brushes.Transparent;
                 isStrokeSelectionCloneOn = false;
                 updateBorderStrokeSelectionControlLocation();
             }
+            UpdateSelectIconState();
         }
 
         private void updateBorderStrokeSelectionControlLocation()
