@@ -82,6 +82,18 @@ namespace Ink_Anything
         static int keyid = 10;
         static Dictionary<int, HotKeyCallBackHanlder> keymap = new Dictionary<int, HotKeyCallBackHanlder>();
 
+        /// <summary>
+        /// 测试指定快捷键是否可用（不干扰 Regist 的 ID 计数）
+        /// </summary>
+        public static bool IsHotkeyAvailable(Window window, HotkeyModifiers modifiers, uint vk)
+        {
+            var hwnd = new WindowInteropHelper(window).Handle;
+            int testId = 9000 + (int)modifiers * 256 + (int)vk;
+            bool ok = RegisterHotKey(hwnd, testId, modifiers, vk);
+            if (ok) UnregisterHotKey(hwnd, testId);
+            return ok;
+        }
+
         public delegate void HotKeyCallBackHanlder();
     }
 

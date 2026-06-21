@@ -240,6 +240,37 @@ namespace Ink_Anything
             TextBlockSettingsVersion.Text = "Ink Anything v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
             isLoaded = true;
+
+            CheckHotkeyConflicts();
+        }
+
+        private void CheckHotkeyConflicts()
+        {
+            var conflicts = new List<string>();
+            foreach (var binding in this.InputBindings)
+            {
+                if (binding is KeyBinding kb && kb.Modifiers != ModifierKeys.None)
+                {
+                    HotkeyModifiers mods = 0;
+                    if (kb.Modifiers.HasFlag(ModifierKeys.Alt)) mods |= HotkeyModifiers.MOD_ALT;
+                    if (kb.Modifiers.HasFlag(ModifierKeys.Control)) mods |= HotkeyModifiers.MOD_CONTROL;
+                    if (kb.Modifiers.HasFlag(ModifierKeys.Shift)) mods |= HotkeyModifiers.MOD_SHIFT;
+
+                    uint vk = (uint)KeyInterop.VirtualKeyFromKey(kb.Key);
+                    if (!Hotkey.IsHotkeyAvailable(this, mods, vk))
+                    {
+                        string keyName = kb.Key.ToString();
+                        string modName = kb.Modifiers.ToString().Replace(", ", "+");
+                        conflicts.Add(modName + "+" + keyName);
+                        LogHelper.NewLog($"Hotkey conflict: {modName}+{keyName}");
+                    }
+                }
+            }
+            if (conflicts.Count > 0)
+            {
+                ShowNotification("快捷键冲突：" + string.Join("、", conflicts));
+                LogHelper.WriteLogToFile("Hotkey conflicts: " + string.Join(", ", conflicts), LogHelper.LogType.Info);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -328,7 +359,7 @@ namespace Ink_Anything
             ToggleSwitchShowButtonEraser.IsOn = Settings.Appearance.IsShowEraserButton;
 
             PptNavigationBtn.Visibility =
-                Settings.PowerPointSettings.IsShowPPTNavigation ? Visibility.Visible : Visibility.Collapsed;
+                Settings.PowerPointSettings.IsShowPPTNavigation && isInSlideShow ? Visibility.Visible : Visibility.Collapsed;
             ToggleSwitchShowButtonPPTNavigation.IsOn = Settings.PowerPointSettings.IsShowPPTNavigation;
 
             ComboBoxTheme.SelectedIndex = Settings.Appearance.Theme;
@@ -441,6 +472,8 @@ namespace Ink_Anything
                 }
 
                 ComboBoxPenStyle.SelectedIndex = Settings.Canvas.InkStyle;
+
+                ComboBoxTextCursorType.SelectedIndex = Settings.Canvas.TextCursorType;
 
                 ComboBoxEraserSize.SelectedIndex = Settings.Canvas.EraserSize;
 

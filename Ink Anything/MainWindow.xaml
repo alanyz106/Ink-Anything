@@ -46,6 +46,7 @@
         <RoutedUICommand x:Key="HotKey_DrawLine" Text=" "/>
         <RoutedUICommand x:Key="HotKey_Clear" Text=" "/>
         <RoutedUICommand x:Key="HotKey_Text" Text=" "/>
+        <RoutedUICommand x:Key="HotKey_SelectAll" Text=" "/>
     </Window.Resources>
     <!--输入命令绑定-->
     <Window.InputBindings>
@@ -65,6 +66,8 @@
         <KeyBinding Modifiers="Alt" Key="V" Command="{StaticResource HotKey_Hide}" />
         <KeyBinding Modifiers="Alt" Key="L" Command="{StaticResource HotKey_DrawLine}" />
         <KeyBinding Modifiers="Alt" Key="T" Command="{StaticResource HotKey_Text}" />
+        <KeyBinding Modifiers="Control" Key="A" Command="{StaticResource HotKey_SelectAll}" />
+        <KeyBinding Modifiers="Alt" Key="Q" Command="{StaticResource HotKey_ChangeToSelect}" />
     </Window.InputBindings>
     <!--命令执行方法绑定-->
     <Window.CommandBindings>
@@ -98,6 +101,12 @@
         <CommandBinding Command="{StaticResource HotKey_DrawLine}"
                         CanExecute="CommandBinding_CanExecute"
                         Executed="KeyDrawLine"/>
+        <CommandBinding Command="{StaticResource HotKey_SelectAll}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeySelectAll"/>
+        <CommandBinding Command="{StaticResource HotKey_ChangeToSelect}"
+                        CanExecute="CommandBinding_CanExecute"
+                        Executed="KeyChangeToSelect"/>
         <CommandBinding Command="{StaticResource HotKey_ChangeToPen1}"
                         CanExecute="CommandBinding_CanExecute"
                         Executed="KeyChangeToPen1"/>
@@ -137,6 +146,7 @@
                    MouseDown="inkCanvas_MouseDown"
                    MouseMove="inkCanvas_MouseMove"
                    PreviewMouseMove="inkCanvas_PreviewMouseMove"
+                   PreviewMouseLeftButtonDown="inkCanvas_PreviewMouseLeftButtonDown"
                    MouseUp="inkCanvas_MouseUp"
                    ManipulationStarting="inkCanvas_ManipulationStarting"
                    SelectionChanged="inkCanvas_SelectionChanged"
@@ -154,6 +164,7 @@
             <Grid Name="GridInkCanvasSelectionCover"
                   MouseDown="GridInkCanvasSelectionCover_MouseDown"
                   MouseUp="GridInkCanvasSelectionCover_MouseUp"
+                  MouseMove="GridInkCanvasSelectionCover_MouseMove"
                   IsManipulationEnabled="True"
                   ManipulationStarting="GridInkCanvasSelectionCover_ManipulationStarting"
                   ManipulationCompleted="GridInkCanvasSelectionCover_ManipulationCompleted"
@@ -162,7 +173,7 @@
                   PreviewTouchUp="GridInkCanvasSelectionCover_PreviewTouchUp"
                   TouchDown="GridInkCanvasSelectionCover_TouchDown"
                   TouchUp="GridInkCanvasSelectionCover_TouchUp"
-                  Background="#01FFFFFF" Opacity="0.01" Visibility="Visible"/>
+                  Background="#01FFFFFF" Opacity="0.01" Visibility="Visible" Cursor="SizeAll"/>
             <Border Name="BorderStrokeSelectionControl"
                     HorizontalAlignment="Left" VerticalAlignment="Top" Margin="100,900,0,0"
                     CornerRadius="5" Height="80"
@@ -441,6 +452,11 @@
                                                FontSize="14"/>
                                 </StackPanel>
                                 <ui:ToggleSwitch Name="ToggleSwitchShowCursor" Header="显示画笔光标" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowCursor_Toggled"/>
+                                <TextBlock Text="文本模式光标" FontFamily="Microsoft YaHei UI" FontSize="14"/>
+                                <ComboBox Name="ComboBoxTextCursorType" FontFamily="Microsoft YaHei UI" SelectedIndex="0" SelectionChanged="ComboBoxTextCursorType_SelectionChanged">
+                                    <ComboBoxItem Content="箭头（默认）" FontFamily="Microsoft YaHei UI"/>
+                                    <ComboBoxItem Content="文本 (I)" FontFamily="Microsoft YaHei UI"/>
+                                </ComboBox>
                                 <TextBlock Text="画笔样式" FontFamily="Microsoft YaHei UI" FontSize="14"/>
                                 <ComboBox Name="ComboBoxPenStyle" FontFamily="Microsoft YaHei UI" SelectedIndex="0" SelectionChanged="ComboBoxPenStyle_SelectionChanged">
                                     <ComboBoxItem Content="模拟笔锋（根据墨迹尾部计算）" FontFamily="Microsoft YaHei UI"/>
@@ -626,7 +642,7 @@
         <Border x:Name="PptNavigationBtn" Visibility="Collapsed" Width="Auto" MinWidth="36" Height="36" CornerRadius="5" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                 Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
             <Grid MouseUp="PPTNavigationBtn_Click">
-                <TextBlock Name="PptNavigationTextBlock" FontSize="10" Foreground="{DynamicResource FloatBarForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="0/0" Margin="2"/>
+                <TextBlock Name="PptNavigationTextBlock" FontSize="10" Foreground="{DynamicResource FloatBarForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="" Margin="2"/>
             </Grid>
         </Border>
 
@@ -655,8 +671,6 @@
                                                         ToolTipService.ToolTip="当前是鼠标模式，点击切换到画笔模式 (Alt+S)">
                                 <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Edit}" Foreground="{DynamicResource FloatBarForeground}"/>
                             </local:ClickSensitiveGrid>
-                            <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Setting}" Foreground="{DynamicResource FloatBarForeground}" MouseUp="SymbolIconSettings_Click"
-                                           ToolTipService.ToolTip="设置：打开设置面板"/>
                         </ui:SimpleStackPanel>
                         <ui:SimpleStackPanel Name="StackPanelCanvasControls" Visibility="Visible" Margin="10,5,0,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
                             <local:ClickSensitiveGrid x:Name="GridModeToggle" Click="SymbolIconCursor_Click"
@@ -774,7 +788,7 @@
                                 </Border>
                             </Grid>
                             <ui:FontIcon Name="SymbolIconSelect" Glyph="{x:Static local:FluentIconGlyphs.SelectAll}" Foreground="{DynamicResource FloatBarForeground}" MouseUp="SymbolIconSelect_MouseUp"
-                                           ToolTipService.ToolTip="全选：选中所有墨迹进行操作"/>
+                                           ToolTipService.ToolTip="选择：点击进入选择模式，再点一次全选墨迹，再点一次退出选择模式 (Alt+Q 切换，Ctrl+A 全选)"/>
                             <Grid Margin="3,5,0,5">
                                 <Image MouseUp="ImageDrawShape_MouseUp" MouseDown="Border_MouseDown" Margin="-2.5" Source="{DynamicResource DrawShapeImageSource.DrawShapeIcon}"
                                        ToolTipService.ToolTip="图形工具：绘制直线、箭头、圆、椭圆等预设图形"/>
@@ -915,6 +929,8 @@
                             <ui:SimpleStackPanel Margin="0,5,10,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
                                 <ui:FontIcon Margin="0,0,0,0" Glyph="{x:Static local:FluentIconGlyphs.Camera}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconScreenshot_MouseUp"
                                                ToolTipService.ToolTip="截屏：截图并自动保存到图片文件夹 (Alt+C)"/>
+                                <ui:FontIcon Glyph="{x:Static local:FluentIconGlyphs.Setting}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconSettings_Click"
+                                               ToolTipService.ToolTip="设置：打开设置面板"/>
                                 <Grid Height="24" Width="20">
                                     <ui:FontIcon x:Name="SymbolIconTools" Glyph="{x:Static local:FluentIconGlyphs.Repair}" Foreground="{DynamicResource FloatBarForeground}" MouseDown="Border_MouseDown" MouseUp="SymbolIconTools_MouseUp"
                                                    ToolTipService.ToolTip="快捷设置：画笔粗细、墨迹识别、手指模式等"/>

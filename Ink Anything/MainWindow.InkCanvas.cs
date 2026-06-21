@@ -64,8 +64,23 @@ namespace Ink_Anything
             if (inkCanvas1 == null) return;
             if (Settings.Canvas.IsShowCursor)
             {
-                if (inkCanvas1.EditingMode == InkCanvasEditingMode.Ink || drawingShapeMode != 0)
+                if (inkCanvas1.EditingMode == InkCanvasEditingMode.Ink)
                 {
+                    inkCanvas1.Cursor = Cursors.Pen;
+                    inkCanvas1.ForceCursor = true;
+                }
+                else if (drawingShapeMode == 26) // 文本模式
+                {
+                    switch (Settings.Canvas.TextCursorType)
+                    {
+                        case 1: inkCanvas1.Cursor = Cursors.IBeam; break;
+                        default: inkCanvas1.Cursor = Cursors.Arrow; break;
+                    }
+                    inkCanvas1.ForceCursor = true;
+                }
+                else if (drawingShapeMode != 0) // 其他绘图模式
+                {
+                    inkCanvas1.Cursor = Cursors.Pen;
                     inkCanvas1.ForceCursor = true;
                 }
                 else
@@ -79,14 +94,7 @@ namespace Ink_Anything
             }
             if (inkCanvas1.EditingMode == InkCanvasEditingMode.Ink) forcePointEraser = !forcePointEraser;
 
-            if (inkCanvas.EditingMode == InkCanvasEditingMode.Select)
-            {
-                SymbolIconSelect.Foreground = new SolidColorBrush(Color.FromRgb(0, 136, 255));
-            }
-            else
-            {
-                SymbolIconSelect.Foreground = new SolidColorBrush(FloatBarForegroundColor);
-            }
+            UpdateSelectIconState();
         }
 
         #endregion Ink Anything
@@ -108,6 +116,13 @@ namespace Ink_Anything
 
         private void Main_Grid_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if ((e.Key == Key.Q || e.SystemKey == Key.Q) && Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+            {
+                BtnSelect_Click(null, null);
+                e.Handled = true;
+                return;
+            }
+
             if (PptNavigationBtn.Visibility != Visibility.Visible || currentMode != 0) return;
 
             if (e.Key == Key.Down || e.Key == Key.PageDown || e.Key == Key.Right || e.Key == Key.N || e.Key == Key.Space)
@@ -135,6 +150,16 @@ namespace Ink_Anything
             if (drawingShapeMode == 26)
             {
                 HandleTextModeKeyDown(e);
+            }
+            if (e.Key == Key.Back || e.Key == Key.Delete)
+            {
+                var selected = inkCanvas.GetSelectedStrokes();
+                if (selected.Count > 0)
+                {
+                    inkCanvas.Strokes.Remove(selected);
+                    GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
+                    e.Handled = true;
+                }
             }
         }
 
@@ -173,12 +198,30 @@ namespace Ink_Anything
             SymbolIconText_MouseUp(sender, null);
         }
 
+        private void KeySelectAll(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (inkCanvas.Strokes.Count == 0) return;
+            inkCanvas.EditingMode = InkCanvasEditingMode.Select;
+            _isSelectAllActive = true;
+            StrokeCollection allStrokes = new StrokeCollection();
+            foreach (Stroke stroke in inkCanvas.Strokes)
+            {
+                if (stroke.GetBounds().Width > 0 && stroke.GetBounds().Height > 0)
+                {
+                    allStrokes.Add(stroke);
+                }
+            }
+            if (allStrokes.Count > 0)
+            {
+                inkCanvas.Select(allStrokes);
+            }
+            UpdateSelectIconState();
+        }
+
         private void KeyChangeToSelect(object sender, ExecutedRoutedEventArgs e)
         {
-            if (inkCanvas.Visibility == Visibility.Visible)
-            {
-                BtnHideInkCanvas_Click(sender, e);
-            }
+            LogHelper.NewLog("KeyChangeToSelect triggered");
+            SymbolIconSelect_MouseUp(null, null);
         }
 
         private void KeyChangeToEraser(object sender, ExecutedRoutedEventArgs e)
