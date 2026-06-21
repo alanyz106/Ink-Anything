@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using WpfCanvas = System.Windows.Controls.Canvas;
@@ -19,7 +20,8 @@ namespace Ink_Anything
         private TextUndoStack textUndoStack = new TextUndoStack();
         private List<TextElementData> _currentTextElements = new List<TextElementData>();
 
-        private Border selectedTextBorder = null;
+        private List<Border> selectedTextBorders = new List<Border>();
+        private static readonly SolidColorBrush MultiSelectHighlightBrush = new SolidColorBrush(Color.FromArgb(0x30, 0x40, 0x9E, 0xFF));
         private WpfCanvas resizeHandlesCanvas = null;
         private bool isResizing = false;
         private Point resizeStartPoint;
@@ -36,6 +38,18 @@ namespace Ink_Anything
                     IsHitTestVisible = true,
                     Background = Brushes.Transparent,
                 };
+                // 让 Canvas 铺满 inkCanvas，确保空白区域也能接收鼠标事件
+                _textOverlayCanvas.Width = inkCanvas.ActualWidth > 0 ? inkCanvas.ActualWidth : 1920;
+                _textOverlayCanvas.Height = inkCanvas.ActualHeight > 0 ? inkCanvas.ActualHeight : 1080;
+                inkCanvas.SizeChanged += (s, e) =>
+                {
+                    if (_textOverlayCanvas != null)
+                    {
+                        _textOverlayCanvas.Width = e.NewSize.Width;
+                        _textOverlayCanvas.Height = e.NewSize.Height;
+                    }
+                };
+                _textOverlayCanvas.MouseLeftButtonDown += TextOverlayCanvas_MouseLeftButtonDown;
                 inkCanvas.Children.Add(_textOverlayCanvas);
             }
             return _textOverlayCanvas;
@@ -55,6 +69,15 @@ namespace Ink_Anything
 
         private void EnterTextMode()
         {
+            if (Main_Grid.Background == Brushes.Transparent)
+            {
+                Main_Grid.Background = new SolidColorBrush(StringToColor("#01FFFFFF"));
+                inkCanvas.Visibility = Visibility.Visible;
+                inkCanvas.IsHitTestVisible = true;
+                GridBackgroundCoverHolder.Visibility = Visibility.Visible;
+                StackPanelCanvasControls.Visibility = Visibility.Visible;
+                StackPanelCanvacMain.Visibility = Visibility.Collapsed;
+            }
             drawingShapeMode = 26;
             forceEraser = true;
             inkCanvas.EditingMode = InkCanvasEditingMode.None;
@@ -73,6 +96,75 @@ namespace Ink_Anything
             ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式 (Alt+T)");
             ClearResizeHandles();
             BtnPen_Click(null, null);
+        }
+
+        private void TextOverlayCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (drawingShapeMode != 26) return;
+
+            // 检查点击是否在某个文字边框上
+            var pos = e.GetPosition(_textOverlayCanvas);
+            foreach (var child in _textOverlayCanvas.Children)
+            {
+                if (child is Border border && border.Tag as string == "TextElement")
+                {
+                    var left = WpfCanvas.GetLeft(border);
+                    var top = WpfCanvas.GetTop(border);
+                    if (pos.X >= left && pos.X <= left + border.ActualWidth &&
+                        pos.Y >= top && pos.Y <= top + border.ActualHeight)
+                    {
+                        return; // 点在文字上，让文字的 MouseLeftButtonDown 处理
+                    }
+                }
+            }
+
+            // 点在空白处：清除选中状态，创建新文本框
+            if (selectedTextBorders.Count > 0)
+            {
+                foreach (var b in selectedTextBorders) b.Background = Brushes.Transparent;
+                ClearResizeHandlesOnly();
+                selectedTextBorders.Clear();
+            }
+
+            // 转换到 inkCanvas 坐标
+            var inkPos = e.GetPosition(inkCanvas);
+            HandleTextModeClick(inkPos);
+            e.Handled = true;
+        }
+
+        private void inkCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (drawingShapeMode != 26) return;
+
+            // 检查点击是否在某个文字边框上
+            var pos = e.GetPosition(inkCanvas);
+            if (_textOverlayCanvas != null)
+            {
+                foreach (var child in _textOverlayCanvas.Children)
+                {
+                    if (child is Border border && border.Tag as string == "TextElement")
+                    {
+                        var left = WpfCanvas.GetLeft(border);
+                        var top = WpfCanvas.GetTop(border);
+                        if (pos.X >= left && pos.X <= left + border.ActualWidth &&
+                            pos.Y >= top && pos.Y <= top + border.ActualHeight)
+                        {
+                            return; // 点在文字上，让文字自己的 MouseLeftButtonDown 处理
+                        }
+                    }
+                }
+            }
+
+            // 点在空白处：清除选中状态，创建新文本框
+            if (selectedTextBorders.Count > 0)
+            {
+                foreach (var b in selectedTextBorders) b.Background = Brushes.Transparent;
+                ClearResizeHandlesOnly();
+                selectedTextBorders.Clear();
+            }
+
+            HandleTextModeClick(pos);
+            e.Handled = true;
         }
 
         internal void HandleTextModeClick(Point pos)
@@ -233,10 +325,14 @@ namespace Ink_Anything
         #region 文本拖拽移动
 
         private bool isDraggingText = false;
+        private bool hasDraggedText = false;
         private Point textDragStartPoint;
-        private double textDragStartLeft;
-        private double textDragStartTop;
+        private Dictionary<Border, Point> textDragStartPositions = new Dictionary<Border, Point>();
         private Border draggingTextBorder = null;
+        private bool isDraggingClone = false;
+
+        private Border pendingCtrlCloneSource = null;
+        private Border pendingCtrlToggleBorder = null;
 
         private void TextBorder_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -245,6 +341,15 @@ namespace Ink_Anything
             var border = sender as Border;
             if (border == null) return;
 
+            // 双击：进入编辑模式（Ctrl按下时不触发，避免与多选/拖动冲突）
+            bool ctrlHeld = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            if (e.ClickCount == 2 && !ctrlHeld && border.Child is TextBlock)
+            {
+                EditTextBorder(border);
+                e.Handled = true;
+                return;
+            }
+
             e.Handled = true;
 
             if (currentEditingTextBorder != null && currentEditingTextBorder != border)
@@ -252,50 +357,169 @@ namespace Ink_Anything
                 CommitCurrentEditingText();
             }
 
-            SelectTextBorder(border);
+            bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+
+            if (isCtrlDown)
+            {
+                bool alreadySelected = selectedTextBorders.Contains(border);
+                if (!alreadySelected)
+                {
+                    // 未选中：立即加入选中，确保参与拖动
+                    selectedTextBorders.Add(border);
+                    border.Background = MultiSelectHighlightBrush;
+                    ClearResizeHandlesOnly();
+                    ShowResizeHandles(border);
+                }
+                // 只对原本就选中的文字记录待切换，MouseUp 未拖动时取消选中
+                pendingCtrlToggleBorder = alreadySelected ? border : null;
+                pendingCtrlCloneSource = border;
+            }
+            else
+            {
+                ToggleOrSelectTextBorder(border, false);
+                pendingCtrlToggleBorder = null;
+                pendingCtrlCloneSource = null;
+            }
+
+            draggingTextBorder = border;
+            isDraggingClone = false;
+            hasDraggedText = false;
 
             isDraggingText = true;
             textDragStartPoint = e.GetPosition(GetTextOverlayCanvas());
-            textDragStartLeft = WpfCanvas.GetLeft(border);
-            textDragStartTop = WpfCanvas.GetTop(border);
-            draggingTextBorder = border;
+            textDragStartPositions.Clear();
+            foreach (var b in selectedTextBorders)
+            {
+                textDragStartPositions[b] = new Point(WpfCanvas.GetLeft(b), WpfCanvas.GetTop(b));
+            }
             border.CaptureMouse();
         }
 
         private void TextBorder_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!isDraggingText || sender != draggingTextBorder) return;
+            if (!isDraggingText || selectedTextBorders.Count == 0) return;
 
             var currentPoint = e.GetPosition(GetTextOverlayCanvas());
             var dx = currentPoint.X - textDragStartPoint.X;
             var dy = currentPoint.Y - textDragStartPoint.Y;
 
-            WpfCanvas.SetLeft(draggingTextBorder, textDragStartLeft + dx);
-            WpfCanvas.SetTop(draggingTextBorder, textDragStartTop + dy);
+            if (Math.Abs(dx) > 2 || Math.Abs(dy) > 2)
+                hasDraggedText = true;
+
+            // Ctrl+拖动：超过阈值时克隆所有选中的文字
+            if (pendingCtrlCloneSource != null && !isDraggingClone && (Math.Abs(dx) > 3 || Math.Abs(dy) > 3))
+            {
+                var originals = selectedTextBorders.ToList();
+                foreach (var b in originals) b.Background = Brushes.Transparent;
+                selectedTextBorders.Clear();
+                textDragStartPositions.Clear();
+
+                foreach (var orig in originals)
+                {
+                    var clone = CloneTextBorder(orig);
+                    if (clone != null)
+                    {
+                        selectedTextBorders.Add(clone);
+                        textDragStartPositions[clone] = new Point(WpfCanvas.GetLeft(clone), WpfCanvas.GetTop(clone));
+                    }
+                }
+
+                isDraggingClone = true;
+                draggingTextBorder = selectedTextBorders.FirstOrDefault();
+                var last = GetLastSelectedTextBorder();
+                if (last != null)
+                {
+                    last.Background = MultiSelectHighlightBrush;
+                    ShowResizeHandles(last);
+                }
+
+                pendingCtrlCloneSource = null;
+            }
+
+            foreach (var b in selectedTextBorders)
+            {
+                if (textDragStartPositions.TryGetValue(b, out var startPos))
+                {
+                    WpfCanvas.SetLeft(b, startPos.X + dx);
+                    WpfCanvas.SetTop(b, startPos.Y + dy);
+                }
+            }
             UpdateResizeHandlesPosition();
         }
 
         private void TextBorder_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (!isDraggingText || sender != draggingTextBorder) return;
+            if (!isDraggingText) return;
 
             isDraggingText = false;
-            draggingTextBorder.ReleaseMouseCapture();
 
-            var newLeft = WpfCanvas.GetLeft(draggingTextBorder);
-            var newTop = WpfCanvas.GetTop(draggingTextBorder);
-
-            if (Math.Abs(newLeft - textDragStartLeft) > 1 || Math.Abs(newTop - textDragStartTop) > 1)
+            if (pendingCtrlToggleBorder != null)
             {
-                var data = FindTextElementData(draggingTextBorder);
-                if (data != null)
+                if (hasDraggedText)
                 {
-                    textUndoStack.CommitMove(data, textDragStartLeft, textDragStartTop, newLeft, newTop);
-                    data.X = newLeft;
-                    data.Y = newTop;
+                    // Ctrl+拖动完成：清除原始选中状态（克隆已在 MouseMove 中处理）
+                    foreach (var b in selectedTextBorders) b.Background = Brushes.Transparent;
+                    ClearResizeHandlesOnly();
+                    selectedTextBorders.Clear();
+                }
+                else
+                {
+                    // Ctrl+点击未拖动：切换选中状态
+                    if (selectedTextBorders.Contains(pendingCtrlToggleBorder))
+                    {
+                        selectedTextBorders.Remove(pendingCtrlToggleBorder);
+                        pendingCtrlToggleBorder.Background = Brushes.Transparent;
+                        ClearResizeHandlesOnly();
+                        var last = GetLastSelectedTextBorder();
+                        if (last != null) ShowResizeHandles(last);
+                    }
+                }
+            }
+            pendingCtrlToggleBorder = null;
+            pendingCtrlCloneSource = null;
+
+            if (draggingTextBorder != null)
+            {
+                draggingTextBorder.ReleaseMouseCapture();
+            }
+
+            foreach (var b in selectedTextBorders)
+            {
+                if (textDragStartPositions.TryGetValue(b, out var startPos))
+                {
+                    var newLeft = WpfCanvas.GetLeft(b);
+                    var newTop = WpfCanvas.GetTop(b);
+
+                    if (Math.Abs(newLeft - startPos.X) > 1 || Math.Abs(newTop - startPos.Y) > 1)
+                    {
+                        if (isDraggingClone)
+                        {
+                            // 克隆体拖拽结束，提交 Add
+                            var cloneData = new TextElementData
+                            {
+                                Content = (b.Child as TextBlock)?.Text ?? "",
+                                X = newLeft,
+                                Y = newTop,
+                                FontSize = (b.Child as TextBlock)?.FontSize ?? 24,
+                                ColorHex = BrushToHex((b.Child as TextBlock)?.Foreground ?? Brushes.Black),
+                            };
+                            textUndoStack.CommitAdd(cloneData);
+                        }
+                        else
+                        {
+                            var data = FindTextElementData(b);
+                            if (data != null)
+                            {
+                                textUndoStack.CommitMove(data, startPos.X, startPos.Y, newLeft, newTop);
+                                data.X = newLeft;
+                                data.Y = newTop;
+                            }
+                        }
+                    }
                 }
             }
 
+            isDraggingClone = false;
             draggingTextBorder = null;
         }
 
@@ -307,12 +531,59 @@ namespace Ink_Anything
             var dx = e.DeltaManipulation.Translation.X;
             var dy = e.DeltaManipulation.Translation.Y;
 
-            var left = WpfCanvas.GetLeft(border) + dx;
-            var top = WpfCanvas.GetTop(border) + dy;
-
-            WpfCanvas.SetLeft(border, left);
-            WpfCanvas.SetTop(border, top);
+            // 多选时移动所有选中的文字
+            if (selectedTextBorders.Contains(border))
+            {
+                foreach (var b in selectedTextBorders)
+                {
+                    WpfCanvas.SetLeft(b, WpfCanvas.GetLeft(b) + dx);
+                    WpfCanvas.SetTop(b, WpfCanvas.GetTop(b) + dy);
+                }
+            }
+            else
+            {
+                WpfCanvas.SetLeft(border, WpfCanvas.GetLeft(border) + dx);
+                WpfCanvas.SetTop(border, WpfCanvas.GetTop(border) + dy);
+            }
             UpdateResizeHandlesPosition();
+        }
+
+        private Border CloneTextBorder(Border source)
+        {
+            var srcText = source.Child as TextBlock;
+            if (srcText == null) return null;
+
+            var textBlock = new TextBlock
+            {
+                Text = srcText.Text,
+                FontSize = srcText.FontSize,
+                Foreground = srcText.Foreground,
+                FontFamily = srcText.FontFamily,
+                TextWrapping = TextWrapping.Wrap,
+                Padding = new Thickness(2, 1, 2, 1),
+            };
+
+            var border = new Border
+            {
+                Child = textBlock,
+                Tag = "TextElement",
+                Cursor = Cursors.SizeAll,
+                Background = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+            };
+
+            var overlay = GetTextOverlayCanvas();
+            overlay.Children.Add(border);
+            WpfCanvas.SetLeft(border, WpfCanvas.GetLeft(source) + 10);
+            WpfCanvas.SetTop(border, WpfCanvas.GetTop(source) + 10);
+
+            border.MouseLeftButtonDown += TextBorder_MouseLeftButtonDown;
+            border.MouseLeftButtonUp += TextBorder_MouseLeftButtonUp;
+            border.MouseMove += TextBorder_MouseMove;
+            border.MouseRightButtonUp += TextBorder_MouseRightButtonUp;
+            border.ManipulationDelta += TextBorder_ManipulationDelta;
+
+            return border;
         }
 
         #endregion
@@ -325,6 +596,7 @@ namespace Ink_Anything
             EditTextBorder(sender as Border);
             e.Handled = true;
         }
+
 
         private void EditTextBorder(Border border)
         {
@@ -351,7 +623,7 @@ namespace Ink_Anything
                 MinWidth = 30,
                 MinHeight = 20,
                 TextWrapping = TextWrapping.Wrap,
-                AcceptsReturn = true,
+                AcceptsReturn = false,
                 Padding = new Thickness(2, 1, 2, 1),
                 CaretBrush = foreground,
             };
@@ -426,15 +698,19 @@ namespace Ink_Anything
         {
             if (e.Key == Key.Delete || e.Key == Key.Back)
             {
-                if (selectedTextBorder != null)
+                if (selectedTextBorders.Count > 0)
                 {
-                    var data = FindTextElementData(selectedTextBorder);
-                    if (data != null)
+                    var overlay = GetTextOverlayCanvas();
+                    foreach (var border in selectedTextBorders.ToList())
                     {
-                        textUndoStack.CommitRemove(data);
-                        _currentTextElements.Remove(data);
+                        var data = FindTextElementData(border);
+                        if (data != null)
+                        {
+                            textUndoStack.CommitRemove(data);
+                            _currentTextElements.Remove(data);
+                        }
+                        overlay.Children.Remove(border);
                     }
-                    GetTextOverlayCanvas().Children.Remove(selectedTextBorder);
                     ClearResizeHandles();
                     e.Handled = true;
                 }
@@ -474,7 +750,7 @@ namespace Ink_Anything
                 }
                 _textOverlayCanvas.Children.Remove(border);
             }
-            if (selectedTextBorder != null && toRemove.Contains(selectedTextBorder))
+            if (selectedTextBorders.Any(b => toRemove.Contains(b)))
             {
                 ClearResizeHandles();
             }
@@ -482,12 +758,42 @@ namespace Ink_Anything
 
         #region 选中和缩放手柄
 
-        private void SelectTextBorder(Border border)
+        private Border GetLastSelectedTextBorder()
         {
-            if (selectedTextBorder == border) return;
-            ClearResizeHandles();
-            selectedTextBorder = border;
-            ShowResizeHandles(border);
+            return selectedTextBorders.Count > 0 ? selectedTextBorders[selectedTextBorders.Count - 1] : null;
+        }
+
+        private void ToggleOrSelectTextBorder(Border border, bool isCtrlDown)
+        {
+            if (!isCtrlDown)
+            {
+                // 无Ctrl：清空之前的选择，只选当前
+                foreach (var b in selectedTextBorders) b.Background = Brushes.Transparent;
+                selectedTextBorders.Clear();
+                ClearResizeHandlesOnly();
+                selectedTextBorders.Add(border);
+                border.Background = MultiSelectHighlightBrush;
+                ShowResizeHandles(border);
+            }
+            else
+            {
+                // Ctrl：切换选中状态
+                if (selectedTextBorders.Contains(border))
+                {
+                    selectedTextBorders.Remove(border);
+                    border.Background = Brushes.Transparent;
+                    ClearResizeHandlesOnly();
+                    var last = GetLastSelectedTextBorder();
+                    if (last != null) ShowResizeHandles(last);
+                }
+                else
+                {
+                    selectedTextBorders.Add(border);
+                    border.Background = MultiSelectHighlightBrush;
+                    ClearResizeHandlesOnly();
+                    ShowResizeHandles(border);
+                }
+            }
         }
 
         private void ShowResizeHandles(Border border)
@@ -537,12 +843,13 @@ namespace Ink_Anything
 
         private void UpdateResizeHandlesPosition()
         {
-            if (resizeHandlesCanvas == null || selectedTextBorder == null) return;
+            var target = GetLastSelectedTextBorder();
+            if (resizeHandlesCanvas == null || target == null) return;
 
-            var left = WpfCanvas.GetLeft(selectedTextBorder);
-            var top = WpfCanvas.GetTop(selectedTextBorder);
-            var right = left + selectedTextBorder.ActualWidth;
-            var bottom = top + selectedTextBorder.ActualHeight;
+            var left = WpfCanvas.GetLeft(target);
+            var top = WpfCanvas.GetTop(target);
+            var right = left + target.ActualWidth;
+            var bottom = top + target.ActualHeight;
 
             var handles = resizeHandlesCanvas.Children.OfType<Border>().ToList();
             if (handles.Count < 4) return;
@@ -559,14 +866,20 @@ namespace Ink_Anything
             WpfCanvas.SetTop(handle, top);
         }
 
-        private void ClearResizeHandles()
+        private void ClearResizeHandlesOnly()
         {
             if (resizeHandlesCanvas != null)
             {
                 GetTextOverlayCanvas().Children.Remove(resizeHandlesCanvas);
                 resizeHandlesCanvas = null;
             }
-            selectedTextBorder = null;
+        }
+
+        private void ClearResizeHandles()
+        {
+            ClearResizeHandlesOnly();
+            foreach (var b in selectedTextBorders) b.Background = Brushes.Transparent;
+            selectedTextBorders.Clear();
         }
 
         private void ResizeHandle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -858,7 +1171,7 @@ namespace Ink_Anything
                 inkCanvas.Children.Remove(_textOverlayCanvas);
                 _textOverlayCanvas = null;
             }
-            selectedTextBorder = null;
+            selectedTextBorders.Clear();
             resizeHandlesCanvas = null;
             currentEditingTextBorder = null;
             _currentTextElements.Clear();
