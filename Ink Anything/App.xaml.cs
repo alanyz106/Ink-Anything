@@ -72,6 +72,13 @@ namespace Ink_Anything
             try
             {
                 JObject release = JObject.Parse(args.RemoteData);
+
+                if (release["message"] != null)
+                {
+                    LogHelper.NewLog("GitHub API 返回错误: " + release["message"]);
+                    return;
+                }
+
                 string tagName = release["tag_name"]?.ToString() ?? "";
                 string version = tagName.TrimStart('v');
 
@@ -100,8 +107,9 @@ namespace Ink_Anything
                     };
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                LogHelper.NewLog("AutoUpdater 解析更新信息失败: " + ex.ToString());
             }
         }
 

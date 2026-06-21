@@ -1,9 +1,12 @@
 using AutoUpdaterDotNET;
 using Ink_Anything.Helpers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -502,22 +505,95 @@ namespace Ink_Anything
             BtnCheckUpdate.IsEnabled = false;
             BtnCheckUpdate.Content = "检查中...";
 
-            AutoUpdater.CheckForUpdateEvent += OnCheckForUpdateComplete;
-            AutoUpdater.Start("https://api.github.com/repos/alanyz106/Ink-Anything/releases/latest");
+            System.Threading.ThreadPool.QueueUserWorkItem(_ => CheckForUpdate());
         }
 
-        private void OnCheckForUpdateComplete(UpdateInfoEventArgs args)
+        private void CheckForUpdate()
         {
-            AutoUpdater.CheckForUpdateEvent -= OnCheckForUpdateComplete;
-            Dispatcher.Invoke(() =>
+            try
             {
-                BtnCheckUpdate.IsEnabled = true;
-                BtnCheckUpdate.Content = "检查更新";
-                if (!args.IsUpdateAvailable)
+                string localVersionString = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                Version localVersion = new Version(localVersionString);
+
+                var request = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/alanyz106/Ink-Anything/releases/latest");
+                request.UserAgent = "Ink-Anything";
+                request.Method = "GET";
+                request.Timeout = 10000;
+
+                string responseText;
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var reader = new StreamReader(response.GetResponseStream()))
                 {
-                    ShowNewMessage("当前已是最新版本");
+                    responseText = reader.ReadToEnd();
                 }
-            });
+
+                JObject release = JObject.Parse(responseText);
+                string tagName = release["tag_name"]?.ToString() ?? "";
+                string remoteVersionStr = tagName.TrimStart('v');
+
+                if (string.IsNullOrEmpty(remoteVersionStr))
+                {
+                    Dispatcher.Invoke(() => ShowNewMessage("检查更新失败：无法获取远程版本信息"));
+                    return;
+                }
+
+                Version remoteVersion = new Version(remoteVersionStr);
+
+                if (remoteVersion.CompareTo(localVersion) > 0)
+                {
+                    string downloadUrl = "";
+                    string changelog = release["html_url"]?.ToString() ?? "";
+                    foreach (var asset in release["assets"] ?? new JArray())
+                    {
+                        string name = asset["name"]?.ToString() ?? "";
+                        if (name.Contains("Setup") && name.EndsWith(".exe"))
+                        {
+                            downloadUrl = asset["browser_download_url"]?.ToString() ?? "";
+                            break;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(downloadUrl))
+                    {
+                        string finalUrl = downloadUrl;
+                        string finalChangelog = changelog;
+                        string finalVersion = remoteVersionStr;
+                        Dispatcher.Invoke(() =>
+                        {
+                            var updateArgs = new UpdateInfoEventArgs
+                            {
+                                CurrentVersion = finalVersion,
+                                DownloadURL = finalUrl,
+                                ChangelogURL = finalChangelog,
+                                Mandatory = new Mandatory { Value = false },
+                                InstallerArgs = "/VERYSILENT /SUPPRESSMSGBOXES /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS"
+                            };
+                            AutoUpdater.ShowUpdateForm(updateArgs);
+                        });
+                    }
+                    else
+                    {
+                        Dispatcher.Invoke(() => ShowNewMessage("发现新版本 v" + remoteVersionStr + "，但未找到安装包"));
+                    }
+                }
+                else
+                {
+                    Dispatcher.Invoke(() => ShowNewMessage("当前已是最新版本"));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.NewLog("检查更新失败: " + ex.ToString());
+                Dispatcher.Invoke(() => ShowNewMessage("检查更新失败，请检查网络连接后重试"));
+            }
+            finally
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    BtnCheckUpdate.IsEnabled = true;
+                    BtnCheckUpdate.Content = "检查更新";
+                });
+            }
         }
 
         #endregion
