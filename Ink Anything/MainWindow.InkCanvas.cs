@@ -218,25 +218,38 @@ namespace Ink_Anything
         private void KeySelectAll(object sender, ExecutedRoutedEventArgs e)
         {
             if (inkCanvas.Strokes.Count == 0 && (_textOverlayCanvas == null || _textOverlayCanvas.Children.Count == 0)) return;
+            if (!_isInSelectionMode)
+            {
+                _previousDrawingShapeMode = drawingShapeMode;
+                drawingShapeMode = 0;
+                _selectionScope = (_previousDrawingShapeMode == 26) ? SelectionScope.Text : SelectionScope.Ink;
+            }
             _isInSelectionMode = true;
             inkCanvas.EditingMode = InkCanvasEditingMode.None;
             if (_textOverlayCanvas != null)
-                _textOverlayCanvas.Background = null;
+                _textOverlayCanvas.Background = (_selectionScope == SelectionScope.Text) ? Brushes.Transparent : null;
             RegisterRubberBandHandlers();
             _isSelectAllActive = true;
-            StrokeCollection allStrokes = new StrokeCollection();
-            foreach (Stroke stroke in inkCanvas.Strokes)
+
+            if (_selectionScope == SelectionScope.Text)
             {
-                if (stroke.GetBounds().Width > 0 && stroke.GetBounds().Height > 0)
+                SelectAllTextElements();
+            }
+            else
+            {
+                StrokeCollection allStrokes = new StrokeCollection();
+                foreach (Stroke stroke in inkCanvas.Strokes)
                 {
-                    allStrokes.Add(stroke);
+                    if (stroke.GetBounds().Width > 0 && stroke.GetBounds().Height > 0)
+                    {
+                        allStrokes.Add(stroke);
+                    }
+                }
+                if (allStrokes.Count > 0)
+                {
+                    inkCanvas.Select(allStrokes);
                 }
             }
-            if (allStrokes.Count > 0)
-            {
-                inkCanvas.Select(allStrokes);
-            }
-            SelectAllTextElements();
             UpdateSelectIconState();
         }
 

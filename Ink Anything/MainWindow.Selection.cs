@@ -259,8 +259,12 @@ namespace Ink_Anything
 
             var pos = e.GetPosition(inkCanvas);
 
-            // 点击在文字上时不做框选（由 TextInput 的 handler 处理）
-            if (FindTextBorderAtPoint(pos) != null) return;
+            // 墨迹选择模式下点击文字不做特殊处理（由 rubber band 统一处理）
+            if (_selectionScope != SelectionScope.Ink)
+            {
+                // 点击在文字上时不做框选（由 TextInput 的 handler 处理）
+                if (FindTextBorderAtPoint(pos) != null) return;
+            }
 
             // 点击空白区域时清除文字选中
             ClearTextSelection();
@@ -305,34 +309,15 @@ namespace Ink_Anything
 
         private void PerformRubberBandSelection(Rect selRect)
         {
-            // 选中范围内的墨迹
-            var selectedStrokes = new StrokeCollection();
-            foreach (Stroke stroke in inkCanvas.Strokes)
+            if (_selectionScope == SelectionScope.Text)
             {
-                var strokeBounds = stroke.GetBounds();
-                if (strokeBounds.Width > 0 && strokeBounds.Height > 0 && selRect.IntersectsWith(strokeBounds))
-                {
-                    selectedStrokes.Add(stroke);
-                }
-            }
-            if (selectedStrokes.Count > 0)
-            {
-                inkCanvas.Select(selectedStrokes);
-                // 选中范围内的文字（inkCanvas_SelectionChanged 中也会调用 SelectTextsWithinStrokeBounds，
-                // 但这里也显式选中，确保文字选中效果立即生效）
-                SelectTextsInRect(selRect);
-            }
-            else
-            {
-                // 没有墨迹被选中，清除墨迹选中状态
+                // 文字选择模式：只选中范围内的文字
                 isProgramChangeStrokeSelection = true;
                 inkCanvas.Select(new StrokeCollection());
                 isProgramChangeStrokeSelection = false;
 
-                // 选中范围内的文字
                 SelectTextsInRect(selRect);
 
-                // 仅选中文字时，显示覆盖层（覆盖层已支持文字拖拽）和选中矩形
                 if (selectedTextBorders.Count > 0)
                 {
                     ShowMultiTextSelectionRect();
@@ -342,6 +327,29 @@ namespace Ink_Anything
                 else
                 {
                     HideMultiTextSelectionRect();
+                }
+            }
+            else
+            {
+                // 墨迹选择模式：只选中范围内的墨迹
+                var selectedStrokes = new StrokeCollection();
+                foreach (Stroke stroke in inkCanvas.Strokes)
+                {
+                    var strokeBounds = stroke.GetBounds();
+                    if (strokeBounds.Width > 0 && strokeBounds.Height > 0 && selRect.IntersectsWith(strokeBounds))
+                    {
+                        selectedStrokes.Add(stroke);
+                    }
+                }
+                if (selectedStrokes.Count > 0)
+                {
+                    inkCanvas.Select(selectedStrokes);
+                }
+                else
+                {
+                    isProgramChangeStrokeSelection = true;
+                    inkCanvas.Select(new StrokeCollection());
+                    isProgramChangeStrokeSelection = false;
                 }
             }
         }
@@ -578,6 +586,9 @@ namespace Ink_Anything
             }
         }
 
+        private enum SelectionScope { Ink, Text }
+        private SelectionScope _selectionScope = SelectionScope.Ink;
+
         private bool _isSelectAllActive = false;
 
         private bool _isInSelectionMode = false;
@@ -603,27 +614,48 @@ namespace Ink_Anything
                 {
                     // 部分选中状态 → 全选
                     _isSelectAllActive = true;
-                    StrokeCollection selectedStrokes = new StrokeCollection();
-                    foreach (Stroke stroke in inkCanvas.Strokes)
+                    if (_selectionScope == SelectionScope.Text)
                     {
-                        if (stroke.GetBounds().Width > 0 && stroke.GetBounds().Height > 0)
-                        {
-                            selectedStrokes.Add(stroke);
-                        }
+                        // 文本选择模式：只全选文字
+                        SelectAllTextElements();
                     }
-                    inkCanvas.Select(selectedStrokes);
-                    SelectAllTextElements();
+                    else
+                    {
+                        // 墨迹选择模式：只全选墨迹
+                        StrokeCollection selectedStrokes = new StrokeCollection();
+                        foreach (Stroke stroke in inkCanvas.Strokes)
+                        {
+                            if (stroke.GetBounds().Width > 0 && stroke.GetBounds().Height > 0)
+                            {
+                                selectedStrokes.Add(stroke);
+                            }
+                        }
+                        inkCanvas.Select(selectedStrokes);
+                    }
                 }
             }
             else
             {
                 // 非选择模式 → 进入选择模式
+                // 根据进入前的模式决定选择范围：文本模式(26)进来只选文字，否则只选墨迹
+                _selectionScope = (_previousDrawingShapeMode == 26) ? SelectionScope.Text : SelectionScope.Ink;
                 _isSelectAllActive = false;
                 _isInSelectionMode = true;
                 inkCanvas.EditingMode = InkCanvasEditingMode.None;
                 if (_textOverlayCanvas != null)
-                    _textOverlayCanvas.Background = null;
+                    _textOverlayCanvas.Background = (_selectionScope == SelectionScope.Text) ? Brushes.Transparent : null;
                 RegisterRubberBandHandlers();
+                // 更新文本图标：文本选择范围用浅蓝高亮，墨迹选择范围恢复默认
+                if (_selectionScope == SelectionScope.Text)
+                {
+                    SymbolIconText.Foreground = new SolidColorBrush(Color.FromRgb(0x7C, 0xB9, 0xE8));
+                    ToolTipService.SetToolTip(SymbolIconText, "文本选择：再次点击进入墨迹选择 (Alt+T)");
+                }
+                else
+                {
+                    SymbolIconText.Foreground = (Brush)FindResource("FloatBarForeground");
+                    ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式 (Alt+T)");
+                }
             }
             UpdateSelectIconState();
         }
@@ -634,7 +666,7 @@ namespace Ink_Anything
             _isInSelectionMode = false;
             UnregisterRubberBandHandlers();
             HideRubberBand();
-            // 恢复到进入选择模式之前的模式（如文本模式 drawingShapeMode=26）
+            // 恢复到进入选择模式之前的模式
             drawingShapeMode = _previousDrawingShapeMode;
             if (drawingShapeMode == 26)
             {
@@ -650,11 +682,59 @@ namespace Ink_Anything
             {
                 inkCanvas.ForceCursor = false;
                 inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                // 退出到非文本模式时，恢复文本图标默认颜色
+                SymbolIconText.Foreground = (Brush)FindResource("FloatBarForeground");
+                ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式 (Alt+T)");
             }
             inkCanvas.IsManipulationEnabled = true;
             ClearTextSelection();
             if (_textOverlayCanvas != null)
                 _textOverlayCanvas.Background = Brushes.Transparent;
+        }
+
+        /// <summary>
+        /// 在选择模式中切换选择范围（墨迹↔文字），切换到目标范围的部分选中状态
+        /// </summary>
+        private void SwitchSelectionScope(SelectionScope newScope)
+        {
+            if (!_isInSelectionMode || _selectionScope == newScope) return;
+
+            // 清除当前所有选中
+            isProgramChangeStrokeSelection = true;
+            inkCanvas.Select(new StrokeCollection());
+            isProgramChangeStrokeSelection = false;
+            ClearTextSelection();
+            HideMultiTextSelectionRect();
+
+            _selectionScope = newScope;
+            _isSelectAllActive = false;
+
+            // 同步更新退出选择模式时恢复的模式
+            _previousDrawingShapeMode = (newScope == SelectionScope.Text) ? 26 : 0;
+
+            // 更新文本覆盖层点击穿透（文字选择模式需要可点击，墨迹选择模式不需要）
+            if (_textOverlayCanvas != null)
+                _textOverlayCanvas.Background = (newScope == SelectionScope.Text) ? Brushes.Transparent : null;
+
+            // 更新光标
+            if (newScope == SelectionScope.Text)
+            {
+                inkCanvas.ForceCursor = true;
+                inkCanvas.Cursor = Cursors.Arrow;
+                // 文本选择范围：浅蓝高亮文本图标
+                SymbolIconText.Foreground = new SolidColorBrush(Color.FromRgb(0x7C, 0xB9, 0xE8));
+                ToolTipService.SetToolTip(SymbolIconText, "文本选择：再次点击进入墨迹选择 (Alt+T)");
+            }
+            else
+            {
+                inkCanvas.ForceCursor = false;
+                // 墨迹选择范围：恢复文本图标默认颜色
+                SymbolIconText.Foreground = (Brush)FindResource("FloatBarForeground");
+                ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式 (Alt+T)");
+            }
+
+            UpdateSelectionControlVisibility();
+            UpdateSelectIconState();
         }
 
         internal void UpdateSelectIconState()
@@ -663,16 +743,21 @@ namespace Ink_Anything
             {
                 // 非选择模式：默认颜色
                 SymbolIconSelect.Foreground = new SolidColorBrush(FloatBarForegroundColor);
+                ToolTipService.SetToolTip(SymbolIconSelect, "选择：点击进入选择模式，再点一次全选，再点一次退出 (Alt+Q)");
             }
             else if (_isSelectAllActive)
             {
                 // 全选状态：深蓝高亮
                 SymbolIconSelect.Foreground = new SolidColorBrush(Color.FromRgb(0, 136, 255));
+                string mode = _selectionScope == SelectionScope.Text ? "文字" : "墨迹";
+                ToolTipService.SetToolTip(SymbolIconSelect, $"已全选所有{ mode }：再次点击退出选择模式 (Alt+Q)");
             }
             else
             {
                 // 部分选中状态：浅蓝高亮
                 SymbolIconSelect.Foreground = new SolidColorBrush(Color.FromRgb(0x7C, 0xB9, 0xE8));
+                string mode = _selectionScope == SelectionScope.Text ? "文字" : "墨迹";
+                ToolTipService.SetToolTip(SymbolIconSelect, $"选择模式（仅{ mode }）：点击全选所有{ mode } (Alt+Q)");
             }
         }
 
@@ -697,7 +782,9 @@ namespace Ink_Anything
                 inkCanvas.ReleaseMouseCapture();
                 BorderStrokeSelectionClone.Background = Brushes.Transparent;
                 isStrokeSelectionCloneOn = false;
-                SelectTextsWithinStrokeBounds();
+                BorderStrokeSelectionControl.Visibility = Visibility.Visible;
+                if (_selectionScope != SelectionScope.Text)
+                    SelectTextsWithinStrokeBounds();
                 updateBorderStrokeSelectionControlLocation();
             }
             UpdateSelectIconState();
@@ -1191,6 +1278,7 @@ namespace Ink_Anything
 
         private void SelectTextsWithinStrokeBounds()
         {
+            if (_selectionScope == SelectionScope.Ink) return;
             if (_textOverlayCanvas == null) return;
             var bounds = inkCanvas.GetSelectionBounds();
             if (double.IsNaN(bounds.Left)) return;
@@ -1236,7 +1324,8 @@ namespace Ink_Anything
         {
             bool hasStrokeSelection = inkCanvas.GetSelectedStrokes().Count > 0;
             bool hasTextSelection = selectedTextBorders.Count > 0;
-            BorderStrokeSelectionControl.Visibility = (hasStrokeSelection || hasTextSelection)
+            // 墨迹悬浮工具栏（复制、旋转、镜像等）只在墨迹选中时显示
+            BorderStrokeSelectionControl.Visibility = hasStrokeSelection
                 ? Visibility.Visible : Visibility.Collapsed;
             if (hasStrokeSelection || hasTextSelection)
                 GridInkCanvasSelectionCover.Visibility = Visibility.Visible;

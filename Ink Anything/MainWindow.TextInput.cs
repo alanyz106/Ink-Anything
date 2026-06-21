@@ -57,7 +57,12 @@ namespace Ink_Anything
 
         private void SymbolIconText_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (drawingShapeMode == 26)
+            if (_isInSelectionMode)
+            {
+                // 在选择模式中：切换选择范围（墨迹↔文字），进入部分选中状态
+                SwitchSelectionScope(_selectionScope == SelectionScope.Text ? SelectionScope.Ink : SelectionScope.Text);
+            }
+            else if (drawingShapeMode == 26)
             {
                 ExitTextMode();
             }
@@ -137,20 +142,24 @@ namespace Ink_Anything
             // 选择模式下：检查是否点击了文字 Border
             if (_isInSelectionMode && _textOverlayCanvas != null)
             {
-                var selPos = e.GetPosition(inkCanvas);
-                bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-                Border hitBorder = FindTextBorderAtPoint(selPos);
-                if (hitBorder != null)
+                // 墨迹选择模式下不处理文字点击
+                if (_selectionScope != SelectionScope.Ink)
                 {
-                    if (inkCanvas.GetSelectedStrokes().Count > 0)
+                    var selPos = e.GetPosition(inkCanvas);
+                    bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+                    Border hitBorder = FindTextBorderAtPoint(selPos);
+                    if (hitBorder != null)
                     {
-                        // 有墨迹选中：让 cover 的 handler 统一处理墨迹+文字拖拽
+                        if (inkCanvas.GetSelectedStrokes().Count > 0)
+                        {
+                            // 有墨迹选中：让 cover 的 handler 统一处理墨迹+文字拖拽
+                            return;
+                        }
+                        // 纯文字选中：preview handler 处理选中和拖拽
+                        HandleSelectionTextClick(hitBorder, isCtrlDown, selPos);
+                        e.Handled = true;
                         return;
                     }
-                    // 纯文字选中：preview handler 处理选中和拖拽
-                    HandleSelectionTextClick(hitBorder, isCtrlDown, selPos);
-                    e.Handled = true;
-                    return;
                 }
                 ClearTextSelection();
             }
