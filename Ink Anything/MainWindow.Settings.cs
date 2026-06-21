@@ -94,7 +94,7 @@ namespace Ink_Anything
             SaveSettingsToFile();
 
             PptNavigationBtn.Visibility =
-                Settings.PowerPointSettings.IsShowPPTNavigation ? Visibility.Visible : Visibility.Collapsed;
+                Settings.PowerPointSettings.IsShowPPTNavigation && isInSlideShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -124,6 +124,14 @@ namespace Ink_Anything
         {
             if (!isLoaded) return;
             Settings.Canvas.InkStyle = ComboBoxPenStyle.SelectedIndex;
+            SaveSettingsToFile();
+        }
+
+        private void ComboBoxTextCursorType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.Canvas.TextCursorType = ComboBoxTextCursorType.SelectedIndex;
+            inkCanvas_EditingModeChanged(inkCanvas, null);
             SaveSettingsToFile();
         }
 
