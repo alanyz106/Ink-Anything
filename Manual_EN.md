@@ -40,7 +40,9 @@ The unified ink writing experience across slideshow and whiteboard/blackboard mo
 * Select and transform strokes: zoom, rotate, move, clone
 * Two-finger gesture zoom/rotate/pan across the full canvas
 * **Eraser 3-state toggle**: Stroke erase ↔ Partial erase ↔ Exit eraser
-* **Text Input**: Add text anywhere on the canvas with drag, resize, color, undo/redo support
+* **Text Input**: Add text anywhere on the canvas with drag, resize, color, undo/redo support; Ctrl+click to multi-select, Ctrl+drag to clone text
+* **Enhanced Stroke Selection**: Drag to move selected strokes, Ctrl+drag to clone; select button 3-state toggle (enter → select all → exit), icon color indicator (deep blue = all selected, light blue = partial)
+* **Hotkey Conflict Detection**: Auto-detects and notifies on startup if hotkeys conflict with other software
 * Shape drawing (long-press to keep selected):
   Straight line, dashed line, arrow line, parallel lines
   Ellipse (with/without foci), hyperbola, parabola
@@ -79,12 +81,15 @@ The unified ink writing experience across slideshow and whiteboard/blackboard mo
 * **Add text**: Left-click anywhere on the canvas, a text box appears — start typing
 * **Submit text**: Press Enter, or click elsewhere to auto-submit
 * **Line break**: Press Shift+Enter while editing to insert a line break
-* **Edit text**: In text mode, right-click a submitted text element to re-edit
+* **Edit text**: In text mode, double-click a submitted text element to re-edit (or right-click)
 * **Move text**: In text mode, left-click and drag a submitted text element to move it
+* **Multi-select text**: Ctrl+click text elements to select multiple
+* **Clone text by drag**: After multi-selecting, Ctrl+drag to clone all selected text to a new position
 * **Resize text**: Click a text element to show resize handles at the corners — drag to adjust size (font size range: 8–200)
 * **Delete text**: Select then press Delete or Backspace, or use the eraser to erase
 * **Text color**: Follows the current pen color
 * **Text size**: Adjustable in the quick settings panel (range: 12–72, default: 24), or fine-tune via resize handles
+* **Text cursor**: Switchable between arrow and I-beam cursor in settings
 * **Exit text mode**: Tap the text icon again, press Alt+T, or press Escape
 
 ### Drawing Preset Shapes
@@ -100,8 +105,15 @@ The unified ink writing experience across slideshow and whiteboard/blackboard mo
 
 ### Selection Operations
 * Tap the select button to enter selection mode, then drag to select multiple strokes
+* **Select button 3-state toggle**: First tap enters selection mode → second tap selects all → third tap exits selection mode
 * The floating toolbar shows operation buttons: Clone, Clone to New Page, Rotate (45°/90°), Flip (horizontal/vertical), Stroke Width Adjust (enlarge/shrink/restore), Delete
+* **Drag to move**: After selecting strokes, drag to move them
+* **Ctrl+drag to clone**: Hold Ctrl and drag to copy selected strokes to a new position
+* **Deselect**: Click outside the selected area to deselect
+* Ctrl+A to select all strokes
+* Delete/Backspace to delete selected strokes
 * Supports two-finger gesture operations on selected strokes (zoom, move, rotate)
+* Selection icon color: deep blue = all selected, light blue = partial selection
 
 ### PPT Slideshow Mode
 * **Page Navigation**: When no ink is on screen, swipe with multiple fingers, use on-screen controls, or keyboard arrow keys
@@ -141,14 +153,17 @@ The unified ink writing experience across slideshow and whiteboard/blackboard mo
 | Alt+V | Show/hide floating toolbar |
 | Alt+L | Draw straight line |
 | Alt+T | Text input mode |
+| Alt+Q | Toggle selection mode |
 | Alt+1 | Switch to black pen |
 | Alt+2 | Switch to red pen |
 | Alt+3 | Switch to green pen |
 | Alt+4 | Switch to blue pen |
 | Alt+5 | Switch to yellow pen |
 | Alt+6 | Switch to white pen |
+| Ctrl+A | Select all strokes |
 | Ctrl+Z | Undo (prioritizes text operations) |
 | Ctrl+Y | Redo (prioritizes text operations) |
+| Delete / Backspace | Delete selected strokes or text |
 | Shift+Esc | Exit/end slideshow |
 | Escape | Exit current mode |
 
@@ -180,3 +195,6 @@ The unified ink writing experience across slideshow and whiteboard/blackboard mo
 7. Need to write text on the canvas? Press Alt+T to enter text mode, click anywhere to type — supports drag-to-move and resize handles.
 8. Quick color switching: press Alt+1~6 to switch between black, red, green, blue, yellow, and white.
 9. Floating toolbar in the way? Press Alt+V to quickly hide/show it.
+10. Need to copy multiple text elements? Hold Ctrl and click to multi-select, then Ctrl+drag to clone all selected.
+11. Need to select all ink quickly? Press Ctrl+A, or double-tap the select button.
+12. Startup shows "hotkey conflict"? Another app is using the same shortcut — change it there or ignore the warning.
