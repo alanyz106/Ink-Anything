@@ -227,8 +227,7 @@ namespace Ink_Anything
             LoadSettings();
             if (Environment.Is64BitProcess)
             {
-                TabBtnInkToShape.Visibility = Visibility.Collapsed;
-                PanelInkToShape.Visibility = Visibility.Collapsed;
+                PanelInkToShapeSettings.Visibility = Visibility.Collapsed;
             }
 
             ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;

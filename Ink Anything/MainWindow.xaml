@@ -441,8 +441,7 @@
 
         <Border Name="BorderSettings" Background="White" BorderBrush="Black"
                 BorderThickness="1" CornerRadius="10" ui:ThemeManager.RequestedTheme="Light"
-                Width="400" Height="500" HorizontalAlignment="Center"
-                Margin="0,80,0,120" Visibility="Visible">
+                Width="400" Height="500" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60"/>
@@ -469,11 +468,9 @@
                                 <RadioButton Name="TabBtnBehavior" Content="行为" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked" IsChecked="True"/>
                                 <RadioButton Name="TabBtnCanvas" Content="画板" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnGesture" Content="手势" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
-                                <RadioButton Name="TabBtnInkToShape" Content="识别" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
-                                <RadioButton Name="TabBtnAppearance" Content="外观" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
+                                                                <RadioButton Name="TabBtnAppearance" Content="外观" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnPowerPoint" Content="PPT" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnAdvanced" Content="高级" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
-                                <RadioButton Name="TabBtnReset" Content="重置" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnAutomation" Content="自动" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                             </StackPanel>
                         </ScrollViewer>
@@ -488,6 +485,22 @@
                                 <ui:ToggleSwitch Name="ToggleSwitchRunAtStartup" Header="开机时运行" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchRunAtStartup_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchAutoHideCanvas" Header="自动隐藏画板" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchAutoHideCanvas_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchAutoEnterModeFinger" Header="自动进入手指模式" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchAutoEnterModeFinger_Toggled"/>
+                                <StackPanel>
+                                    <TextBlock FontSize="14" Margin="0,12,0,12"
+                                        Text="重置设置为推荐设置"/>
+                                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="12">
+                                        <Button Content="重置" Width="100" FontFamily="Microsoft YaHei UI" Click="BtnResetToSuggestion_Click" Margin="0,0,0,0"/>
+                                        <ui:FontIcon Name="SymbolIconResetSuggestionComplete" Glyph="{x:Static local:FluentIconGlyphs.Accept}" Visibility="Collapsed"/>
+                                    </ui:SimpleStackPanel>
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock FontSize="14" Margin="0,0,0,12"
+                                        Text="重置设置为默认设置"/>
+                                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="12">
+                                        <Button Content="重置" Width="100" FontFamily="Microsoft YaHei UI" Click="BtnResetToDefault_Click" Margin="0,0,0,10"/>
+                                        <ui:FontIcon Name="SymbolIconResetDefaultComplete" Glyph="{x:Static local:FluentIconGlyphs.Accept}" Visibility="Collapsed"/>
+                                    </ui:SimpleStackPanel>
+                                </StackPanel>
                             </ui:SimpleStackPanel>
                         </StackPanel>
 
@@ -543,6 +556,10 @@
                                     <ComboBoxItem Content="否" FontFamily="Microsoft YaHei UI"/>
                                     <ComboBoxItem Content="每次询问" FontFamily="Microsoft YaHei UI"/>
                                 </ComboBox>
+                                <StackPanel Name="PanelInkToShapeSettings">
+                                    <TextBlock Text="墨迹识别功能目前处于开发阶段，目前可实现智能识别圆、三角形、&#x000A;矩形，并自动转换为规范图形。" Foreground="#666666"/>
+                                    <ui:ToggleSwitch Name="ToggleSwitchEnableInkToShape" Header="启用墨迹识别" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchEnableInkToShape_Toggled" IsOn="True"/>
+                                </StackPanel>
                             </ui:SimpleStackPanel>
                         </StackPanel>
 
@@ -555,14 +572,6 @@
                                 <ui:ToggleSwitch Name="ToggleSwitchEnableTwoFingerRotation" Header="允许双指旋转" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchEnableTwoFingerRotation_Toggled"/>
                                 <TextBlock Text="允许选中墨迹后对墨迹进行双指或多指缩放操作（此设置不受&#x201C;允许双指旋转&#x201D;设置的影响）" TextWrapping="Wrap" Foreground="#666666"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchEnableTwoFingerRotationOnSelection" Header="允许双指旋转选中的墨迹" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchEnableTwoFingerRotation_Toggled"/>
-                            </ui:SimpleStackPanel>
-                        </StackPanel>
-
-                        <!-- 内容面板：墨迹识别 -->
-                        <StackPanel Name="PanelInkToShape" Visibility="Collapsed">
-                            <ui:SimpleStackPanel Spacing="12">
-                                <TextBlock Text="墨迹识别功能目前处于开发阶段，目前可实现智能识别圆、三角形、&#x000A;矩形，并自动转换为规范图形。" Foreground="#666666"/>
-                                <ui:ToggleSwitch Name="ToggleSwitchEnableInkToShape" Header="启用墨迹识别" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchEnableInkToShape_Toggled" IsOn="True"/>
                             </ui:SimpleStackPanel>
                         </StackPanel>
 
@@ -633,28 +642,6 @@
                                 <ui:ToggleSwitch Name="ToggleSwitchEraserBindTouchMultiplier" Header="橡皮擦绑定触摸大小倍数" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" IsOn="False" Toggled="ToggleSwitchEraserBindTouchMultiplier_Toggled" Visibility="{Binding Path=Visibility, ElementName=TouchMultiplierSlider, Mode=OneWay}"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchIsQuadIR" Header="四边红外模式" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchIsQuadIR_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchIsLogEnabled" Header="记录日志" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" IsOn="True" Toggled="ToggleSwitchIsLogEnabled_Toggled"/>
-                            </ui:SimpleStackPanel>
-                        </StackPanel>
-
-                        <!-- 内容面板：重置 -->
-                        <StackPanel Name="PanelReset" Visibility="Collapsed">
-                            <ui:SimpleStackPanel Spacing="12">
-                                <StackPanel>
-                                    <TextBlock FontSize="14" Margin="0,0,0,12"
-                                        Text="重置设置为推荐设置"/>
-                                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="12">
-                                        <Button Content="重置" Width="100" FontFamily="Microsoft YaHei UI" Click="BtnResetToSuggestion_Click" Margin="0,0,0,0"/>
-                                        <ui:FontIcon Name="SymbolIconResetSuggestionComplete" Glyph="{x:Static local:FluentIconGlyphs.Accept}" Visibility="Collapsed"/>
-                                    </ui:SimpleStackPanel>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock FontSize="14" Margin="0,0,0,12"
-                                        Text="重置设置为默认设置"/>
-                                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="12">
-                                        <Button Content="重置" Width="100" FontFamily="Microsoft YaHei UI" Click="BtnResetToDefault_Click" Margin="0,0,0,10"/>
-                                        <ui:FontIcon Name="SymbolIconResetDefaultComplete" Glyph="{x:Static local:FluentIconGlyphs.Accept}" Visibility="Collapsed"/>
-                                    </ui:SimpleStackPanel>
-                                </StackPanel>
                             </ui:SimpleStackPanel>
                         </StackPanel>
 

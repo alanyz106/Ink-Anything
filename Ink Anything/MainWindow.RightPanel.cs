@@ -44,6 +44,22 @@ namespace Ink_Anything
             }
             else
             {
+                // 将设置面板定位在悬浮工具栏上方
+                double toolbarLeft = ViewboxFloatingBar.Margin.Left;
+                double toolbarTop = ViewboxFloatingBar.Margin.Top;
+                double toolbarWidth = ViewboxFloatingBar.ActualWidth > 0
+                    ? ViewboxFloatingBar.ActualWidth : 284;
+
+                double settingsLeft = toolbarLeft + (toolbarWidth - 400) / 2;
+                double settingsTop = toolbarTop - 500 - 15;
+
+                // 不超出屏幕边界
+                settingsLeft = Math.Max(5, Math.Min(settingsLeft,
+                    SystemParameters.WorkArea.Width - 400 - 5));
+                settingsTop = Math.Max(5, settingsTop);
+
+                BorderSettings.Margin = new Thickness(settingsLeft, settingsTop, 0, 0);
+
                 BorderSettings.Tag = Visibility.Visible;
                 BorderSettings.Visibility = Visibility.Visible;
                 BorderSettings.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(150)));

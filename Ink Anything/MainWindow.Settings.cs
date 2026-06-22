@@ -609,22 +609,18 @@ namespace Ink_Anything
             PanelBehavior.Visibility = Visibility.Collapsed;
             PanelCanvas.Visibility = Visibility.Collapsed;
             PanelGesture.Visibility = Visibility.Collapsed;
-            PanelInkToShape.Visibility = Visibility.Collapsed;
             PanelAppearance.Visibility = Visibility.Collapsed;
             PanelPowerPoint.Visibility = Visibility.Collapsed;
             PanelAdvanced.Visibility = Visibility.Collapsed;
-            PanelReset.Visibility = Visibility.Collapsed;
             PanelAutomation.Visibility = Visibility.Collapsed;
 
             // 根据选中的 RadioButton 显示对应面板
             if (TabBtnBehavior.IsChecked == true) PanelBehavior.Visibility = Visibility.Visible;
             else if (TabBtnCanvas.IsChecked == true) PanelCanvas.Visibility = Visibility.Visible;
             else if (TabBtnGesture.IsChecked == true) PanelGesture.Visibility = Visibility.Visible;
-            else if (TabBtnInkToShape.IsChecked == true) PanelInkToShape.Visibility = Visibility.Visible;
             else if (TabBtnAppearance.IsChecked == true) PanelAppearance.Visibility = Visibility.Visible;
             else if (TabBtnPowerPoint.IsChecked == true) PanelPowerPoint.Visibility = Visibility.Visible;
             else if (TabBtnAdvanced.IsChecked == true) PanelAdvanced.Visibility = Visibility.Visible;
-            else if (TabBtnReset.IsChecked == true) PanelReset.Visibility = Visibility.Visible;
             else if (TabBtnAutomation.IsChecked == true) PanelAutomation.Visibility = Visibility.Visible;
         }
 
