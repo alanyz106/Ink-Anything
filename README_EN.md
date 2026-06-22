@@ -12,26 +12,27 @@ A lightweight digital whiteboard in WPF/C#, with text input and deep optimizatio
 
 ## Features
 
-- Optimized support for Microsoft PowerPoint — auto-switches to whiteboard mode during slideshow, with page navigation and ink/text saving
-- Active Pen support (pressure sensitivity)
-- Fine nib for writing, flip the pen to use the eraser (not supported by Seewo Whiteboard 5)
-- Finger touch erasing
-- Multi-touch gesture support (zoom, pan, rotate)
-- Multi-page whiteboard management with unlimited canvas
-- Hand-drawn shape recognition (circle, rectangle, triangle, etc.) with auto-conversion to clean shapes
-- **Text Input**: Add text anywhere on the canvas — drag to move, resize handles, color changes, undo/redo, auto-saved in whiteboard and PPT modes; supports **Ctrl+click multi-select** and **Ctrl+drag to clone** text elements
-- **Eraser 3-state toggle**: Stroke erase ↔ Partial erase ↔ Exit eraser, supports erasing text elements
-- **Enhanced stroke selection**: Drag to move selected strokes, Ctrl+drag to clone, click outside to deselect; select button supports 3-state toggle (enter → select all → exit)
-- Floating toolbar with lock/unlock position
-- Countdown timer, random name picker, and other teaching tools
-- Screenshot with auto-save
-- Ink save and load
-- Ink replay
-- Dark / Light / Follow-system theme
-- Auto-start on boot
-- Global hotkeys (Alt+S/D/E/C/V/L/T/Q, Alt+1~6 for quick color switching, Ctrl+A select all)
-- Hotkey conflict detection on startup with notification
-- Works with other infrared touch screens
+- **Deep Microsoft PowerPoint integration**: Auto-switches to whiteboard mode during slideshow, page navigation, ink/text auto-save, hidden slide detection, playback position memory
+- **Three modes**: Slideshow mode (auto-save ink and text), Whiteboard/Blackboard mode (up to 99 pages), Screen Pen mode
+- **Active Pen / pressure sensitivity support**, fine nib for writing, flip for eraser
+- **Multi-touch gestures**: Two-finger zoom/pan/rotate, finger touch erasing
+- **Multi-page whiteboard** with independent ink and text data per page
+- **Text input**: Add text anywhere on canvas, drag to move, resize handles, color changes, undo/redo, Ctrl+multi-select, Ctrl+drag to clone
+- **Hand-drawn shape recognition**: Auto-detects circles, triangles, rectangles and converts to clean shapes; supports concentric/tangent circles and cross-section recognition
+- **Shape drawing tools**: Lines/arrows/dashed lines, ellipse/hyperbola/parabola (with optional foci), circle/dashed circle, cylinder/cone/cuboid, 2D/3D coordinate systems, parallel lines
+- **Selection mode separation**: Automatically distinguishes ink vs text selection scope; Alt+T toggles between them
+- **Eraser 3-state toggle**: Stroke erase ↔ Partial erase ↔ Exit eraser, supports erasing text
+- **Enhanced stroke selection**: Drag to move, Ctrl+drag to clone, 3-state select button (enter → select all → exit)
+- **Simulated calligraphy**: Speed-based or tail-based brush effects
+- **Settings page with tab layout**: Categorized tabs for all settings, built-in check-for-update button
+- **Auto-update**: Fetches updates from GitHub Releases, silent install via Inno Setup
+- **Floating toolbar**: Draggable, collapsible, lockable, with quick settings menu
+- **Teaching tools**: Countdown timer, random name picker (importable lists)
+- **Ink save/load/replay**, auto-save screenshots
+- **Theme switching**: Dark / Light / Follow-system
+- **Global hotkeys**: Alt+S/D/E/C/V/L/T/Q, Alt+1~6 for quick color switching, Ctrl+A/Z/Y
+- **Hotkey conflict detection** on startup
+- **Auto-start on boot**
 
 ## Keyboard Shortcuts
 
@@ -43,8 +44,8 @@ A lightweight digital whiteboard in WPF/C#, with text input and deep optimizatio
 | Alt+C | Screenshot |
 | Alt+V | Show/hide floating toolbar |
 | Alt+L | Draw straight line |
-| Alt+T | Text input mode |
-| Alt+Q | Toggle selection mode |
+| Alt+T | Text input mode (toggles ink↔text selection scope when in selection mode) |
+| Alt+Q | Toggle selection mode (toggles ink↔text selection scope when in selection mode) |
 | Alt+1~6 | Switch pen color (black/red/green/blue/yellow/white) |
 | Ctrl+A | Select all strokes |
 | Ctrl+Z | Undo |
