@@ -68,6 +68,11 @@ namespace Ink_Anything
             if (!isLoaded) return;
 
             Settings.Startup.IsAutoHideCanvas = ToggleSwitchAutoHideCanvas.IsOn;
+            if (ToggleSwitchAutoHideCanvas.IsOn && ToggleSwitchStartInTextMode.IsOn)
+            {
+                ToggleSwitchStartInTextMode.IsOn = false;
+                ShowNotification("自动隐藏画板与启动时进入文本模式不能同时开启");
+            }
             SaveSettingsToFile();
         }
 
@@ -90,7 +95,7 @@ namespace Ink_Anything
             Settings.PowerPointSettings.IsShowPPTNavigation = ToggleSwitchShowButtonPPTNavigation.IsOn;
             SaveSettingsToFile();
 
-            PptNavigationBtn.Visibility =
+            PptNavigationPanel.Visibility =
                 Settings.PowerPointSettings.IsShowPPTNavigation && isInSlideShow ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -217,10 +222,10 @@ namespace Ink_Anything
             SaveSettingsToFile();
         }
 
-        private void ToggleSwitchHideStrokeWhenSelecting_Toggled(object sender, RoutedEventArgs e)
+        private void ToggleSwitchHideInkOnMouseMode_Toggled(object sender, RoutedEventArgs e)
         {
             if (!isLoaded) return;
-            Settings.Canvas.HideStrokeWhenSelecting = ToggleSwitchHideStrokeWhenSelecting.IsOn;
+            Settings.Canvas.HideStrokeWhenSelecting = ToggleSwitchHideInkOnMouseMode.IsOn;
             SaveSettingsToFile();
         }
 
@@ -293,7 +298,6 @@ namespace Ink_Anything
             bool IsAutoKillPptService = Settings.Automation.IsAutoKillPptService;
             Settings = new Settings();
             Settings.Appearance.IsShowEraserButton = false;
-            Settings.Appearance.IsShowExitButton = false;
             Settings.Startup.IsAutoHideCanvas = true;
             Settings.Automation.IsAutoKillPptService = IsAutoKillPptService;
             Settings.Canvas.InkWidth = 2.5;
@@ -366,6 +370,18 @@ namespace Ink_Anything
         {
             if (!isLoaded) return;
             Settings.Advanced.IsLogEnabled = ToggleSwitchIsLogEnabled.IsOn;
+            SaveSettingsToFile();
+        }
+
+        private void ToggleSwitchStartInTextMode_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.Startup.IsStartInTextMode = ToggleSwitchStartInTextMode.IsOn;
+            if (ToggleSwitchStartInTextMode.IsOn && ToggleSwitchAutoHideCanvas.IsOn)
+            {
+                ToggleSwitchAutoHideCanvas.IsOn = false;
+                ShowNotification("自动隐藏画板与启动时进入文本模式不能同时开启");
+            }
             SaveSettingsToFile();
         }
 
@@ -489,7 +505,6 @@ namespace Ink_Anything
             PanelCanvas.Visibility = Visibility.Collapsed;
             PanelAppearance.Visibility = Visibility.Collapsed;
             PanelPowerPoint.Visibility = Visibility.Collapsed;
-            PanelAdvanced.Visibility = Visibility.Collapsed;
             PanelAutomation.Visibility = Visibility.Collapsed;
             PanelHotkeys.Visibility = Visibility.Collapsed;
 
@@ -498,7 +513,6 @@ namespace Ink_Anything
             else if (TabBtnCanvas.IsChecked == true) PanelCanvas.Visibility = Visibility.Visible;
             else if (TabBtnAppearance.IsChecked == true) PanelAppearance.Visibility = Visibility.Visible;
             else if (TabBtnPowerPoint.IsChecked == true) PanelPowerPoint.Visibility = Visibility.Visible;
-            else if (TabBtnAdvanced.IsChecked == true) PanelAdvanced.Visibility = Visibility.Visible;
             else if (TabBtnAutomation.IsChecked == true) PanelAutomation.Visibility = Visibility.Visible;
             else if (TabBtnHotkeys.IsChecked == true) PanelHotkeys.Visibility = Visibility.Visible;
         }

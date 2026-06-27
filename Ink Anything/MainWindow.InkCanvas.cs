@@ -29,6 +29,7 @@ namespace Ink_Anything
 
                 inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 inkCanvas.Gesture += InkCanvas_Gesture;
+                ColorSwitchCheck();
             }
             catch { }
         }
@@ -42,7 +43,7 @@ namespace Ink_Anything
                 foreach (GestureRecognitionResult gest in gestures)
                 {
                     //Trace.WriteLine(string.Format("Gesture: {0}, Confidence: {1}", gest.ApplicationGesture, gest.RecognitionConfidence));
-                    if (PptNavigationBtn.Visibility == Visibility.Visible)
+                    if (PptNavigationPanel.Visibility == Visibility.Visible)
                     {
                         if (gest.ApplicationGesture == ApplicationGesture.Left)
                         {
@@ -144,7 +145,7 @@ namespace Ink_Anything
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (PptNavigationBtn.Visibility != Visibility.Visible || currentMode != 0) return;
+            if (PptNavigationPanel.Visibility != Visibility.Visible || currentMode != 0) return;
             if (e.Delta >= 120)
             {
                 BtnPPTSlidesUp_Click(null, null);
@@ -171,7 +172,7 @@ namespace Ink_Anything
                 return;
             }
 
-            if (PptNavigationBtn.Visibility != Visibility.Visible || currentMode != 0) return;
+            if (PptNavigationPanel.Visibility != Visibility.Visible || currentMode != 0) return;
 
             if (e.Key == Key.Down || e.Key == Key.PageDown || e.Key == Key.Right || e.Key == Key.N || e.Key == Key.Space)
             {

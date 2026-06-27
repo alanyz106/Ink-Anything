@@ -229,7 +229,7 @@ namespace Ink_Anything
                 //BtnPPTSlideShow.Visibility = Visibility.Collapsed;
                 isInSlideShow = false;
                 FloatBarPPTExitContainer.Visibility = Visibility.Collapsed;
-                PptNavigationBtn.Visibility = Visibility.Collapsed;
+                PptNavigationPanel.Visibility = Visibility.Collapsed;
             });
         }
 
@@ -330,9 +330,8 @@ namespace Ink_Anything
 
                 isInSlideShow = true;
                 FloatBarPPTExitContainer.Visibility = Visibility.Visible;
-                PptNavigationBtn.Visibility =
+                PptNavigationPanel.Visibility =
                     Settings.PowerPointSettings.IsShowPPTNavigation ? Visibility.Visible : Visibility.Collapsed;
-
                 if (Settings.PowerPointSettings.IsShowCanvasAtNewSlideShow && Main_Grid.Background == Brushes.Transparent)
                 {
                     if (currentMode != 0)
@@ -484,7 +483,7 @@ namespace Ink_Anything
 
                 isInSlideShow = false;
                 FloatBarPPTExitContainer.Visibility = Visibility.Collapsed;
-                PptNavigationBtn.Visibility = Visibility.Collapsed;
+                PptNavigationPanel.Visibility = Visibility.Collapsed;
 
                 if (currentMode != 0)
                 {

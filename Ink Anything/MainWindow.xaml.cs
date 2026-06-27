@@ -157,45 +157,15 @@ namespace Ink_Anything
                         Version version = Assembly.GetExecutingAssembly().GetName().Version;
 
                         string lastVersion = "";
-                        if (response.Contains("Special Version") && !File.Exists(App.RootPath + "Versions.ini"))
+                        try
                         {
-                            LogHelper.WriteLogToFile("Welcome Window Show Dialog", LogHelper.LogType.Event);
-
-                            if (response.Contains("Special Version Alhua"))
-                            {
-                                WelcomeWindow.IsNewBuilding = true;
-                            }
-                            new WelcomeWindow().ShowDialog();
+                            lastVersion = File.ReadAllText(App.RootPath + "Versions.ini");
                         }
-                        else
+                        catch { }
+                        if (!lastVersion.Contains(version.ToString()))
                         {
-                            try
-                            {
-                                lastVersion = File.ReadAllText(App.RootPath + "Versions.ini");
-                            }
-                            catch { }
-                            if (response.Contains("Special Version") && !lastVersion.Contains("NewWelcomeConfigured"))
-                            {
-                                LogHelper.WriteLogToFile("Welcome Window Show Dialog (Second time)", LogHelper.LogType.Event);
-
-                                if (response.Contains("Special Version Alhua"))
-                                {
-                                    WelcomeWindow.IsNewBuilding = true;
-                                }
-                                new WelcomeWindow().ShowDialog();
-                            }
-                            try
-                            {
-                                lastVersion = File.ReadAllText(App.RootPath + "Versions.ini");
-                            }
-                            catch { }
-                            if (!lastVersion.Contains(version.ToString()))
-                            {
-                                //LogHelper.WriteLogToFile("Change Log Window Show Dialog", LogHelper.LogType.Event);
-                                //new ChangeLogWindow().ShowDialog();
-                                lastVersion += "\n" + version.ToString();
-                                File.WriteAllText(App.RootPath + "Versions.ini", lastVersion.Trim());
-                            }
+                            lastVersion += "\n" + version.ToString();
+                            File.WriteAllText(App.RootPath + "Versions.ini", lastVersion.Trim());
                         }
                     });
                 }
@@ -328,9 +298,15 @@ namespace Ink_Anything
                 ToggleSwitchAutoHideCanvas.IsOn = false;
             }
 
+            ToggleSwitchStartInTextMode.IsOn = Settings.Startup.IsStartInTextMode;
+            if (isStartup && Settings.Startup.IsStartInTextMode)
+            {
+                EnterTextMode();
+            }
+
             ToggleSwitchShowButtonEraser.IsOn = Settings.Appearance.IsShowEraserButton;
 
-            PptNavigationBtn.Visibility =
+            PptNavigationPanel.Visibility =
                 Settings.PowerPointSettings.IsShowPPTNavigation && isInSlideShow ? Visibility.Visible : Visibility.Collapsed;
             ToggleSwitchShowButtonPPTNavigation.IsOn = Settings.PowerPointSettings.IsShowPPTNavigation;
 
@@ -508,11 +484,11 @@ namespace Ink_Anything
 
                 if (Settings.Canvas.HideStrokeWhenSelecting)
                 {
-                    ToggleSwitchHideStrokeWhenSelecting.IsOn = true;
+                    ToggleSwitchHideInkOnMouseMode.IsOn = true;
                 }
                 else
                 {
-                    ToggleSwitchHideStrokeWhenSelecting.IsOn = false;
+                    ToggleSwitchHideInkOnMouseMode.IsOn = false;
                 }
 
                 if (Settings.Canvas.UsingWhiteboard)

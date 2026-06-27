@@ -460,7 +460,7 @@ namespace Ink_Anything
             if (drawingShapeMode == 26)
             {
                 inkCanvas.EditingMode = InkCanvasEditingMode.None;
-                inkCanvas.ForceCursor = true;
+                inkCanvas.ForceCursor = false;
                 // 使用用户设置的光标类型
                 inkCanvas.Cursor = Settings.Canvas.TextCursorType == 1 ? Cursors.IBeam : Cursors.Arrow;
                 // 恢复文本图标高亮

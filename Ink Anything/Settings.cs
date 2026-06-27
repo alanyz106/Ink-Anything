@@ -57,20 +57,14 @@ namespace Ink_Anything
     {
         [JsonProperty("isAutoHideCanvas")]
         public bool IsAutoHideCanvas { get; set; } = true;
+        [JsonProperty("isStartInTextMode")]
+        public bool IsStartInTextMode { get; set; } = false;
     }
 
     public class Appearance
     {
-        [JsonProperty("isTransparentButtonBackground")]
-        public bool IsTransparentButtonBackground { get; set; } = true;
-        [JsonProperty("isShowExitButton")]
-        public bool IsShowExitButton { get; set; } = true;
         [JsonProperty("isShowEraserButton")]
-        public bool IsShowEraserButton { get; set; } = true;
-        [JsonProperty("isShowHideControlButton")]
-        public bool IsShowHideControlButton { get; set; } = false;
-        [JsonProperty("isShowLRSwitchButton")]
-        public bool IsShowLRSwitchButton { get; set; } = false;
+        public bool IsShowEraserButton { get; set; } = false;
         [JsonProperty("theme")]
         public int Theme { get; set; } = 0;
     }

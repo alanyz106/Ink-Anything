@@ -280,7 +280,7 @@
             </Border>
         </Grid>
 
-        <Grid Visibility="Collapsed">
+        <Grid Name="PptNavigationPanel" Visibility="Collapsed">
             <Grid Visibility="{Binding ElementName=GridBackgroundCoverHolder, Path=Visibility}">
                 <Viewbox Margin="10" Height="50" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
@@ -289,9 +289,9 @@
                                 <Image Source="{DynamicResource ResourceKey=PPTImageSource.HorizontalPreviousSlideNormal}"/>
                             </Grid>
                         </Border>
-                        <Border Visibility="{Binding ElementName=PptNavigationBtn, Path=Visibility}" Width="36" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
+                        <Border Width="36" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
                             <Grid MouseUp="PPTNavigationBtn_Click">
-                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{Binding ElementName=PptNavigationTextBlock, Path=Foreground}" FontSize="{Binding ElementName=PptNavigationTextBlock, Path=FontSize}" Text="{Binding ElementName=PptNavigationTextBlock, Path=Text}" />
+                                <TextBlock Name="PptNavigationTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource FloatBarForeground}" FontSize="10" Text="" Margin="2" />
                             </Grid>
                         </Border>
                         <Border Width="36" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
@@ -445,7 +445,6 @@
                                 <RadioButton Name="TabBtnCanvas" Content="画板" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                                                 <RadioButton Name="TabBtnAppearance" Content="外观" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnPowerPoint" Content="PPT" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
-                                <RadioButton Name="TabBtnAdvanced" Content="高级" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnAutomation" Content="自动" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnHotkeys" Content="快捷键" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                             </StackPanel>
@@ -460,6 +459,8 @@
                                 </ui:SimpleStackPanel>
                                 <ui:ToggleSwitch Name="ToggleSwitchRunAtStartup" Header="开机时运行" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchRunAtStartup_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchAutoHideCanvas" Header="自动隐藏画板" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchAutoHideCanvas_Toggled"/>
+                                <ui:ToggleSwitch Name="ToggleSwitchIsLogEnabled" Header="记录日志" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" IsOn="True" Toggled="ToggleSwitchIsLogEnabled_Toggled"/>
+                                <ui:ToggleSwitch Name="ToggleSwitchStartInTextMode" Header="启动时默认进入文本模式" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchStartInTextMode_Toggled"/>
                                 <StackPanel>
                                     <TextBlock FontSize="14" Margin="0,12,0,12"
                                         Text="重置设置为推荐设置"/>
@@ -521,7 +522,7 @@
                                     <ComboBoxItem Content="较大"  FontFamily="Microsoft YaHei UI"/>
                                     <ComboBoxItem Content="大"  FontFamily="Microsoft YaHei UI"/>
                                 </ComboBox>
-                                <ui:ToggleSwitch Name="ToggleSwitchHideStrokeWhenSelecting" Header="退出画板模式后隐藏墨迹" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchHideStrokeWhenSelecting_Toggled"/>
+                                <ui:ToggleSwitch Name="ToggleSwitchHideInkOnMouseMode" Header="退出画板模式后隐藏墨迹" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchHideInkOnMouseMode_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchUsingWhiteboard" Header="使用白板 (白色背景)" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchUsingWhiteboard_Toggled"/>
                                 <TextBlock Text="保留双曲线渐近线" FontFamily="Microsoft YaHei UI" FontSize="14"/>
                                 <ComboBox Name="ComboBoxHyperbolaAsymptoteOption" FontFamily="Microsoft YaHei UI" SelectedIndex="2" SelectionChanged="ComboBoxHyperbolaAsymptoteOption_SelectionChanged">
@@ -565,13 +566,6 @@
                                 <ui:ToggleSwitch Name="ToggleSwitchNotifyHiddenPage" Header="提示隐藏幻灯片" IsOn="True" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchNotifyHiddenPage_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchNoStrokeClearInPowerPoint" Header="退出画板模式时不清除笔迹" IsOn="True" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchNoStrokeClearInPowerPoint_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchShowStrokeOnSelectInPowerPoint" Header="退出画板模式时不隐藏笔迹" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchShowStrokeOnSelectInPowerPoint_Toggled"/>
-                            </ui:SimpleStackPanel>
-                        </StackPanel>
-
-                        <!-- 内容面板：高级 -->
-                        <StackPanel Name="PanelAdvanced" Visibility="Collapsed">
-                            <ui:SimpleStackPanel Spacing="12">
-                                <ui:ToggleSwitch Name="ToggleSwitchIsLogEnabled" Header="记录日志" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" IsOn="True" Toggled="ToggleSwitchIsLogEnabled_Toggled"/>
                             </ui:SimpleStackPanel>
                         </StackPanel>
 
@@ -700,13 +694,6 @@
             </Border>
         </Grid>
 
-
-        <Border x:Name="PptNavigationBtn" Visibility="Collapsed" Width="Auto" MinWidth="36" Height="36" CornerRadius="5" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
-            <Grid MouseUp="PPTNavigationBtn_Click">
-                <TextBlock Name="PptNavigationTextBlock" FontSize="10" Foreground="{DynamicResource FloatBarForeground}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="" Margin="2"/>
-            </Grid>
-        </Border>
 
         <Viewbox Name="ViewboxFloatingBar" Margin="100,10,-2000,-200" 
                  HorizontalAlignment="Left" Height="50" VerticalAlignment="Top">
