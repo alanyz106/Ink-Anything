@@ -671,113 +671,51 @@ namespace Ink_Anything
         {
             try
             {
-                if (dec.Count >= 1)
+                ManipulationDelta md = e.DeltaManipulation;
+                Vector trans = md.Translation;
+                double rotate = md.Rotation;
+                Vector scale = md.Scale;
+
+                Matrix m = new Matrix();
+
+                FrameworkElement fe = e.Source as FrameworkElement;
+                Point center = new Point(fe.ActualWidth / 2, fe.ActualHeight / 2);
+                center = new Point(inkCanvas.GetSelectionBounds().Left + inkCanvas.GetSelectionBounds().Width / 2,
+                    inkCanvas.GetSelectionBounds().Top + inkCanvas.GetSelectionBounds().Height / 2);
+                center = m.Transform(center);
+
+                m.Translate(trans.X, trans.Y);
+                m.ScaleAt(scale.X, scale.Y, center.X, center.Y);
+
+                StrokeCollection strokes = inkCanvas.GetSelectedStrokes();
+                if (StrokesSelectionClone.Count != 0)
                 {
-                    ManipulationDelta md = e.DeltaManipulation;
-                    Vector trans = md.Translation;
-                    double rotate = md.Rotation;
-                    Vector scale = md.Scale;
-
-                    Matrix m = new Matrix();
-
-                    FrameworkElement fe = e.Source as FrameworkElement;
-                    Point center = new Point(fe.ActualWidth / 2, fe.ActualHeight / 2);
-                    center = new Point(inkCanvas.GetSelectionBounds().Left + inkCanvas.GetSelectionBounds().Width / 2,
-                        inkCanvas.GetSelectionBounds().Top + inkCanvas.GetSelectionBounds().Height / 2);
-                    center = m.Transform(center);
-
-                    m.Translate(trans.X, trans.Y);
-                    m.ScaleAt(scale.X, scale.Y, center.X, center.Y);
-
-                    StrokeCollection strokes = inkCanvas.GetSelectedStrokes();
-                    if (StrokesSelectionClone.Count != 0)
-                    {
-                        strokes = StrokesSelectionClone;
-                    }
-                    else if (Settings.Gesture.IsEnableTwoFingerRotationOnSelection)
-                    {
-                        m.RotateAt(rotate, center.X, center.Y);
-                    }
-                    foreach (Stroke stroke in strokes)
-                    {
-                        stroke.Transform(m, false);
-
-                        try
-                        {
-                            stroke.DrawingAttributes.Width *= md.Scale.X;
-                            stroke.DrawingAttributes.Height *= md.Scale.Y;
-                        }
-                        catch { }
-                    }
-                    // 同步移动文字
-                    foreach (var b in _textManager.SelectedTextBorders)
-                    {
-                        WpfCanvas.SetLeft(b, WpfCanvas.GetLeft(b) + trans.X);
-                        WpfCanvas.SetTop(b, WpfCanvas.GetTop(b) + trans.Y);
-                    }
-                    updateBorderStrokeSelectionControlLocation();
+                    strokes = StrokesSelectionClone;
                 }
+                else
+                {
+                    m.RotateAt(rotate, center.X, center.Y);
+                }
+                foreach (Stroke stroke in strokes)
+                {
+                    stroke.Transform(m, false);
+
+                    try
+                    {
+                        stroke.DrawingAttributes.Width *= md.Scale.X;
+                        stroke.DrawingAttributes.Height *= md.Scale.Y;
+                    }
+                    catch { }
+                }
+                // 同步移动文字
+                foreach (var b in _textManager.SelectedTextBorders)
+                {
+                    WpfCanvas.SetLeft(b, WpfCanvas.GetLeft(b) + trans.X);
+                    WpfCanvas.SetTop(b, WpfCanvas.GetTop(b) + trans.Y);
+                }
+                updateBorderStrokeSelectionControlLocation();
             }
             catch { }
-        }
-
-        private void GridInkCanvasSelectionCover_TouchDown(object sender, TouchEventArgs e)
-        {
-        }
-
-        private void GridInkCanvasSelectionCover_TouchUp(object sender, TouchEventArgs e)
-        {
-        }
-
-        Point lastTouchPointOnGridInkCanvasCover = new Point(0, 0);
-        private void GridInkCanvasSelectionCover_PreviewTouchDown(object sender, TouchEventArgs e)
-        {
-            dec.Add(e.TouchDevice.Id);
-            if (dec.Count == 1)
-            {
-                TouchPoint touchPoint = e.GetTouchPoint(null);
-                centerPoint = touchPoint.Position;
-                lastTouchPointOnGridInkCanvasCover = touchPoint.Position;
-
-                if (isStrokeSelectionCloneOn)
-                {
-                    StrokeCollection strokes = inkCanvas.GetSelectedStrokes();
-                    isProgramChangeStrokeSelection = true;
-                    inkCanvas.Select(new StrokeCollection());
-                    StrokesSelectionClone = strokes.Clone();
-                    inkCanvas.Select(strokes);
-                    isProgramChangeStrokeSelection = false;
-                    inkCanvas.Strokes.Add(StrokesSelectionClone);
-                }
-            }
-        }
-
-        private void GridInkCanvasSelectionCover_PreviewTouchUp(object sender, TouchEventArgs e)
-        {
-            dec.Remove(e.TouchDevice.Id);
-            if (dec.Count >= 1) return;
-            isProgramChangeStrokeSelection = false;
-            if (lastTouchPointOnGridInkCanvasCover == e.GetTouchPoint(null).Position)
-            {
-                if (lastTouchPointOnGridInkCanvasCover.X < inkCanvas.GetSelectionBounds().Left ||
-                    lastTouchPointOnGridInkCanvasCover.Y < inkCanvas.GetSelectionBounds().Top ||
-                    lastTouchPointOnGridInkCanvasCover.X > inkCanvas.GetSelectionBounds().Right ||
-                    lastTouchPointOnGridInkCanvasCover.Y > inkCanvas.GetSelectionBounds().Bottom)
-                {
-                    inkCanvas.Select(new StrokeCollection());
-                    StrokesSelectionClone = new StrokeCollection();
-                }
-            }
-            else if (inkCanvas.GetSelectedStrokes().Count == 0)
-            {
-                GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
-                StrokesSelectionClone = new StrokeCollection();
-            }
-            else
-            {
-                GridInkCanvasSelectionCover.Visibility = Visibility.Visible;
-                StrokesSelectionClone = new StrokeCollection();
-            }
         }
 
         #region 统一选择：文字 + 墨迹

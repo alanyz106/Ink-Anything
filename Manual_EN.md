@@ -8,7 +8,7 @@
 
 ## What is Ink Anything? <span id='intro'></span>
 
-Ink Anything is a lightweight digital whiteboard optimized for Microsoft PowerPoint. It supports ink writing, text input, shape recognition, and multi-touch gestures.
+Ink Anything is a lightweight digital whiteboard optimized for Microsoft PowerPoint. It supports ink writing, text input, and shape recognition.
 
 ### Three Modes
 
@@ -29,7 +29,6 @@ The eraser icon cycles through three states:
 1. **Gray (Stroke Erase)**: Tap once — erases entire strokes
 2. **Blue (Partial Erase)**: Tap again — erases within the indicated area
 3. **Exit**: Tap once more to return to pen mode
-* Press palm on screen to erase (supported on most touch screens)
 * Eraser also works on text elements
 
 ### Text Input
@@ -75,7 +74,7 @@ The eraser icon cycles through three states:
 * Supports two-finger gestures on selected strokes (zoom, move, rotate)
 
 ### PPT Slideshow Mode
-* **Page navigation**: When no ink is on screen, swipe with multiple fingers, use on-screen controls, or keyboard arrow keys
+* **Page navigation**: Use on-screen controls or keyboard arrow keys
 * **Auto-save**: Ink and text are saved per slide; stroke folder is portable to other computers
 * Detects hidden slides and prompts to unhide
 * Remembers last playback position and offers to jump back
@@ -91,18 +90,17 @@ The eraser icon cycles through three states:
 * Draggable to any position on screen
 * Collapsible/expandable (Alt+V or tap the emoji icon)
 * Lockable to prevent accidental movement
-* Quick settings: pen width, text size, ink-to-shape toggle, finger mode toggle, ink save/load/replay, countdown timer, random name picker
+* Quick settings: pen width, text size, ink-to-shape toggle, ink save/load/replay, countdown timer, random name picker
 * Ink floating toolbar (clone/rotate/flip/delete) only shows when ink strokes are selected
 
 ### Settings Page
 Tap the gear icon to open settings. Tab-based layout:
-* **Behavior**: Canvas hiding, finger mode, startup behavior
+* **Behavior**: Canvas hiding, startup behavior
 * **Canvas**: Pen width, eraser type, cursor display
-* **Gesture**: Two-finger gestures (zoom/pan/rotate)
 * **Ink-to-Shape**: Shape recognition toggle
 * **Appearance**: Theme (light/dark/follow-system)
 * **PPT**: PowerPoint integration settings
-* **Advanced**: Special screens, touch sensitivity, logging
+* **Advanced**: Logging
 * **Automation**: Auto-kill processes, auto-save screenshots/ink
 * **Check for Updates**: Button at the top of settings page
 
@@ -161,8 +159,8 @@ All settings auto-save; some require restart.
 ## Tips <span id='skill'></span>
 1. Double-tap "Clear" to clear the screen and hide the whiteboard at the same time.
 2. Made a mistake? Press Ctrl+Z to undo, Ctrl+Y to redo.
-3. Running out of space? Swipe up with two fingers to pan, or pinch to zoom out.
-4. Flip the pen for eraser. Use a finger or tilt the pen tip for small areas, or the back of your hand for large areas.
+3. Running out of space? Use Ctrl+Z to undo and free up space.
+4. Can't find the eraser button? Use Alt+E to cycle eraser modes.
 5. Press Alt+T to enter text mode, click anywhere to type.
 6. Quick color switching: Alt+1~6.
 7. Floating toolbar in the way? Press Alt+V to hide/show.

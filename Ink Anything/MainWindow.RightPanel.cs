@@ -78,6 +78,7 @@ namespace Ink_Anything
         }
 
         bool forceEraser = false;
+        bool forcePointEraser = true;
 
         private void BtnErase_Click(object sender, RoutedEventArgs e)
         {
@@ -167,11 +168,6 @@ namespace Ink_Anything
                 BorderDrawShape.Visibility = Visibility.Collapsed;
             }
             GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
-            //Label.Content = "isSingleFingerDragMode=" + isSingleFingerDragMode.ToString();
-            if (isSingleFingerDragMode)
-            {
-                BtnFingerDragMode_Click(null, null);
-            }
             isLongPressSelected = false;
         }
 
@@ -266,22 +262,6 @@ namespace Ink_Anything
                 {
                     BorderPenColorWhite_MouseUp(null, null);
                 }
-        }
-
-        int BoundsWidth = 5;
-        private void ToggleSwitchModeFinger_Toggled(object sender, RoutedEventArgs e)
-        {
-            var toggle = sender as iNKORE.UI.WPF.Modern.Controls.ToggleSwitch;
-            if (toggle == null) return;
-
-            // 同步两个浮动栏手指模式开关
-            if (toggle != ToggleSwitchFloatBarModeFinger)
-                ToggleSwitchFloatBarModeFinger.IsOn = toggle.IsOn;
-            if (toggle != ToggleSwitchFloatBarQuickModeFinger)
-                ToggleSwitchFloatBarQuickModeFinger.IsOn = toggle.IsOn;
-
-            ToggleSwitchAutoEnterModeFinger.IsOn = toggle.IsOn;
-            BoundsWidth = toggle.IsOn ? 15 : 5;
         }
 
         private void BtnHideInkCanvas_Click(object sender, RoutedEventArgs e)

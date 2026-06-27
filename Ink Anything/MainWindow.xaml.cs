@@ -310,14 +310,6 @@ namespace Ink_Anything
             var loaded = SettingsManager.LoadFromFile(App.RootPath + settingsFileName);
             if (loaded != null) Settings = loaded;
 
-            if (Settings.Startup.IsAutoEnterModeFinger)
-            {
-                ToggleSwitchAutoEnterModeFinger.IsOn = true;
-            }
-            else
-            {
-                ToggleSwitchAutoEnterModeFinger.IsOn = false;
-            }
             if (Settings.Startup.IsAutoHideCanvas)
             {
                 if (isStartup)
@@ -361,71 +353,6 @@ namespace Ink_Anything
             else
             {
                 ToggleSwitchShowCanvasAtNewSlideShow.IsOn = false;
-            }
-
-            if (Settings.Gesture == null)
-            {
-                Settings.Gesture = new Gesture();
-            }
-            if (Settings.Gesture.IsDisableLockSmithByDefault)
-            {
-                ToggleSwitchDisableLockSmithByDefault.IsOn = true;
-                _lockSmith = false;
-                LockSmithSymbol.Glyph = FluentIconGlyphs.Pin;
-            }
-            else
-            {
-                ToggleSwitchDisableLockSmithByDefault.IsOn = false;
-                _lockSmith = true;
-                LockSmithSymbol.Glyph = FluentIconGlyphs.UnPin;
-            }
-            if (Settings.Gesture.IsEnableTwoFingerZoom)
-            {
-                ToggleSwitchEnableTwoFingerZoom.IsOn = true;
-            }
-            else
-            {
-                ToggleSwitchEnableTwoFingerZoom.IsOn = false;
-            }
-            if (Settings.Gesture.IsEnableTwoFingerTranslate)
-            {
-                ToggleSwitchEnableTwoFingerTranslate.IsOn = true;
-            }
-            else
-            {
-                ToggleSwitchEnableTwoFingerTranslate.IsOn = false;
-            }
-            if (Settings.Gesture.IsEnableTwoFingerRotation)
-            {
-                ToggleSwitchEnableTwoFingerRotation.IsOn = true;
-            }
-            else
-            {
-                ToggleSwitchEnableTwoFingerRotation.IsOn = false;
-            }
-            if (Settings.Gesture.IsEnableTwoFingerRotationOnSelection)
-            {
-                ToggleSwitchEnableTwoFingerRotationOnSelection.IsOn = true;
-            }
-            else
-            {
-                ToggleSwitchEnableTwoFingerRotationOnSelection.IsOn = false;
-            }
-            if (Settings.PowerPointSettings.IsEnableTwoFingerGestureInPresentationMode)
-            {
-                ToggleSwitchEnableTwoFingerGestureInPresentationMode.IsOn = true;
-            }
-            else
-            {
-                ToggleSwitchEnableTwoFingerGestureInPresentationMode.IsOn = false;
-            }
-            if (Settings.PowerPointSettings.IsEnableFingerGestureSlideShowControl)
-            {
-                ToggleSwitchEnableFingerGestureSlideShowControl.IsOn = true;
-            }
-            else
-            {
-                ToggleSwitchEnableFingerGestureSlideShowControl.IsOn = false;
             }
 
             if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\InkCanvas" + ".lnk"))
@@ -629,7 +556,6 @@ namespace Ink_Anything
 
             if (Settings.Advanced != null)
             {
-                TouchMultiplierSlider.Value = Settings.Advanced.TouchMultiplier;
                 if (Settings.Advanced.IsLogEnabled)
                 {
                     ToggleSwitchIsLogEnabled.IsOn = true;
@@ -638,26 +564,6 @@ namespace Ink_Anything
                 {
                     ToggleSwitchIsLogEnabled.IsOn = false;
                 }
-                if (Settings.Advanced.EraserBindTouchMultiplier)
-                {
-                    ToggleSwitchEraserBindTouchMultiplier.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchEraserBindTouchMultiplier.IsOn = false;
-                }
-
-                if (Settings.Advanced.IsSpecialScreen)
-                {
-                    ToggleSwitchIsSpecialScreen.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchIsSpecialScreen.IsOn = false;
-                }
-                TouchMultiplierSlider.Visibility = ToggleSwitchIsSpecialScreen.IsOn ? Visibility.Visible : Visibility.Collapsed;
-
-                ToggleSwitchIsQuadIR.IsOn = Settings.Advanced.IsQuadIR;
             }
             else
             {

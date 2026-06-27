@@ -14,8 +14,6 @@ A lightweight digital whiteboard in WPF/C#, with text input and deep optimizatio
 
 - **Deep Microsoft PowerPoint integration**: Auto-switches to whiteboard mode during slideshow, page navigation, ink/text auto-save, hidden slide detection, playback position memory
 - **Three modes**: Slideshow mode (auto-save ink and text), Whiteboard/Blackboard mode (up to 99 pages), Screen Pen mode
-- **Active Pen / pressure sensitivity support**, fine nib for writing, flip for eraser
-- **Multi-touch gestures**: Two-finger zoom/pan/rotate, finger touch erasing
 - **Multi-page whiteboard** with independent ink and text data per page
 - **Text input**: Add text anywhere on canvas, drag to move, resize handles, color changes, undo/redo, Ctrl+multi-select, Ctrl+drag to clone
 - **Hand-drawn shape recognition**: Auto-detects circles, triangles, rectangles and converts to clean shapes; supports concentric/tangent circles and cross-section recognition

@@ -71,14 +71,6 @@ namespace Ink_Anything
             SaveSettingsToFile();
         }
 
-        private void ToggleSwitchAutoEnterModeFinger_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.Startup.IsAutoEnterModeFinger = ToggleSwitchAutoEnterModeFinger.IsOn;
-            SaveSettingsToFile();
-        }
-
         #endregion
 
         #region Appearance
@@ -292,62 +284,6 @@ namespace Ink_Anything
 
         #endregion
 
-        #region Gesture
-
-
-        private void ToggleSwitchEnableFingerGestureSlideShowControl_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.PowerPointSettings.IsEnableFingerGestureSlideShowControl = ToggleSwitchEnableFingerGestureSlideShowControl.IsOn;
-
-            SaveSettingsToFile();
-        }
-
-        private void ToggleSwitchDisableLockSmithByDefault_Toggled(object sender, RoutedEventArgs e) {
-            if (!isLoaded) return;
-
-            Settings.Gesture.IsDisableLockSmithByDefault = ToggleSwitchDisableLockSmithByDefault.IsOn;
-
-            SaveSettingsToFile();
-        }
-
-        private void ToggleSwitchEnableTwoFingerZoom_Toggled(object sender, RoutedEventArgs e) {
-            if (!isLoaded) return;
-
-            Settings.Gesture.IsEnableTwoFingerZoom = ToggleSwitchEnableTwoFingerZoom.IsOn;
-
-            SaveSettingsToFile();
-        }
-
-        private void ToggleSwitchEnableTwoFingerTranslate_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.Gesture.IsEnableTwoFingerTranslate = ToggleSwitchEnableTwoFingerTranslate.IsOn;
-
-            SaveSettingsToFile();
-        }
-
-        private void ToggleSwitchEnableTwoFingerRotation_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.Gesture.IsEnableTwoFingerRotation = ToggleSwitchEnableTwoFingerRotation.IsOn;
-            Settings.Gesture.IsEnableTwoFingerRotationOnSelection = ToggleSwitchEnableTwoFingerRotationOnSelection.IsOn;
-
-            SaveSettingsToFile();
-        }
-
-        private void ToggleSwitchEnableTwoFingerGestureInPresentationMode_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-
-            Settings.PowerPointSettings.IsEnableTwoFingerGestureInPresentationMode = ToggleSwitchEnableTwoFingerGestureInPresentationMode.IsOn;
-
-            SaveSettingsToFile();
-        }
-
         #endregion
 
         #region Reset
@@ -425,45 +361,6 @@ namespace Ink_Anything
         #endregion
 
         #region Advanced
-
-        private void ToggleSwitchIsSpecialScreen_OnToggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-            Settings.Advanced.IsSpecialScreen = ToggleSwitchIsSpecialScreen.IsOn;
-            TouchMultiplierSlider.Visibility = ToggleSwitchIsSpecialScreen.IsOn ? Visibility.Visible : Visibility.Collapsed;
-            SaveSettingsToFile();
-        }
-
-        private void TouchMultiplierSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!isLoaded) return;
-            Settings.Advanced.TouchMultiplier = e.NewValue;
-            SaveSettingsToFile();
-        }
-
-        private void BorderCalculateMultiplier_TouchDown(object sender, TouchEventArgs e)
-        {
-            var args = e.GetTouchPoint(null).Bounds;
-            double value;
-            if (!Settings.Advanced.IsQuadIR) value = args.Width;
-            else value = Math.Sqrt(args.Width * args.Height); //四边红外
-
-            TextBlockShowCalculatedMultiplier.Text = (5 / (value * 1.1)).ToString();
-        }
-
-        private void ToggleSwitchEraserBindTouchMultiplier_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-            Settings.Advanced.EraserBindTouchMultiplier = ToggleSwitchEraserBindTouchMultiplier.IsOn;
-            SaveSettingsToFile();
-        }
-
-        private void ToggleSwitchIsQuadIR_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-            Settings.Advanced.IsQuadIR = ToggleSwitchIsQuadIR.IsOn;
-            SaveSettingsToFile();
-        }
 
         private void ToggleSwitchIsLogEnabled_Toggled(object sender, RoutedEventArgs e)
         {
@@ -590,7 +487,6 @@ namespace Ink_Anything
             // 隐藏所有面板
             PanelBehavior.Visibility = Visibility.Collapsed;
             PanelCanvas.Visibility = Visibility.Collapsed;
-            PanelGesture.Visibility = Visibility.Collapsed;
             PanelAppearance.Visibility = Visibility.Collapsed;
             PanelPowerPoint.Visibility = Visibility.Collapsed;
             PanelAdvanced.Visibility = Visibility.Collapsed;
@@ -600,7 +496,6 @@ namespace Ink_Anything
             // 根据选中的 RadioButton 显示对应面板
             if (TabBtnBehavior.IsChecked == true) PanelBehavior.Visibility = Visibility.Visible;
             else if (TabBtnCanvas.IsChecked == true) PanelCanvas.Visibility = Visibility.Visible;
-            else if (TabBtnGesture.IsChecked == true) PanelGesture.Visibility = Visibility.Visible;
             else if (TabBtnAppearance.IsChecked == true) PanelAppearance.Visibility = Visibility.Visible;
             else if (TabBtnPowerPoint.IsChecked == true) PanelPowerPoint.Visibility = Visibility.Visible;
             else if (TabBtnAdvanced.IsChecked == true) PanelAdvanced.Visibility = Visibility.Visible;
@@ -858,7 +753,5 @@ namespace Ink_Anything
         {
             e.Handled = true;
         }
-
-        #endregion
     }
 }

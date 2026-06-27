@@ -43,7 +43,6 @@ namespace Ink_Anything
             if (CheckBoxNewBuildingOptimization.IsChecked == true)
             {
                 MainWindow.Settings.Appearance.IsShowEraserButton = true;
-                MainWindow.Settings.Startup.IsAutoEnterModeFinger = true;
             }
 
             MainWindow.SaveSettingsToFile();

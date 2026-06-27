@@ -196,8 +196,6 @@ namespace Ink_Anything
             else
             {
                 //关闭黑板
-                if (isInMultiTouchMode) BorderMultiTouchMode_MouseUp(null, null);
-
                 if (!isInSlideShow)
                 {
                     if (pointDesktop != new Point(-1, -1))
@@ -536,6 +534,7 @@ namespace Ink_Anything
             }
         }
 
+        bool _lockSmith = false;
         private void SymbolIconPin_MouseUp(object sender, MouseButtonEventArgs e)
         {
             _lockSmith = !_lockSmith;

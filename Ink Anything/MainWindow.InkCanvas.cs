@@ -384,18 +384,6 @@ namespace Ink_Anything
         }
 
 
-        private void BtnFingerDragMode_Click(object sender, RoutedEventArgs e)
-        {
-            if (isSingleFingerDragMode)
-            {
-                isSingleFingerDragMode = false;
-            }
-            else
-            {
-                isSingleFingerDragMode = true;
-            }
-        }
-
         private void BtnUndo_Click(object sender, RoutedEventArgs e)
         {
             if (inkCanvas.GetSelectedStrokes().Count != 0)

@@ -107,10 +107,6 @@ namespace Ink_Anything
                         drawingShapeMode = 15;
                     }
                     isLongPressSelected = true;
-                    if (isSingleFingerDragMode)
-                    {
-                        BtnFingerDragMode_Click(null, null);
-                    }
                 }
             }
     
@@ -247,49 +243,6 @@ namespace Ink_Anything
             }
     
             #endregion
-    
-            private void inkCanvas_PreviewTouchMove(object sender, TouchEventArgs e)
-            {
-                if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke)
-                {
-                    TryEraseTextAtPoint(e.GetTouchPoint(inkCanvas).Position);
-                }
-            }
-
-            private void inkCanvas_TouchMove(object sender, TouchEventArgs e)
-            {
-                if (isSingleFingerDragMode) return;
-                if (inkCanvas.EditingMode == InkCanvasEditingMode.EraseByPoint || inkCanvas.EditingMode == InkCanvasEditingMode.EraseByStroke)
-                {
-                    TryEraseTextAtPoint(e.GetTouchPoint(inkCanvas).Position);
-                }
-                if (drawingShapeMode != 0)
-                {
-                    if (isLastTouchEraser)
-                    {
-                        return;
-                    }
-                    //EraserContainer.Background = null;
-                    ImageEraser.Visibility = Visibility.Visible;
-                    if (isWaitUntilNextTouchDown) return;
-                    if (dec.Count > 1)
-                    {
-                        isWaitUntilNextTouchDown = true;
-                        try
-                        {
-                            inkCanvas.Strokes.Remove(lastTempStroke);
-                            inkCanvas.Strokes.Remove(lastTempStrokeCollection);
-                        }
-                        catch { }
-                        return;
-                    }
-                    if (inkCanvas.EditingMode != InkCanvasEditingMode.None)
-                    {
-                        inkCanvas.EditingMode = InkCanvasEditingMode.None;
-                    }
-                }
-                MouseTouchMove(e.GetTouchPoint(inkCanvas).Position);
-            }
     
             int drawMultiStepShapeCurrentStep = 0; //多笔完成的图形 当前所处在的笔画
             StrokeCollection drawMultiStepShapeSpecialStrokeCollection = new StrokeCollection(); //多笔完成的图形 当前所处在的笔画
@@ -1053,22 +1006,17 @@ namespace Ink_Anything
             bool isFirstTouchCuboid = true;
             Point CuboidFrontRectIniP = new Point();
             Point CuboidFrontRectEndP = new Point();
-    
-            private void Main_Grid_TouchUp(object sender, TouchEventArgs e)
-            {
-                inkCanvas_MouseUp(sender, null);
-                if (dec.Count == 0)
-                {
-                    isWaitUntilNextTouchDown = false;
-                }
-            }
+            Point iniP = new Point(0, 0);
+            double lastTouchDownTime = 0;
+            double lastTouchUpTime = 0;
+
             Stroke lastTempStroke = null;
             StrokeCollection lastTempStrokeCollection = new StrokeCollection();
-            bool isWaitUntilNextTouchDown = false;
 
             bool isMouseDown = false;
             private void inkCanvas_MouseDown(object sender, MouseButtonEventArgs e)
             {
+                lastTouchDownTime = DateTime.Now.TimeOfDay.TotalMilliseconds;
                 if (drawingShapeMode == 26)
                 {
                     HandleTextModeClick(e.GetPosition(inkCanvas));
@@ -1114,6 +1062,7 @@ namespace Ink_Anything
     
             private void inkCanvas_MouseUp(object sender, MouseButtonEventArgs e)
             {
+                lastTouchUpTime = DateTime.Now.TimeOfDay.TotalMilliseconds;
                 if (drawingShapeMode == 5)
                 {
                     Circle circle = new Circle(new Point(), 0, lastTempStroke);

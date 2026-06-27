@@ -14,8 +14,6 @@ namespace Ink_Anything
         public PowerPointSettings PowerPointSettings { get; set; } = new PowerPointSettings();
         [JsonProperty("canvas")]
         public Canvas Canvas { get; set; } = new Canvas();
-        [JsonProperty("gesture")]
-        public Gesture Gesture { get; set; } = new Gesture();
         [JsonProperty("inkToShape")]
         public InkToShape InkToShape { get; set; } = new InkToShape();
         [JsonProperty("startup")]
@@ -55,29 +53,10 @@ namespace Ink_Anything
         Ask
     }
 
-    public class Gesture
-    {
-        [JsonIgnore]
-        public bool IsEnableTwoFingerGesture => IsEnableTwoFingerZoom || IsEnableTwoFingerTranslate || IsEnableTwoFingerRotation;
-        [JsonProperty("isDisableLockSmithByDefault")]
-        public bool IsDisableLockSmithByDefault { get; set; } = true;
-        [JsonProperty("isEnableTwoFingerZoom")]
-        public bool IsEnableTwoFingerZoom { get; set; } = true;
-        [JsonProperty("isEnableTwoFingerTranslate")]
-        public bool IsEnableTwoFingerTranslate { get; set; } = true;
-        [JsonProperty("isEnableTwoFingerRotation")]
-        public bool IsEnableTwoFingerRotation { get; set; } = false;
-        [JsonProperty("isEnableTwoFingerRotationOnSelection")]
-        public bool IsEnableTwoFingerRotationOnSelection { get; set; } = false;
-
-    }
-
     public class Startup
     {
         [JsonProperty("isAutoHideCanvas")]
         public bool IsAutoHideCanvas { get; set; } = true;
-        [JsonProperty("isAutoEnterModeFinger")]
-        public bool IsAutoEnterModeFinger { get; set; } = false;
     }
 
     public class Appearance
@@ -92,8 +71,6 @@ namespace Ink_Anything
         public bool IsShowHideControlButton { get; set; } = false;
         [JsonProperty("isShowLRSwitchButton")]
         public bool IsShowLRSwitchButton { get; set; } = false;
-        [JsonProperty("isShowModeFingerToggleSwitch")]
-        public bool IsShowModeFingerToggleSwitch { get; set; } = true;
         [JsonProperty("theme")]
         public int Theme { get; set; } = 0;
     }
@@ -118,10 +95,6 @@ namespace Ink_Anything
         public bool IsNotifyPreviousPage { get; set; } = false;
         [JsonProperty("isNotifyHiddenPage")]
         public bool IsNotifyHiddenPage { get; set; } = true;
-        [JsonProperty("isEnableTwoFingerGestureInPresentationMode")]
-        public bool IsEnableTwoFingerGestureInPresentationMode { get; set; } = false;
-        [JsonProperty("isEnableFingerGestureSlideShowControl")]
-        public bool IsEnableFingerGestureSlideShowControl { get; set; } = true;
         [JsonProperty("isSupportWPS")]
         public bool IsSupportWPS { get; set; } = true;
     }
@@ -150,14 +123,6 @@ namespace Ink_Anything
 
     public class Advanced
     {
-        [JsonProperty("isSpecialScreen")]
-        public bool IsSpecialScreen { get; set; } = false;
-        [JsonProperty("isQuadIR")]
-        public bool IsQuadIR { get; set; } = false;
-        [JsonProperty("touchMultiplier")]
-        public double TouchMultiplier { get; set; } = 0.25;
-        [JsonProperty("eraserBindTouchMultiplier")]
-        public bool EraserBindTouchMultiplier { get; set; } = false;
         [JsonProperty("isLogEnabled")]
         public bool IsLogEnabled { get; set; } = true;
     }
