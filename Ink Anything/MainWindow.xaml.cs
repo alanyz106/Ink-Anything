@@ -94,7 +94,6 @@ namespace Ink_Anything
         {
             try
             {
-                // 希沃相关： easinote swenserver RemoteProcess EasiNote.MediaHttpService smartnote.cloud EasiUpdate smartnote EasiUpdate3 EasiUpdate3Protect SeewoP2P CefSharp.BrowserSubprocess SeewoUploadService
                 string arg = "/F";
                 if (Settings.Automation.IsAutoKillPptService)
                 {
@@ -103,21 +102,6 @@ namespace Ink_Anything
                     {
                         arg += " /IM PPTService.exe";
                     }
-                    processes = Process.GetProcessesByName("SeewoIwbAssistant");
-                    if (processes.Length > 0)
-                    {
-                        arg += " /IM SeewoIwbAssistant.exe" +
-                            " /IM Sia.Guard.exe";
-                    }
-                }
-                if (Settings.Automation.IsAutoKillEasiNote)
-                {
-                    Process[] processes = Process.GetProcessesByName("EasiNote");
-                    if (processes.Length > 0)
-                    {
-                        arg += " /IM EasiNote.exe";
-
-                    }
                 }
                 if (arg != "/F")
                 {
@@ -125,13 +109,6 @@ namespace Ink_Anything
                     p.StartInfo = new ProcessStartInfo("taskkill", arg);
                     p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     p.Start();
-
-                    if (arg.Contains("EasiNote"))
-                    {
-
-                        BtnSwitch_Click(null, null);
-                        MessageBox.Show("“希沃白板 5”已自动关闭");
-                    }
                 }
             }
             catch { }
@@ -489,22 +466,13 @@ namespace Ink_Anything
 
             if (Settings.Automation != null)
             {
-                if (Settings.Automation.IsAutoKillEasiNote || Settings.Automation.IsAutoKillPptService)
+                if (Settings.Automation.IsAutoKillPptService)
                 {
                     timerKillProcess.Start();
                 }
                 else
                 {
                     timerKillProcess.Stop();
-                }
-
-                if (Settings.Automation.IsAutoKillEasiNote)
-                {
-                    ToggleSwitchAutoKillEasiNote.IsOn = true;
-                }
-                else
-                {
-                    ToggleSwitchAutoKillEasiNote.IsOn = false;
                 }
 
                 if (Settings.Automation.IsAutoClearWhenExitingWritingMode)

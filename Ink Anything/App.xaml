@@ -25,7 +25,7 @@
                 
                 <ui:XamlControlsResources/>
                 
-                <ResourceDictionary Source="Resources/SeewoImageDictionary.xaml"/>
+                <ResourceDictionary Source="Resources/PPTImageDictionary.xaml"/>
                 <ResourceDictionary Source="Resources/DrawShapeImageDictionary.xaml"/>
                 <ResourceDictionary Source="Resources/IconImageDictionary.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Light.xaml"/>

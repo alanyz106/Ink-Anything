@@ -184,23 +184,7 @@ namespace Ink_Anything
             Settings.Automation.IsAutoKillPptService = ToggleSwitchAutoKillPptService.IsOn;
             SaveSettingsToFile();
 
-            if (Settings.Automation.IsAutoKillEasiNote || Settings.Automation.IsAutoKillPptService)
-            {
-                timerKillProcess.Start();
-            }
-            else
-            {
-                timerKillProcess.Stop();
-            }
-        }
-
-        private void ToggleSwitchAutoKillEasiNote_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!isLoaded) return;
-            Settings.Automation.IsAutoKillEasiNote = ToggleSwitchAutoKillEasiNote.IsOn;
-            SaveSettingsToFile();
-
-            if (Settings.Automation.IsAutoKillEasiNote || Settings.Automation.IsAutoKillPptService)
+            if (Settings.Automation.IsAutoKillPptService)
             {
                 timerKillProcess.Start();
             }
@@ -371,12 +355,10 @@ namespace Ink_Anything
         public static void SetSettingsToRecommendation()
         {
             bool IsAutoKillPptService = Settings.Automation.IsAutoKillPptService;
-            bool IsAutoKillEasiNote = Settings.Automation.IsAutoKillEasiNote;
             Settings = new Settings();
             Settings.Appearance.IsShowEraserButton = false;
             Settings.Appearance.IsShowExitButton = false;
             Settings.Startup.IsAutoHideCanvas = true;
-            Settings.Automation.IsAutoKillEasiNote = IsAutoKillEasiNote;
             Settings.Automation.IsAutoKillPptService = IsAutoKillPptService;
             Settings.Canvas.InkWidth = 2.5;
         }

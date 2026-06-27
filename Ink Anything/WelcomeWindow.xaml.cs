@@ -40,11 +40,6 @@ namespace Ink_Anything
                 MainWindow.Settings.Automation.IsAutoKillPptService = true;
             }
 
-            if (CheckBoxAutoKillEasiNote.IsChecked == true)
-            {
-                MainWindow.Settings.Automation.IsAutoKillEasiNote = true;
-            }
-
             if (CheckBoxNewBuildingOptimization.IsChecked == true)
             {
                 MainWindow.Settings.Appearance.IsShowEraserButton = true;

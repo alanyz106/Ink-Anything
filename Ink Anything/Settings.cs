@@ -131,9 +131,6 @@ namespace Ink_Anything
         [JsonProperty("isAutoKillPptService")]
         public bool IsAutoKillPptService { get; set; } = false;
 
-        [JsonProperty("isAutoKillEasiNote")]
-        public bool IsAutoKillEasiNote { get; set; } = false;
-
         [JsonProperty("isSaveScreenshotsInDateFolders")]
         public bool IsSaveScreenshotsInDateFolders { get; set; } = false;
 

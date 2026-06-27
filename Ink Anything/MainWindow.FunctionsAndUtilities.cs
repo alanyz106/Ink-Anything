@@ -102,7 +102,7 @@ namespace Ink_Anything
                 ResourceDictionary rd2 = new ResourceDictionary() { Source = new Uri("Resources/DrawShapeImageDictionary.xaml", UriKind.Relative) };
                 Application.Current.Resources.MergedDictionaries.Add(rd2);
 
-                ResourceDictionary rd3 = new ResourceDictionary() { Source = new Uri("Resources/SeewoImageDictionary.xaml", UriKind.Relative) };
+                ResourceDictionary rd3 = new ResourceDictionary() { Source = new Uri("Resources/PPTImageDictionary.xaml", UriKind.Relative) };
                 Application.Current.Resources.MergedDictionaries.Add(rd3);
 
                 ResourceDictionary rd4 = new ResourceDictionary() { Source = new Uri("Resources/IconImageDictionary.xaml", UriKind.Relative) };
@@ -120,7 +120,7 @@ namespace Ink_Anything
                 ResourceDictionary rd2 = new ResourceDictionary() { Source = new Uri("Resources/DrawShapeImageDictionary.xaml", UriKind.Relative) };
                 Application.Current.Resources.MergedDictionaries.Add(rd2);
 
-                ResourceDictionary rd3 = new ResourceDictionary() { Source = new Uri("Resources/SeewoImageDictionary.xaml", UriKind.Relative) };
+                ResourceDictionary rd3 = new ResourceDictionary() { Source = new Uri("Resources/PPTImageDictionary.xaml", UriKind.Relative) };
                 Application.Current.Resources.MergedDictionaries.Add(rd3);
 
                 ResourceDictionary rd4 = new ResourceDictionary() { Source = new Uri("Resources/IconImageDictionary.xaml", UriKind.Relative) };

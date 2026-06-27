@@ -300,7 +300,7 @@
                     <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
                         <Border Width="36" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
                             <Grid Margin="6" MouseUp="GridPPTControlPrevious_MouseUp">
-                                <Image Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalPreviousSlideNormal}"/>
+                                <Image Source="{DynamicResource ResourceKey=PPTImageSource.HorizontalPreviousSlideNormal}"/>
                             </Grid>
                         </Border>
                         <Border Visibility="{Binding ElementName=PptNavigationBtn, Path=Visibility}" Width="36" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
@@ -310,7 +310,7 @@
                         </Border>
                         <Border Width="36" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
                             <Grid Margin="6" MouseUp="GridPPTControlNext_MouseUp">
-                                <Image Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalNextSlideNormal}"/>
+                                <Image Source="{DynamicResource ResourceKey=PPTImageSource.HorizontalNextSlideNormal}"/>
                             </Grid>
                         </Border>
                     </ui:SimpleStackPanel>
@@ -328,8 +328,8 @@
                     </Border>
                     <Border Width="36" MouseUp="BtnWhiteBoardSwitchPrevious_Click" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
                         <Grid Margin="6">
-                            <Image Visibility="Collapsed" Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalPreviousSlideSelected}"/>
-                            <Image Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalPreviousSlideNormal}"/>
+                            <Image Visibility="Collapsed" Source="{DynamicResource ResourceKey=PPTImageSource.HorizontalPreviousSlideSelected}"/>
+                            <Image Source="{DynamicResource ResourceKey=PPTImageSource.HorizontalPreviousSlideNormal}"/>
                         </Grid>
                     </Border>
                     <Border Height="36" CornerRadius="2" Margin="0,0">
@@ -340,8 +340,8 @@
                     </Border>
                     <Border Width="36" MouseUp="BtnWhiteBoardSwitchNext_Click" Height="36" CornerRadius="5" Background="{DynamicResource FloatBarBackground}" BorderThickness="1" BorderBrush="{DynamicResource FloatBarBorderBrush}">
                         <Grid Margin="6">
-                            <Image Visibility="Collapsed" Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalNextSlideSelected}"/>
-                            <Image Source="{DynamicResource ResourceKey=SeewoImageSource.HorizontalNextSlideNormal}"/>
+                            <Image Visibility="Collapsed" Source="{DynamicResource ResourceKey=PPTImageSource.HorizontalNextSlideSelected}"/>
+                            <Image Source="{DynamicResource ResourceKey=PPTImageSource.HorizontalNextSlideNormal}"/>
                         </Grid>
                     </Border>
                 </ui:SimpleStackPanel>
@@ -650,7 +650,6 @@
                         <StackPanel Name="PanelAutomation" Visibility="Collapsed">
                             <ui:SimpleStackPanel Spacing="12">
                                 <ui:ToggleSwitch Name="ToggleSwitchAutoKillPptService" Header="自动查杀&#x201C;PPT 小工具&#x201D;" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchAutoKillPptService_Toggled"/>
-                                <ui:ToggleSwitch Name="ToggleSwitchAutoKillEasiNote" Header="自动查杀&#x201C;希沃白板 5&#x201D;" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchAutoKillEasiNote_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchSaveScreenshotsInDateFolders" Header="截图分日期文件夹保存" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchSaveScreenshotsInDateFolders_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchAutoSaveStrokesAtScreenshot" Header="截图时自动保存墨迹" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchAutoSaveStrokesAtScreenshot_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchAutoSaveStrokesAtClear" Header="清屏时自动截图" IsOn="False" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchAutoSaveStrokesAtClear_Toggled"/>
@@ -1057,7 +1056,7 @@
                                 </Image>
                             </Grid>
                             <Grid x:Name="FloatBarPPTExitContainer" Margin="0,5,0,5" Visibility="Collapsed">
-                                <Image x:Name="FloatBarPPTExitImage" Source="{DynamicResource ResourceKey=SeewoImageSource.PPTExitNormal}" Visibility="Visible" MouseDown="Border_MouseDown" MouseUp="ImagePPTControlEnd_MouseUp" Margin="-2,1,10,2"
+                                <Image x:Name="FloatBarPPTExitImage" Source="{DynamicResource ResourceKey=PPTImageSource.PPTExitNormal}" Visibility="Visible" MouseDown="Border_MouseDown" MouseUp="ImagePPTControlEnd_MouseUp" Margin="-2,1,10,2"
                                        ToolTipService.ToolTip="结束幻灯片放映 (Shift+Esc)"/>
                             </Grid>
                             <ui:SimpleStackPanel Margin="0,5,10,5" Spacing="10" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
