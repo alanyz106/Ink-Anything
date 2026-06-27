@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Build output
+Ink-Anything-x64/
+
+# Temp files
+bash.exe.stackdump
+
 # Other Projects
 Other Projects/
 
