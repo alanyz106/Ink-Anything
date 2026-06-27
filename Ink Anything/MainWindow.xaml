@@ -461,6 +461,7 @@
                                 <ui:ToggleSwitch Name="ToggleSwitchAutoHideCanvas" Header="自动隐藏画板" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchAutoHideCanvas_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchIsLogEnabled" Header="记录日志" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" IsOn="True" Toggled="ToggleSwitchIsLogEnabled_Toggled"/>
                                 <ui:ToggleSwitch Name="ToggleSwitchStartInTextMode" Header="启动时默认进入文本模式" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchStartInTextMode_Toggled"/>
+                                <ui:ToggleSwitch Name="ToggleSwitchMinimizeToTray" Header="关闭时最小化到系统托盘" FontFamily="Microsoft YaHei UI" OnContent="开" OffContent="关" Toggled="ToggleSwitchMinimizeToTray_Toggled"/>
                                 <StackPanel>
                                     <TextBlock FontSize="14" Margin="0,12,0,12"
                                         Text="重置设置为推荐设置"/>

@@ -385,6 +385,13 @@ namespace Ink_Anything
             SaveSettingsToFile();
         }
 
+        private void ToggleSwitchMinimizeToTray_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!isLoaded) return;
+            Settings.Startup.IsMinimizeToTray = ToggleSwitchMinimizeToTray.IsOn;
+            SaveSettingsToFile();
+        }
+
         #endregion
 
         #region Check Update

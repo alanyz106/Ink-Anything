@@ -21,7 +21,6 @@ namespace Ink_Anything
         public static bool CloseIsFromButton = false;
         private void BtnExit_Click(object sender, RoutedEventArgs e)
         {
-            CloseIsFromButton = true;
             Close();
         }
 

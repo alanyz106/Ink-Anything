@@ -59,6 +59,8 @@ namespace Ink_Anything
         public bool IsAutoHideCanvas { get; set; } = true;
         [JsonProperty("isStartInTextMode")]
         public bool IsStartInTextMode { get; set; } = false;
+        [JsonProperty("isMinimizeToTray")]
+        public bool IsMinimizeToTray { get; set; } = false;
     }
 
     public class Appearance

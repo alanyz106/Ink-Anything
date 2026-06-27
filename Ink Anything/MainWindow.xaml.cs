@@ -72,6 +72,50 @@ namespace Ink_Anything
             inkCanvas.Strokes.StrokesChanged += StrokesOnStrokesChanged;
 
             Microsoft.Win32.SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+
+            InitNotifyIcon();
+        }
+
+        #endregion
+
+        #region System Tray
+
+        private System.Windows.Forms.NotifyIcon _notifyIcon;
+
+        private void InitNotifyIcon()
+        {
+            _notifyIcon = new System.Windows.Forms.NotifyIcon();
+            _notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
+            _notifyIcon.Text = "Ink Anything";
+            _notifyIcon.Visible = false;
+
+            var menu = new System.Windows.Forms.ContextMenuStrip();
+            var exitItem = new System.Windows.Forms.ToolStripMenuItem("退出");
+            exitItem.Click += (s, e) =>
+            {
+                CloseIsFromButton = true;
+                _notifyIcon.Visible = false;
+                Application.Current.Shutdown();
+            };
+            menu.Items.Add(exitItem);
+            _notifyIcon.ContextMenuStrip = menu;
+
+            _notifyIcon.DoubleClick += (s, e) => RestoreFromTray();
+        }
+
+        private void MinimizeToTray()
+        {
+            _notifyIcon.Visible = true;
+            this.Hide();
+            _notifyIcon.ShowBalloonTip(2000, "Ink Anything", "已最小化到系统托盘", System.Windows.Forms.ToolTipIcon.Info);
+        }
+
+        private void RestoreFromTray()
+        {
+            this.Show();
+            this.WindowState = WindowState.Maximized;
+            this.Activate();
+            _notifyIcon.Visible = false;
         }
 
         #endregion
@@ -233,29 +277,53 @@ namespace Ink_Anything
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             LogHelper.WriteLogToFile("Ink Anything closing", LogHelper.LogType.Event);
-            if (!CloseIsFromButton)
+
+            if (CloseIsFromButton)
             {
-                e.Cancel = true;
-                if (MessageBox.Show("是否继续关闭 Ink Anything 画板，这将丢失当前未保存的工作。", "Ink Anything 画板", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                _notifyIcon.Visible = false;
+                return;
+            }
+
+            e.Cancel = true;
+
+            if (Settings.Startup.IsMinimizeToTray)
+            {
+                MinimizeToTray();
+                return;
+            }
+
+            var dialog = new CloseDialog { Owner = this };
+            if (dialog.ShowDialog() == true)
+            {
+                if (dialog.RememberChoice)
                 {
-                    if (MessageBox.Show("真的狠心关闭 Ink Anything 画板吗？", "Ink Anything 画板", MessageBoxButton.OKCancel, MessageBoxImage.Error) == MessageBoxResult.OK)
-                    {
-                        if (MessageBox.Show("是否取消关闭 Ink Anything 画板？", "Ink Anything 画板", MessageBoxButton.OKCancel, MessageBoxImage.Error) != MessageBoxResult.OK)
-                        {
-                            e.Cancel = false;
-                        }
-                    }
+                    Settings.Startup.IsMinimizeToTray = dialog.ShouldMinimize;
+                    SaveSettingsToFile();
+                    ToggleSwitchMinimizeToTray.IsOn = dialog.ShouldMinimize;
+                }
+
+                if (dialog.ShouldMinimize)
+                {
+                    MinimizeToTray();
+                }
+                else
+                {
+                    CloseIsFromButton = true;
+                    _notifyIcon.Visible = false;
+                    e.Cancel = false;
                 }
             }
-            if (e.Cancel)
+            else
             {
-                LogHelper.WriteLogToFile("Ink Anything closing cancelled", LogHelper.LogType.Event);
+                // 用户关闭了对话框（点了 X 或按 Esc），取消关闭
+                e.Cancel = true;
             }
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             LogHelper.WriteLogToFile("Ink Anything closed", LogHelper.LogType.Event);
+            _notifyIcon?.Dispose();
         }
 
         private static void PreloadIALibrary()
@@ -303,6 +371,8 @@ namespace Ink_Anything
             {
                 EnterTextMode();
             }
+
+            ToggleSwitchMinimizeToTray.IsOn = Settings.Startup.IsMinimizeToTray;
 
             ToggleSwitchShowButtonEraser.IsOn = Settings.Appearance.IsShowEraserButton;
 
