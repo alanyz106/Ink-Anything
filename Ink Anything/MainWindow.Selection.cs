@@ -67,174 +67,61 @@ namespace Ink_Anything
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            ChangeStrokeThickness(0.8);
+            _strokeTransformService.ChangeStrokeThickness(0.8);
+            CommitDrawingAttributesHistory();
         }
 
         private void GridPenWidthIncrease_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            ChangeStrokeThickness(1.25);
-        }
-
-        private void ChangeStrokeThickness(double multipler)
-        {
-            foreach (Stroke stroke in inkCanvas.GetSelectedStrokes())
-            {
-                var newWidth = stroke.DrawingAttributes.Width * multipler;
-                var newHeight = stroke.DrawingAttributes.Height * multipler;
-
-                if (newWidth >= DrawingAttributes.MinWidth && newWidth <= DrawingAttributes.MaxWidth
-                    && newHeight >= DrawingAttributes.MinHeight && newHeight <= DrawingAttributes.MaxHeight)
-                {
-                    stroke.DrawingAttributes.Width = newWidth;
-                    stroke.DrawingAttributes.Height = newHeight;
-                }
-            }
-            if (DrawingAttributesHistory.Count > 0)
-            {
-
-                timeMachine.CommitStrokeDrawingAttributesHistory(DrawingAttributesHistory);
-                DrawingAttributesHistory = new Dictionary<Stroke, Tuple<DrawingAttributes, DrawingAttributes>>();
-                foreach (var item in DrawingAttributesHistoryFlag)
-                {
-                    item.Value.Clear();
-                }
-            }
+            _strokeTransformService.ChangeStrokeThickness(1.25);
+            CommitDrawingAttributesHistory();
         }
 
         private void GridPenWidthRestore_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            foreach (Stroke stroke in inkCanvas.GetSelectedStrokes())
-            {
-                stroke.DrawingAttributes.Width = inkCanvas.DefaultDrawingAttributes.Width;
-                stroke.DrawingAttributes.Height = inkCanvas.DefaultDrawingAttributes.Height;
-            }
+            _strokeTransformService.RestoreStrokeThickness();
         }
 
         private void ImageFlipHorizontal_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            Matrix m = new Matrix();
-
-            FrameworkElement fe = e.Source as FrameworkElement;
-            Point center = new Point(fe.ActualWidth / 2, fe.ActualHeight / 2);
-            center = new Point(inkCanvas.GetSelectionBounds().Left + inkCanvas.GetSelectionBounds().Width / 2,
-                inkCanvas.GetSelectionBounds().Top + inkCanvas.GetSelectionBounds().Height / 2);
-            center = m.Transform(center);
-
-            m.ScaleAt(-1, 1, center.X, center.Y);
-
-            StrokeCollection targetStrokes = inkCanvas.GetSelectedStrokes();
-            foreach (Stroke stroke in targetStrokes)
-            {
-                stroke.Transform(m, false);
-            }
-            if (DrawingAttributesHistory.Count > 0)
-            {
-                var collecion = new StrokeCollection();
-                foreach (var item in DrawingAttributesHistory)
-                {
-                    collecion.Add(item.Key);
-                }
-                timeMachine.CommitStrokeDrawingAttributesHistory(DrawingAttributesHistory);
-                DrawingAttributesHistory = new Dictionary<Stroke, Tuple<DrawingAttributes, DrawingAttributes>>();
-                foreach (var item in DrawingAttributesHistoryFlag)
-                {
-                    item.Value.Clear();
-                }
-            }
+            _strokeTransformService.FlipHorizontal();
+            CommitDrawingAttributesHistory();
         }
 
         private void ImageFlipVertical_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            Matrix m = new Matrix();
-
-            FrameworkElement fe = e.Source as FrameworkElement;
-            Point center = new Point(fe.ActualWidth / 2, fe.ActualHeight / 2);
-            center = new Point(inkCanvas.GetSelectionBounds().Left + inkCanvas.GetSelectionBounds().Width / 2,
-                inkCanvas.GetSelectionBounds().Top + inkCanvas.GetSelectionBounds().Height / 2);
-            center = m.Transform(center);
-
-            m.ScaleAt(1, -1, center.X, center.Y);
-
-            StrokeCollection targetStrokes = inkCanvas.GetSelectedStrokes();
-            foreach (Stroke stroke in targetStrokes)
-            {
-                stroke.Transform(m, false);
-            }
-            if (DrawingAttributesHistory.Count > 0)
-            {
-                timeMachine.CommitStrokeDrawingAttributesHistory(DrawingAttributesHistory);
-                DrawingAttributesHistory = new Dictionary<Stroke, Tuple<DrawingAttributes, DrawingAttributes>>();
-                foreach (var item in DrawingAttributesHistoryFlag)
-                {
-                    item.Value.Clear();
-                }
-            }
+            _strokeTransformService.FlipVertical();
+            CommitDrawingAttributesHistory();
         }
 
         private void ImageRotate45_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            Matrix m = new Matrix();
-
-            FrameworkElement fe = e.Source as FrameworkElement;
-            Point center = new Point(fe.ActualWidth / 2, fe.ActualHeight / 2);
-            center = new Point(inkCanvas.GetSelectionBounds().Left + inkCanvas.GetSelectionBounds().Width / 2,
-                inkCanvas.GetSelectionBounds().Top + inkCanvas.GetSelectionBounds().Height / 2);
-            center = m.Transform(center);
-
-            m.RotateAt(45, center.X, center.Y);
-
-            StrokeCollection targetStrokes = inkCanvas.GetSelectedStrokes();
-            foreach (Stroke stroke in targetStrokes)
-            {
-                stroke.Transform(m, false);
-            }
-            if (DrawingAttributesHistory.Count > 0)
-            {
-                timeMachine.CommitStrokeDrawingAttributesHistory(DrawingAttributesHistory);
-                DrawingAttributesHistory = new Dictionary<Stroke, Tuple<DrawingAttributes, DrawingAttributes>>();
-                foreach (var item in DrawingAttributesHistoryFlag)
-                {
-                    item.Value.Clear();
-                }
-            }
+            _strokeTransformService.Rotate45();
+            CommitDrawingAttributesHistory();
         }
 
         private void ImageRotate90_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (lastBorderMouseDownObject != sender) return;
 
-            Matrix m = new Matrix();
+            _strokeTransformService.Rotate90();
+            CommitDrawingAttributesHistory();
+        }
 
-            FrameworkElement fe = e.Source as FrameworkElement;
-            Point center = new Point(fe.ActualWidth / 2, fe.ActualHeight / 2);
-            center = new Point(inkCanvas.GetSelectionBounds().Left + inkCanvas.GetSelectionBounds().Width / 2,
-                inkCanvas.GetSelectionBounds().Top + inkCanvas.GetSelectionBounds().Height / 2);
-            center = m.Transform(center);
-
-            m.RotateAt(90, center.X, center.Y);
-
-            StrokeCollection targetStrokes = inkCanvas.GetSelectedStrokes();
-            foreach (Stroke stroke in targetStrokes)
-            {
-                stroke.Transform(m, false);
-            }
+        private void CommitDrawingAttributesHistory()
+        {
             if (DrawingAttributesHistory.Count > 0)
             {
-                var collecion = new StrokeCollection();
-                foreach (var item in DrawingAttributesHistory)
-                {
-                    collecion.Add(item.Key);
-                }
                 timeMachine.CommitStrokeDrawingAttributesHistory(DrawingAttributesHistory);
                 DrawingAttributesHistory = new Dictionary<Stroke, Tuple<DrawingAttributes, DrawingAttributes>>();
                 foreach (var item in DrawingAttributesHistoryFlag)
@@ -318,7 +205,7 @@ namespace Ink_Anything
 
                 SelectTextsInRect(selRect);
 
-                if (selectedTextBorders.Count > 0)
+                if (_textManager.SelectedTextBorders.Count > 0)
                 {
                     ShowMultiTextSelectionRect();
                     GridInkCanvasSelectionCover.Visibility = Visibility.Visible;
@@ -414,7 +301,7 @@ namespace Ink_Anything
 
             // 检查文字选中区域（墨迹无选中时）
             bool isOutsideText = false;
-            if (double.IsNaN(bounds.Left) && selectedTextBorders.Count > 0)
+            if (double.IsNaN(bounds.Left) && _textManager.SelectedTextBorders.Count > 0)
             {
                 var textBounds = GetTextSelectionBounds();
                 if (textBounds.HasValue)
@@ -450,30 +337,6 @@ namespace Ink_Anything
                     var points = stroke.StylusPoints.ToArray();
                     strokeDragStartPositions[stroke] = points.Select(p => new Point(p.X, p.Y)).ToArray();
                 }
-                // 克隆文字
-                if (selectedTextBorders.Count > 0)
-                {
-                    var originals = selectedTextBorders.ToList();
-                    foreach (var b in originals) b.Background = Brushes.Transparent;
-                    selectedTextBorders.Clear();
-                    textDragStartPositions.Clear();
-                    foreach (var orig in originals)
-                    {
-                        var clone = CloneTextBorder(orig);
-                        if (clone != null)
-                        {
-                            selectedTextBorders.Add(clone);
-                            textDragStartPositions[clone] = new Point(WpfCanvas.GetLeft(clone), WpfCanvas.GetTop(clone));
-                        }
-                    }
-                    isDraggingClone = true;
-                    var last = GetLastSelectedTextBorder();
-                    if (last != null)
-                    {
-                        last.Background = MultiSelectHighlightBrush;
-                        ShowResizeHandles(last);
-                    }
-                }
             }
             else
             {
@@ -484,10 +347,10 @@ namespace Ink_Anything
                     strokeDragStartPositions[stroke] = points.Select(p => new Point(p.X, p.Y)).ToArray();
                 }
                 // 记录文字起始位置
-                textDragStartPositions.Clear();
-                foreach (var b in selectedTextBorders)
+                _textManager.TextDragStartPositions.Clear();
+                foreach (var b in _textManager.SelectedTextBorders)
                 {
-                    textDragStartPositions[b] = new Point(WpfCanvas.GetLeft(b), WpfCanvas.GetTop(b));
+                    _textManager.TextDragStartPositions[b] = new Point(WpfCanvas.GetLeft(b), WpfCanvas.GetTop(b));
                 }
             }
 
@@ -523,15 +386,6 @@ namespace Ink_Anything
                     }
                     stroke.StylusPoints = newPoints;
                 }
-                // 同步移动文字
-                foreach (var b in selectedTextBorders)
-                {
-                    if (textDragStartPositions.TryGetValue(b, out var startPos))
-                    {
-                        WpfCanvas.SetLeft(b, startPos.X + dx);
-                        WpfCanvas.SetTop(b, startPos.Y + dy);
-                    }
-                }
                 updateBorderStrokeSelectionControlLocation();
             }
         }
@@ -540,48 +394,9 @@ namespace Ink_Anything
         {
             if (e.LeftButton == MouseButtonState.Released && isGridInkCanvasSelectionCoverMouseDown)
             {
-                // 提交文字移动/克隆的撤销记录
-                if (isDraggingSelection)
-                {
-                    foreach (var b in selectedTextBorders)
-                    {
-                        if (textDragStartPositions.TryGetValue(b, out var startPos))
-                        {
-                            var newLeft = WpfCanvas.GetLeft(b);
-                            var newTop = WpfCanvas.GetTop(b);
-                            if (Math.Abs(newLeft - startPos.X) > 1 || Math.Abs(newTop - startPos.Y) > 1)
-                            {
-                                if (isDraggingClone)
-                                {
-                                    var cloneData = new TextElementData
-                                    {
-                                        Content = (b.Child as TextBlock)?.Text ?? "",
-                                        X = newLeft,
-                                        Y = newTop,
-                                        FontSize = (b.Child as TextBlock)?.FontSize ?? 24,
-                                        ColorHex = BrushToHex((b.Child as TextBlock)?.Foreground ?? Brushes.Black),
-                                    };
-                                    textUndoStack.CommitAdd(cloneData);
-                                }
-                                else
-                                {
-                                    var data = FindTextElementData(b);
-                                    if (data != null)
-                                    {
-                                        textUndoStack.CommitMove(data, startPos.X, startPos.Y, newLeft, newTop);
-                                        data.X = newLeft;
-                                        data.Y = newTop;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
                 GridInkCanvasSelectionCover.ReleaseMouseCapture();
                 isGridInkCanvasSelectionCoverMouseDown = false;
                 isDraggingSelection = false;
-                isDraggingClone = false;
                 StrokesSelectionClone = new StrokeCollection();
             }
         }
@@ -642,8 +457,8 @@ namespace Ink_Anything
                 _isSelectAllActive = false;
                 _isInSelectionMode = true;
                 inkCanvas.EditingMode = InkCanvasEditingMode.None;
-                if (_textOverlayCanvas != null)
-                    _textOverlayCanvas.Background = (_selectionScope == SelectionScope.Text) ? Brushes.Transparent : null;
+                if (_textManager.TextOverlayCanvas != null)
+                    _textManager.TextOverlayCanvas.Background = (_selectionScope == SelectionScope.Text) ? Brushes.Transparent : null;
                 RegisterRubberBandHandlers();
                 // 更新文本图标：文本选择范围用浅蓝高亮，墨迹选择范围恢复默认
                 if (_selectionScope == SelectionScope.Text)
@@ -688,8 +503,8 @@ namespace Ink_Anything
             }
             inkCanvas.IsManipulationEnabled = true;
             ClearTextSelection();
-            if (_textOverlayCanvas != null)
-                _textOverlayCanvas.Background = Brushes.Transparent;
+            if (_textManager.TextOverlayCanvas != null)
+                _textManager.TextOverlayCanvas.Background = Brushes.Transparent;
         }
 
         /// <summary>
@@ -713,8 +528,8 @@ namespace Ink_Anything
             _previousDrawingShapeMode = (newScope == SelectionScope.Text) ? 26 : 0;
 
             // 更新文本覆盖层点击穿透（文字选择模式需要可点击，墨迹选择模式不需要）
-            if (_textOverlayCanvas != null)
-                _textOverlayCanvas.Background = (newScope == SelectionScope.Text) ? Brushes.Transparent : null;
+            if (_textManager.TextOverlayCanvas != null)
+                _textManager.TextOverlayCanvas.Background = (newScope == SelectionScope.Text) ? Brushes.Transparent : null;
 
             // 更新光标
             if (newScope == SelectionScope.Text)
@@ -773,7 +588,7 @@ namespace Ink_Anything
                 _isSelectAllActive = false;
                 UpdateSelectionControlVisibility();
                 // 墨迹取消选中但还有文字时，由矩形继续管理文字选中
-                if (selectedTextBorders.Count > 0) ShowMultiTextSelectionRect();
+                if (_textManager.SelectedTextBorders.Count > 0) ShowMultiTextSelectionRect();
                 else HideMultiTextSelectionRect();
             }
             else
@@ -842,10 +657,10 @@ namespace Ink_Anything
 
         private Rect? GetTextSelectionBounds()
         {
-            if (selectedTextBorders.Count == 0) return null;
+            if (_textManager.SelectedTextBorders.Count == 0) return null;
             double left = double.MaxValue, top = double.MaxValue;
             double right = double.MinValue, bottom = double.MinValue;
-            foreach (var b in selectedTextBorders)
+            foreach (var b in _textManager.SelectedTextBorders)
             {
                 var l = WpfCanvas.GetLeft(b);
                 var t = WpfCanvas.GetTop(b);
@@ -928,7 +743,7 @@ namespace Ink_Anything
                         catch { }
                     }
                     // 同步移动文字
-                    foreach (var b in selectedTextBorders)
+                    foreach (var b in _textManager.SelectedTextBorders)
                     {
                         WpfCanvas.SetLeft(b, WpfCanvas.GetLeft(b) + trans.X);
                         WpfCanvas.SetTop(b, WpfCanvas.GetTop(b) + trans.Y);
@@ -1002,7 +817,7 @@ namespace Ink_Anything
 
         private Border FindTextBorderAtPoint(Point pos)
         {
-            if (_textOverlayCanvas == null) return null;
+            if (_textManager.TextOverlayCanvas == null) return null;
             var result = VisualTreeHelper.HitTest(inkCanvas, pos);
             if (result != null)
             {
@@ -1021,18 +836,18 @@ namespace Ink_Anything
         {
             if (!isCtrlDown)
             {
-                foreach (var b in selectedTextBorders) b.Background = Brushes.Transparent;
-                selectedTextBorders.Clear();
+                foreach (var b in _textManager.SelectedTextBorders) b.Background = Brushes.Transparent;
+                _textManager.SelectedTextBorders.Clear();
                 ClearResizeHandlesOnly();
-                selectedTextBorders.Add(border);
-                border.Background = MultiSelectHighlightBrush;
+                _textManager.SelectedTextBorders.Add(border);
+                border.Background = TextManager.MultiSelectHighlightBrush;
                 ShowResizeHandles(border);
             }
             else
             {
-                if (selectedTextBorders.Contains(border))
+                if (_textManager.SelectedTextBorders.Contains(border))
                 {
-                    selectedTextBorders.Remove(border);
+                    _textManager.SelectedTextBorders.Remove(border);
                     border.Background = Brushes.Transparent;
                     ClearResizeHandlesOnly();
                     var last = GetLastSelectedTextBorder();
@@ -1040,34 +855,33 @@ namespace Ink_Anything
                 }
                 else
                 {
-                    selectedTextBorders.Add(border);
-                    border.Background = MultiSelectHighlightBrush;
+                    _textManager.SelectedTextBorders.Add(border);
+                    border.Background = TextManager.MultiSelectHighlightBrush;
                     ClearResizeHandlesOnly();
                     ShowResizeHandles(border);
                 }
             }
             UpdateSelectionControlVisibility();
-            if (selectedTextBorders.Count > 0) ShowMultiTextSelectionRect();
+            if (_textManager.SelectedTextBorders.Count > 0) ShowMultiTextSelectionRect();
             else HideMultiTextSelectionRect();
 
             // 初始化拖拽状态
             draggingTextBorder = border;
-            isDraggingClone = false;
             hasDraggedText = false;
             isDraggingText = true;
             textDragStartPoint = clickPos;
-            textDragStartPositions.Clear();
-            foreach (var b in selectedTextBorders)
+            _textManager.TextDragStartPositions.Clear();
+            foreach (var b in _textManager.SelectedTextBorders)
             {
-                textDragStartPositions[b] = new Point(WpfCanvas.GetLeft(b), WpfCanvas.GetTop(b));
+                _textManager.TextDragStartPositions[b] = new Point(WpfCanvas.GetLeft(b), WpfCanvas.GetTop(b));
             }
             border.CaptureMouse();
         }
 
         private void ClearTextSelection()
         {
-            foreach (var b in selectedTextBorders) b.Background = Brushes.Transparent;
-            selectedTextBorders.Clear();
+            foreach (var b in _textManager.SelectedTextBorders) b.Background = Brushes.Transparent;
+            _textManager.SelectedTextBorders.Clear();
             ClearResizeHandlesOnly();
             HideMultiTextSelectionRect();
             UpdateSelectionControlVisibility();
@@ -1075,18 +889,18 @@ namespace Ink_Anything
 
         private void SelectTextsInRect(Rect selRect)
         {
-            if (_textOverlayCanvas == null) return;
-            foreach (var child in _textOverlayCanvas.Children)
+            if (_textManager.TextOverlayCanvas == null) return;
+            foreach (var child in _textManager.TextOverlayCanvas.Children)
             {
                 if (child is Border border && border.Tag as string == "TextElement")
                 {
                     var left = WpfCanvas.GetLeft(border);
                     var top = WpfCanvas.GetTop(border);
                     var rect = new Rect(left, top, border.ActualWidth, border.ActualHeight);
-                    if (selRect.IntersectsWith(rect) && !selectedTextBorders.Contains(border))
+                    if (selRect.IntersectsWith(rect) && !_textManager.SelectedTextBorders.Contains(border))
                     {
-                        selectedTextBorders.Add(border);
-                        border.Background = MultiSelectHighlightBrush;
+                        _textManager.SelectedTextBorders.Add(border);
+                        border.Background = TextManager.MultiSelectHighlightBrush;
                     }
                 }
             }
@@ -1098,14 +912,13 @@ namespace Ink_Anything
         /// </summary>
         private Rectangle _multiTextSelectionRect = null;
         private bool _isDraggingMultiRect = false;
-        private bool _isMultiRectClone = false;
         private Point _multiRectDragStart;
         private Dictionary<Border, Point> _multiRectTextStartPos = new Dictionary<Border, Point>();
 
         private void ShowMultiTextSelectionRect()
         {
             HideMultiTextSelectionRect();
-            if (selectedTextBorders.Count == 0) return;
+            if (_textManager.SelectedTextBorders.Count == 0) return;
 
             var bounds = GetTextSelectionBounds();
             if (bounds == null) return;
@@ -1140,7 +953,6 @@ namespace Ink_Anything
         private void HideMultiTextSelectionRect()
         {
             _isDraggingMultiRect = false;
-            _isMultiRectClone = false;
             if (_multiTextSelectionRect != null)
             {
                 var parentGrid = GridInkCanvasSelectionCover.Parent as Grid;
@@ -1169,45 +981,22 @@ namespace Ink_Anything
             // 有墨迹时由覆盖层的统一处理
             if (inkCanvas.GetSelectedStrokes().Count > 0) return;
 
-            bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-            _isMultiRectClone = false;
             _isDraggingMultiRect = false;
             _multiRectDragStart = e.GetPosition(inkCanvas);
             _multiRectTextStartPos.Clear();
 
-            if (isCtrlDown && selectedTextBorders.Count > 0)
+            foreach (var b in _textManager.SelectedTextBorders)
             {
-                // Ctrl+拖拽：立即克隆所有选中的文字
-                var originals = selectedTextBorders.ToList();
-                foreach (var b in originals) b.Background = Brushes.Transparent;
-                selectedTextBorders.Clear();
-                foreach (var orig in originals)
-                {
-                    var clone = CloneTextBorder(orig);
-                    if (clone != null)
-                    {
-                        selectedTextBorders.Add(clone);
-                        _multiRectTextStartPos[clone] = new Point(WpfCanvas.GetLeft(clone), WpfCanvas.GetTop(clone));
-                    }
-                }
-                _isMultiRectClone = true;
-                ShowMultiTextSelectionRect();
-            }
-            else
-            {
-                foreach (var b in selectedTextBorders)
-                {
-                    _multiRectTextStartPos[b] = new Point(WpfCanvas.GetLeft(b), WpfCanvas.GetTop(b));
-                }
+                _multiRectTextStartPos[b] = new Point(WpfCanvas.GetLeft(b), WpfCanvas.GetTop(b));
             }
 
-            _multiTextSelectionRect.CaptureMouse();
+            _multiTextSelectionRect?.CaptureMouse();
             e.Handled = true;
         }
 
         private void MultiTextRect_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!_multiTextSelectionRect.IsMouseCaptured) return;
+            if (_multiTextSelectionRect == null || !_multiTextSelectionRect.IsMouseCaptured) return;
             var currentPoint = e.GetPosition(inkCanvas);
             var dx = currentPoint.X - _multiRectDragStart.X;
             var dy = currentPoint.Y - _multiRectDragStart.Y;
@@ -1217,7 +1006,7 @@ namespace Ink_Anything
 
             if (_isDraggingMultiRect)
             {
-                foreach (var b in selectedTextBorders)
+                foreach (var b in _textManager.SelectedTextBorders)
                 {
                     if (_multiRectTextStartPos.TryGetValue(b, out var startPos))
                     {
@@ -1231,12 +1020,12 @@ namespace Ink_Anything
 
         private void MultiTextRect_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_multiTextSelectionRect.IsMouseCaptured) return;
+            if (_multiTextSelectionRect == null || !_multiTextSelectionRect.IsMouseCaptured) return;
             _multiTextSelectionRect.ReleaseMouseCapture();
 
             if (_isDraggingMultiRect)
             {
-                foreach (var b in selectedTextBorders)
+                foreach (var b in _textManager.SelectedTextBorders)
                 {
                     if (_multiRectTextStartPos.TryGetValue(b, out var startPos))
                     {
@@ -1244,34 +1033,19 @@ namespace Ink_Anything
                         var newTop = WpfCanvas.GetTop(b);
                         if (Math.Abs(newLeft - startPos.X) > 1 || Math.Abs(newTop - startPos.Y) > 1)
                         {
-                            if (_isMultiRectClone)
+                            var data = FindTextElementData(b);
+                            if (data != null)
                             {
-                                var cloneData = new TextElementData
-                                {
-                                    Content = (b.Child as TextBlock)?.Text ?? "",
-                                    X = newLeft,
-                                    Y = newTop,
-                                    FontSize = (b.Child as TextBlock)?.FontSize ?? 24,
-                                    ColorHex = BrushToHex((b.Child as TextBlock)?.Foreground ?? Brushes.Black),
-                                };
-                                textUndoStack.CommitAdd(cloneData);
-                            }
-                            else
-                            {
-                                var data = FindTextElementData(b);
-                                if (data != null)
-                                {
-                                    textUndoStack.CommitMove(data, startPos.X, startPos.Y, newLeft, newTop);
-                                    data.X = newLeft;
-                                    data.Y = newTop;
-                                }
+                                _textManager.TextUndoStack.CommitMove(data, startPos.X, startPos.Y, newLeft, newTop);
+                                data.X = newLeft;
+                                data.Y = newTop;
                             }
                         }
                     }
                 }
             }
+
             _isDraggingMultiRect = false;
-            _isMultiRectClone = false;
             _multiRectTextStartPos.Clear();
             e.Handled = true;
         }
@@ -1279,21 +1053,21 @@ namespace Ink_Anything
         private void SelectTextsWithinStrokeBounds()
         {
             if (_selectionScope == SelectionScope.Ink) return;
-            if (_textOverlayCanvas == null) return;
+            if (_textManager.TextOverlayCanvas == null) return;
             var bounds = inkCanvas.GetSelectionBounds();
             if (double.IsNaN(bounds.Left)) return;
 
-            foreach (var child in _textOverlayCanvas.Children)
+            foreach (var child in _textManager.TextOverlayCanvas.Children)
             {
                 if (child is Border border && border.Tag as string == "TextElement")
                 {
                     var left = System.Windows.Controls.Canvas.GetLeft(border);
                     var top = System.Windows.Controls.Canvas.GetTop(border);
                     var rect = new Rect(left, top, border.ActualWidth, border.ActualHeight);
-                    if (bounds.IntersectsWith(rect) && !selectedTextBorders.Contains(border))
+                    if (bounds.IntersectsWith(rect) && !_textManager.SelectedTextBorders.Contains(border))
                     {
-                        selectedTextBorders.Add(border);
-                        border.Background = MultiSelectHighlightBrush;
+                        _textManager.SelectedTextBorders.Add(border);
+                        border.Background = TextManager.MultiSelectHighlightBrush;
                     }
                 }
             }
@@ -1304,15 +1078,15 @@ namespace Ink_Anything
 
         private void SelectAllTextElements()
         {
-            if (_textOverlayCanvas == null) return;
-            foreach (var child in _textOverlayCanvas.Children)
+            if (_textManager.TextOverlayCanvas == null) return;
+            foreach (var child in _textManager.TextOverlayCanvas.Children)
             {
                 if (child is Border border && border.Tag as string == "TextElement")
                 {
-                    if (!selectedTextBorders.Contains(border))
+                    if (!_textManager.SelectedTextBorders.Contains(border))
                     {
-                        selectedTextBorders.Add(border);
-                        border.Background = MultiSelectHighlightBrush;
+                        _textManager.SelectedTextBorders.Add(border);
+                        border.Background = TextManager.MultiSelectHighlightBrush;
                     }
                 }
             }
@@ -1323,7 +1097,7 @@ namespace Ink_Anything
         private void UpdateSelectionControlVisibility()
         {
             bool hasStrokeSelection = inkCanvas.GetSelectedStrokes().Count > 0;
-            bool hasTextSelection = selectedTextBorders.Count > 0;
+            bool hasTextSelection = _textManager.SelectedTextBorders.Count > 0;
             // 墨迹悬浮工具栏（复制、旋转、镜像等）只在墨迹选中时显示
             BorderStrokeSelectionControl.Visibility = hasStrokeSelection
                 ? Visibility.Visible : Visibility.Collapsed;
@@ -1338,13 +1112,13 @@ namespace Ink_Anything
         private void DeleteSelectedTextBorders()
         {
             var overlay = GetTextOverlayCanvas();
-            foreach (var border in selectedTextBorders.ToList())
+            foreach (var border in _textManager.SelectedTextBorders.ToList())
             {
                 var data = FindTextElementData(border);
                 if (data != null)
                 {
-                    textUndoStack.CommitRemove(data);
-                    _currentTextElements.Remove(data);
+                    _textManager.TextUndoStack.CommitRemove(data);
+                    _textManager.CurrentTextElements.Remove(data);
                 }
                 overlay.Children.Remove(border);
             }

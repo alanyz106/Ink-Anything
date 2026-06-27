@@ -165,16 +165,17 @@ namespace Ink_Anything
                 if (selected.Count > 0)
                 {
                     inkCanvas.Strokes.Remove(selected);
+                    inkCanvas.Select(new StrokeCollection());
                     handled = true;
                 }
-                if (selectedTextBorders.Count > 0)
+                if (_textManager.SelectedTextBorders.Count > 0)
                 {
                     DeleteSelectedTextBorders();
                     handled = true;
                 }
                 if (handled)
                 {
-                    GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
+                    UpdateSelectionControlVisibility();
                     e.Handled = true;
                 }
             }
@@ -217,7 +218,7 @@ namespace Ink_Anything
 
         private void KeySelectAll(object sender, ExecutedRoutedEventArgs e)
         {
-            if (inkCanvas.Strokes.Count == 0 && (_textOverlayCanvas == null || _textOverlayCanvas.Children.Count == 0)) return;
+            if (inkCanvas.Strokes.Count == 0 && (_textManager.TextOverlayCanvas == null || _textManager.TextOverlayCanvas.Children.Count == 0)) return;
             if (!_isInSelectionMode)
             {
                 _previousDrawingShapeMode = drawingShapeMode;
@@ -226,8 +227,8 @@ namespace Ink_Anything
             }
             _isInSelectionMode = true;
             inkCanvas.EditingMode = InkCanvasEditingMode.None;
-            if (_textOverlayCanvas != null)
-                _textOverlayCanvas.Background = (_selectionScope == SelectionScope.Text) ? Brushes.Transparent : null;
+            if (_textManager.TextOverlayCanvas != null)
+                _textManager.TextOverlayCanvas.Background = (_selectionScope == SelectionScope.Text) ? Brushes.Transparent : null;
             RegisterRubberBandHandlers();
             _isSelectAllActive = true;
 
