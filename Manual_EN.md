@@ -8,7 +8,7 @@
 
 ## What is Ink Anything? <span id='intro'></span>
 
-Ink Anything is a lightweight digital whiteboard optimized for Seewo interactive displays and Microsoft PowerPoint. It supports ink writing, text input, shape recognition, and multi-touch gestures.
+Ink Anything is a lightweight digital whiteboard optimized for Microsoft PowerPoint. It supports ink writing, text input, shape recognition, and multi-touch gestures.
 
 ### Three Modes
 

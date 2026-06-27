@@ -4,7 +4,7 @@
 
 # Ink-Anything
 
-A lightweight digital whiteboard in WPF/C#, with text input and deep optimization for Seewo Boards and PowerPoint presentations.
+A lightweight digital whiteboard in WPF/C#, with text input and deep optimization for PowerPoint presentations.
 
 </div>
 
