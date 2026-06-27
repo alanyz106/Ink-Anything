@@ -76,7 +76,7 @@ namespace Ink_Anything
                         case 1: inkCanvas1.Cursor = Cursors.IBeam; break;
                         default: inkCanvas1.Cursor = Cursors.Arrow; break;
                     }
-                    inkCanvas1.ForceCursor = true;
+                    inkCanvas1.ForceCursor = false;
                 }
                 else if (drawingShapeMode != 0) // 其他绘图模式
                 {
@@ -101,6 +101,47 @@ namespace Ink_Anything
 
         #region Hotkeys
 
+        private bool MatchesHotkey(KeyEventArgs e, string gestureStr)
+        {
+            if (string.IsNullOrWhiteSpace(gestureStr)) return false;
+
+            var parts = gestureStr.Split('+');
+            if (parts.Length < 2) return false;
+
+            var requiredMods = ModifierKeys.None;
+            string keyPart = null;
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                var part = parts[i].Trim();
+                switch (part)
+                {
+                    case "Ctrl": requiredMods |= ModifierKeys.Control; break;
+                    case "Alt": requiredMods |= ModifierKeys.Alt; break;
+                    case "Shift": requiredMods |= ModifierKeys.Shift; break;
+                    case "Win": requiredMods |= ModifierKeys.Windows; break;
+                    default: keyPart = part; break;
+                }
+            }
+
+            if (keyPart == null) return false;
+
+            var actualKey = e.Key == Key.System ? e.SystemKey : e.Key;
+            Key expectedKey;
+
+            // 数字键
+            if (keyPart.Length == 1 && keyPart[0] >= '0' && keyPart[0] <= '9')
+            {
+                expectedKey = (Key)(Key.D0 + (keyPart[0] - '0'));
+            }
+            else if (!Enum.TryParse(keyPart, out expectedKey))
+            {
+                return false;
+            }
+
+            return Keyboard.Modifiers == requiredMods && actualKey == expectedKey;
+        }
+
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (PptNavigationBtn.Visibility != Visibility.Visible || currentMode != 0) return;
@@ -116,7 +157,7 @@ namespace Ink_Anything
 
         private void Main_Grid_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if ((e.Key == Key.Q || e.SystemKey == Key.Q) && Keyboard.Modifiers.HasFlag(ModifierKeys.Alt))
+            if (MatchesHotkey(e, Settings.Hotkeys.SelectMode))
             {
                 BtnSelect_Click(null, null);
                 e.Handled = true;

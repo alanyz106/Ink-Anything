@@ -472,6 +472,7 @@
                                 <RadioButton Name="TabBtnPowerPoint" Content="PPT" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnAdvanced" Content="高级" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                                 <RadioButton Name="TabBtnAutomation" Content="自动" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
+                                <RadioButton Name="TabBtnHotkeys" Content="快捷键" Style="{StaticResource SettingsTabRadioButton}" Checked="SettingsTab_Checked"/>
                             </StackPanel>
                         </ScrollViewer>
 
@@ -669,6 +670,85 @@
                                 </StackPanel>
                             </ui:SimpleStackPanel>
                         </StackPanel>
+
+                        <!-- 内容面板：快捷键 -->
+                        <StackPanel Name="PanelHotkeys" Visibility="Collapsed">
+                            <TextBlock FontSize="13" Foreground="#999999" Margin="0,0,0,10" Text="点击输入框后按下新的快捷键组合，留空则禁用该快捷键。"/>
+                            <ui:SimpleStackPanel Spacing="8">
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="切换画板" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyToggleCanvas" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+S"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="清屏" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyClearScreen" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+D"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="橡皮擦" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyEraser" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+E"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="截屏" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyScreenshot" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+C"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="隐藏工具栏" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyToggleToolbar" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+V"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="画直线" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyDrawLine" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+L"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="文本模式" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyTextMode" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+T"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="选择模式" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeySelectMode" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+Q"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <TextBlock FontSize="13" Foreground="#999999" Margin="0,8,0,4" Text="画笔颜色快捷键"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="黑色画笔" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyPenBlack" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+1"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="红色画笔" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyPenRed" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+2"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="绿色画笔" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyPenGreen" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+3"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="蓝色画笔" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyPenBlue" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+4"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="黄色画笔" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyPenYellow" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+5"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <TextBlock Text="白色画笔" Width="120" VerticalAlignment="Center" FontSize="14"/>
+                                    <TextBox Name="HotkeyPenWhite" Width="160" FontSize="14" IsReadOnly="True" Text="Alt+6"
+                                             PreviewKeyDown="HotkeyTextBox_PreviewKeyDown" GotFocus="HotkeyTextBox_GotFocus" LostFocus="HotkeyTextBox_LostFocus"/>
+                                </StackPanel>
+                            </ui:SimpleStackPanel>
+                        </StackPanel>
+
                         <StackPanel HorizontalAlignment="Center" Margin="0,12,0,4">
                             <TextBlock Name="TextBlockSettingsVersion" HorizontalAlignment="Center" FontSize="12" Foreground="#999999"/>
                             <Button Name="BtnCheckUpdate" Content="检查更新" Margin="0,6,0,0"
@@ -842,7 +922,7 @@
                                 </Border>
                             </Grid>
                             <ui:FontIcon Name="SymbolIconSelect" Glyph="{x:Static local:FluentIconGlyphs.SelectAll}" Foreground="{DynamicResource FloatBarForeground}" MouseUp="SymbolIconSelect_MouseUp"
-                                           ToolTipService.ToolTip="选择：点击进入选择模式，再点一次全选墨迹，再点一次退出选择模式 (Alt+Q 切换，Ctrl+A 全选)"/>
+                                           ToolTipService.ToolTip="选择：点击进入选择模式，再点一次退出 (Alt+Q，Ctrl+A 全选)"/>
                             <Grid Margin="3,5,0,5">
                                 <Image MouseUp="ImageDrawShape_MouseUp" MouseDown="Border_MouseDown" Margin="-2.5" Source="{DynamicResource DrawShapeImageSource.DrawShapeIcon}"
                                        ToolTipService.ToolTip="图形工具：绘制直线、箭头、圆、椭圆等预设图形"/>
@@ -959,7 +1039,7 @@
                                            MouseUp="SymbolIconPin_MouseUp" MouseDown="Border_MouseDown"
                                            ToolTipService.ToolTip="锁定：锁定/解锁工具栏位置"/>
                         </ui:SimpleStackPanel>
-                        <ui:SimpleStackPanel Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
+                        <ui:SimpleStackPanel x:Name="StackPanelFloatingBarSecondary" Orientation="{Binding ElementName=StackPanelFloatingBar, Path=Orientation}">
                             <Grid Width="20" Height="24" Margin="2,0,12,1">
                                 <Image Margin="-8" MouseDown="Border_MouseDown" MouseUp="ImageBlackboard_MouseUp"
                                        ToolTipService.ToolTip="切换黑板/白板模式">

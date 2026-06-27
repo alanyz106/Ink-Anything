@@ -37,6 +37,8 @@ namespace Ink_Anything
         {
             if (BorderSettings.Tag as Visibility? == Visibility.Visible)
             {
+                SaveHotkeySettings();
+                ApplyHotkeys();
                 BorderSettings.Tag = Visibility.Collapsed;
                 BorderSettings.BeginAnimation(OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(50)));
                 await Task.Delay(60);

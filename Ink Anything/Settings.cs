@@ -20,6 +20,8 @@ namespace Ink_Anything
         public InkToShape InkToShape { get; set; } = new InkToShape();
         [JsonProperty("startup")]
         public Startup Startup { get; set; } = new Startup();
+        [JsonProperty("hotkeys")]
+        public Hotkeys Hotkeys { get; set; } = new Hotkeys();
     }
 
     public class Canvas
@@ -167,5 +169,37 @@ namespace Ink_Anything
     {
         [JsonProperty("isInkToShapeEnabled")]
         public bool IsInkToShapeEnabled { get; set; } = true;
+    }
+
+    public class Hotkeys
+    {
+        [JsonProperty("toggleCanvas")]
+        public string ToggleCanvas { get; set; } = "Alt+S";
+        [JsonProperty("clearScreen")]
+        public string ClearScreen { get; set; } = "Alt+D";
+        [JsonProperty("eraser")]
+        public string Eraser { get; set; } = "Alt+E";
+        [JsonProperty("screenshot")]
+        public string Screenshot { get; set; } = "Alt+C";
+        [JsonProperty("toggleToolbar")]
+        public string ToggleToolbar { get; set; } = "Alt+V";
+        [JsonProperty("drawLine")]
+        public string DrawLine { get; set; } = "Alt+L";
+        [JsonProperty("textMode")]
+        public string TextMode { get; set; } = "Alt+T";
+        [JsonProperty("selectMode")]
+        public string SelectMode { get; set; } = "Alt+Q";
+        [JsonProperty("penBlack")]
+        public string PenBlack { get; set; } = "Alt+1";
+        [JsonProperty("penRed")]
+        public string PenRed { get; set; } = "Alt+2";
+        [JsonProperty("penGreen")]
+        public string PenGreen { get; set; } = "Alt+3";
+        [JsonProperty("penBlue")]
+        public string PenBlue { get; set; } = "Alt+4";
+        [JsonProperty("penYellow")]
+        public string PenYellow { get; set; } = "Alt+5";
+        [JsonProperty("penWhite")]
+        public string PenWhite { get; set; } = "Alt+6";
     }
 }

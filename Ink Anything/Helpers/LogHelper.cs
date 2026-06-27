@@ -7,6 +7,20 @@ namespace Ink_Anything.Helpers
     {
         public static string LogFile = "Log.txt";
 
+        public static void InitLog()
+        {
+            try
+            {
+                var file = App.RootPath + LogFile;
+                if (!Directory.Exists(App.RootPath))
+                {
+                    Directory.CreateDirectory(App.RootPath);
+                }
+                File.WriteAllText(file, string.Empty);
+            }
+            catch { }
+        }
+
         public static void NewLog(string str)
         {
             WriteLogToFile(str, LogType.Info);

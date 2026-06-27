@@ -246,6 +246,9 @@ namespace Ink_Anything
 
             TextBlockSettingsVersion.Text = "Ink Anything v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
+            LoadHotkeySettings();
+            ApplyHotkeys();
+
             isLoaded = true;
 
             CheckHotkeyConflicts();

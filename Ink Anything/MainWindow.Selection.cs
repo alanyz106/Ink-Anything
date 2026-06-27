@@ -420,34 +420,8 @@ namespace Ink_Anything
             drawingShapeMode = 0;
             if (_isInSelectionMode)
             {
-                if (_isSelectAllActive)
-                {
-                    // 全选状态 → 退出选择模式
-                    ExitSelectionMode();
-                }
-                else
-                {
-                    // 部分选中状态 → 全选
-                    _isSelectAllActive = true;
-                    if (_selectionScope == SelectionScope.Text)
-                    {
-                        // 文本选择模式：只全选文字
-                        SelectAllTextElements();
-                    }
-                    else
-                    {
-                        // 墨迹选择模式：只全选墨迹
-                        StrokeCollection selectedStrokes = new StrokeCollection();
-                        foreach (Stroke stroke in inkCanvas.Strokes)
-                        {
-                            if (stroke.GetBounds().Width > 0 && stroke.GetBounds().Height > 0)
-                            {
-                                selectedStrokes.Add(stroke);
-                            }
-                        }
-                        inkCanvas.Select(selectedStrokes);
-                    }
-                }
+                // 已在选择模式 → 退出（全选由 Ctrl+A 触发）
+                ExitSelectionMode();
             }
             else
             {
@@ -464,12 +438,12 @@ namespace Ink_Anything
                 if (_selectionScope == SelectionScope.Text)
                 {
                     SymbolIconText.Foreground = new SolidColorBrush(Color.FromRgb(0x7C, 0xB9, 0xE8));
-                    ToolTipService.SetToolTip(SymbolIconText, "文本选择：再次点击进入墨迹选择 (Alt+T)");
+                    ToolTipService.SetToolTip(SymbolIconText, $"文本选择：再次点击进入墨迹选择 ({Settings.Hotkeys.TextMode})");
                 }
                 else
                 {
                     SymbolIconText.Foreground = (Brush)FindResource("FloatBarForeground");
-                    ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式 (Alt+T)");
+                    ToolTipService.SetToolTip(SymbolIconText, $"文本输入：点击进入文本模式 ({Settings.Hotkeys.TextMode})");
                 }
             }
             UpdateSelectIconState();
@@ -491,7 +465,7 @@ namespace Ink_Anything
                 inkCanvas.Cursor = Settings.Canvas.TextCursorType == 1 ? Cursors.IBeam : Cursors.Arrow;
                 // 恢复文本图标高亮
                 SymbolIconText.Foreground = new SolidColorBrush(Color.FromRgb(0x40, 0x9E, 0xFF));
-                ToolTipService.SetToolTip(SymbolIconText, "文本模式：点击退出文本模式 (Alt+T)");
+                ToolTipService.SetToolTip(SymbolIconText, $"文本模式：点击退出文本模式 ({Settings.Hotkeys.TextMode})");
             }
             else
             {
@@ -499,7 +473,7 @@ namespace Ink_Anything
                 inkCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 // 退出到非文本模式时，恢复文本图标默认颜色
                 SymbolIconText.Foreground = (Brush)FindResource("FloatBarForeground");
-                ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式 (Alt+T)");
+                ToolTipService.SetToolTip(SymbolIconText, $"文本输入：点击进入文本模式 ({Settings.Hotkeys.TextMode})");
             }
             inkCanvas.IsManipulationEnabled = true;
             ClearTextSelection();
@@ -545,7 +519,7 @@ namespace Ink_Anything
                 inkCanvas.ForceCursor = false;
                 // 墨迹选择范围：恢复文本图标默认颜色
                 SymbolIconText.Foreground = (Brush)FindResource("FloatBarForeground");
-                ToolTipService.SetToolTip(SymbolIconText, "文本输入：点击进入文本模式 (Alt+T)");
+                ToolTipService.SetToolTip(SymbolIconText, $"文本输入：点击进入文本模式 ({Settings.Hotkeys.TextMode})");
             }
 
             UpdateSelectionControlVisibility();
@@ -558,21 +532,14 @@ namespace Ink_Anything
             {
                 // 非选择模式：默认颜色
                 SymbolIconSelect.Foreground = new SolidColorBrush(FloatBarForegroundColor);
-                ToolTipService.SetToolTip(SymbolIconSelect, "选择：点击进入选择模式，再点一次全选，再点一次退出 (Alt+Q)");
-            }
-            else if (_isSelectAllActive)
-            {
-                // 全选状态：深蓝高亮
-                SymbolIconSelect.Foreground = new SolidColorBrush(Color.FromRgb(0, 136, 255));
-                string mode = _selectionScope == SelectionScope.Text ? "文字" : "墨迹";
-                ToolTipService.SetToolTip(SymbolIconSelect, $"已全选所有{ mode }：再次点击退出选择模式 (Alt+Q)");
+                ToolTipService.SetToolTip(SymbolIconSelect, $"选择：点击进入选择模式，再点一次退出 ({Settings.Hotkeys.SelectMode}，Ctrl+A 全选)");
             }
             else
             {
-                // 部分选中状态：浅蓝高亮
+                // 选择模式：浅蓝高亮
                 SymbolIconSelect.Foreground = new SolidColorBrush(Color.FromRgb(0x7C, 0xB9, 0xE8));
                 string mode = _selectionScope == SelectionScope.Text ? "文字" : "墨迹";
-                ToolTipService.SetToolTip(SymbolIconSelect, $"选择模式（仅{ mode }）：点击全选所有{ mode } (Alt+Q)");
+                ToolTipService.SetToolTip(SymbolIconSelect, $"选择模式（仅{ mode }）：点击退出选择模式 ({Settings.Hotkeys.SelectMode}，Ctrl+A 全选)");
             }
         }
 

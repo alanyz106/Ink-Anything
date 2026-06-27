@@ -113,6 +113,13 @@ namespace Ink_Anything
                 }
             }
 
+            // 检查是否在 resize handle 附近（避免在边角附近点击时误创建新文本）
+            if (IsNearResizeHandle(pos))
+            {
+                e.Handled = true;
+                return;
+            }
+
             // 点在空白处：清除选中状态，创建新文本框
             if (_textManager.SelectedTextBorders.Count > 0)
             {
@@ -173,6 +180,10 @@ namespace Ink_Anything
                         }
                     }
                 }
+
+                // 检查是否在 resize handle 附近
+                var overlayPos = e.GetPosition(_textManager.TextOverlayCanvas);
+                if (IsNearResizeHandle(overlayPos)) return;
             }
 
             // 点在空白处：清除选中状态，创建新文本框
@@ -392,8 +403,16 @@ namespace Ink_Anything
             }
             else
             {
-                ToggleOrSelectTextBorder(border, false);
-                pendingCtrlToggleBorder = null;
+                if (_textManager.SelectedTextBorders.Count > 1 && _textManager.SelectedTextBorders.Contains(border))
+                {
+                    // 多选状态下点击已选中项：不清空选择，直接准备拖动
+                    pendingCtrlToggleBorder = null;
+                }
+                else
+                {
+                    ToggleOrSelectTextBorder(border, false);
+                    pendingCtrlToggleBorder = null;
+                }
             }
 
             draggingTextBorder = border;
@@ -822,6 +841,23 @@ namespace Ink_Anything
             WpfCanvas.SetTop(handle, top);
         }
 
+        private bool IsNearResizeHandle(Point pos)
+        {
+            if (_textManager.ResizeHandlesCanvas == null) return false;
+            const double threshold = 16;
+            foreach (var child in _textManager.ResizeHandlesCanvas.Children)
+            {
+                if (child is Border handle)
+                {
+                    var hx = WpfCanvas.GetLeft(handle) + 4;
+                    var hy = WpfCanvas.GetTop(handle) + 4;
+                    if (Math.Abs(pos.X - hx) < threshold && Math.Abs(pos.Y - hy) < threshold)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         private void ClearResizeHandlesOnly()
         {
             if (_textManager.ResizeHandlesCanvas != null)
@@ -1001,6 +1037,7 @@ namespace Ink_Anything
                 if (textBlock != null) textBlock.FontSize = fontSize;
                 UpdateResizeHandlesPosition();
             }
+            try { TextSizeSlider.Value = fontSize; } catch { }
         }
 
         private Border FindTextBorderByData(TextElementData data)

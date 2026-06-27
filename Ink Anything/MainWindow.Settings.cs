@@ -613,6 +613,7 @@ namespace Ink_Anything
             PanelPowerPoint.Visibility = Visibility.Collapsed;
             PanelAdvanced.Visibility = Visibility.Collapsed;
             PanelAutomation.Visibility = Visibility.Collapsed;
+            PanelHotkeys.Visibility = Visibility.Collapsed;
 
             // 根据选中的 RadioButton 显示对应面板
             if (TabBtnBehavior.IsChecked == true) PanelBehavior.Visibility = Visibility.Visible;
@@ -622,6 +623,246 @@ namespace Ink_Anything
             else if (TabBtnPowerPoint.IsChecked == true) PanelPowerPoint.Visibility = Visibility.Visible;
             else if (TabBtnAdvanced.IsChecked == true) PanelAdvanced.Visibility = Visibility.Visible;
             else if (TabBtnAutomation.IsChecked == true) PanelAutomation.Visibility = Visibility.Visible;
+            else if (TabBtnHotkeys.IsChecked == true) PanelHotkeys.Visibility = Visibility.Visible;
+        }
+
+        #endregion
+
+        #region Hotkeys
+
+        private void HotkeyTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            var textBox = sender as System.Windows.Controls.TextBox;
+            if (textBox == null) return;
+
+            e.Handled = true;
+
+            // 只接受修饰键+普通键的组合，不接受单独的修饰键
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            if (key == Key.LeftAlt || key == Key.RightAlt ||
+                key == Key.LeftCtrl || key == Key.RightCtrl ||
+                key == Key.LeftShift || key == Key.RightShift ||
+                key == Key.LWin || key == Key.RWin)
+            {
+                return;
+            }
+
+            var modifiers = Keyboard.Modifiers;
+            if (modifiers == ModifierKeys.None) return;
+
+            string gesture = FormatKeyGesture(modifiers, key);
+            if (string.IsNullOrEmpty(gesture)) return;
+
+            textBox.Text = gesture;
+        }
+
+        private void HotkeyTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as System.Windows.Controls.TextBox;
+            if (textBox != null)
+            {
+                textBox.Text = "请按下快捷键...";
+                textBox.Foreground = System.Windows.Media.Brushes.Gray;
+            }
+        }
+
+        private void HotkeyTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as System.Windows.Controls.TextBox;
+            if (textBox != null)
+            {
+                textBox.Foreground = System.Windows.Media.Brushes.Black;
+                if (textBox.Text == "请按下快捷键...")
+                {
+                    // 恢复原值
+                    LoadSingleHotkey(textBox);
+                }
+            }
+        }
+
+        private string FormatKeyGesture(ModifierKeys modifiers, Key key)
+        {
+            var parts = new System.Collections.Generic.List<string>();
+            if (modifiers.HasFlag(ModifierKeys.Control)) parts.Add("Ctrl");
+            if (modifiers.HasFlag(ModifierKeys.Alt)) parts.Add("Alt");
+            if (modifiers.HasFlag(ModifierKeys.Shift)) parts.Add("Shift");
+            if (modifiers.HasFlag(ModifierKeys.Windows)) parts.Add("Win");
+
+            // 数字键显示为数字
+            string keyName;
+            if (key >= Key.D0 && key <= Key.D9)
+                keyName = (key - Key.D0).ToString();
+            else if (key >= Key.NumPad0 && key <= Key.NumPad9)
+                keyName = (key - Key.NumPad0).ToString();
+            else
+                keyName = key.ToString();
+
+            parts.Add(keyName);
+            return string.Join("+", parts);
+        }
+
+        private void LoadHotkeySettings()
+        {
+            HotkeyToggleCanvas.Text = Settings.Hotkeys.ToggleCanvas;
+            HotkeyClearScreen.Text = Settings.Hotkeys.ClearScreen;
+            HotkeyEraser.Text = Settings.Hotkeys.Eraser;
+            HotkeyScreenshot.Text = Settings.Hotkeys.Screenshot;
+            HotkeyToggleToolbar.Text = Settings.Hotkeys.ToggleToolbar;
+            HotkeyDrawLine.Text = Settings.Hotkeys.DrawLine;
+            HotkeyTextMode.Text = Settings.Hotkeys.TextMode;
+            HotkeySelectMode.Text = Settings.Hotkeys.SelectMode;
+            HotkeyPenBlack.Text = Settings.Hotkeys.PenBlack;
+            HotkeyPenRed.Text = Settings.Hotkeys.PenRed;
+            HotkeyPenGreen.Text = Settings.Hotkeys.PenGreen;
+            HotkeyPenBlue.Text = Settings.Hotkeys.PenBlue;
+            HotkeyPenYellow.Text = Settings.Hotkeys.PenYellow;
+            HotkeyPenWhite.Text = Settings.Hotkeys.PenWhite;
+        }
+
+        private void LoadSingleHotkey(System.Windows.Controls.TextBox textBox)
+        {
+            if (textBox == HotkeyToggleCanvas) textBox.Text = Settings.Hotkeys.ToggleCanvas;
+            else if (textBox == HotkeyClearScreen) textBox.Text = Settings.Hotkeys.ClearScreen;
+            else if (textBox == HotkeyEraser) textBox.Text = Settings.Hotkeys.Eraser;
+            else if (textBox == HotkeyScreenshot) textBox.Text = Settings.Hotkeys.Screenshot;
+            else if (textBox == HotkeyToggleToolbar) textBox.Text = Settings.Hotkeys.ToggleToolbar;
+            else if (textBox == HotkeyDrawLine) textBox.Text = Settings.Hotkeys.DrawLine;
+            else if (textBox == HotkeyTextMode) textBox.Text = Settings.Hotkeys.TextMode;
+            else if (textBox == HotkeySelectMode) textBox.Text = Settings.Hotkeys.SelectMode;
+            else if (textBox == HotkeyPenBlack) textBox.Text = Settings.Hotkeys.PenBlack;
+            else if (textBox == HotkeyPenRed) textBox.Text = Settings.Hotkeys.PenRed;
+            else if (textBox == HotkeyPenGreen) textBox.Text = Settings.Hotkeys.PenGreen;
+            else if (textBox == HotkeyPenBlue) textBox.Text = Settings.Hotkeys.PenBlue;
+            else if (textBox == HotkeyPenYellow) textBox.Text = Settings.Hotkeys.PenYellow;
+            else if (textBox == HotkeyPenWhite) textBox.Text = Settings.Hotkeys.PenWhite;
+        }
+
+        private void SaveHotkeySettings()
+        {
+            Settings.Hotkeys.ToggleCanvas = HotkeyToggleCanvas.Text;
+            Settings.Hotkeys.ClearScreen = HotkeyClearScreen.Text;
+            Settings.Hotkeys.Eraser = HotkeyEraser.Text;
+            Settings.Hotkeys.Screenshot = HotkeyScreenshot.Text;
+            Settings.Hotkeys.ToggleToolbar = HotkeyToggleToolbar.Text;
+            Settings.Hotkeys.DrawLine = HotkeyDrawLine.Text;
+            Settings.Hotkeys.TextMode = HotkeyTextMode.Text;
+            Settings.Hotkeys.SelectMode = HotkeySelectMode.Text;
+            Settings.Hotkeys.PenBlack = HotkeyPenBlack.Text;
+            Settings.Hotkeys.PenRed = HotkeyPenRed.Text;
+            Settings.Hotkeys.PenGreen = HotkeyPenGreen.Text;
+            Settings.Hotkeys.PenBlue = HotkeyPenBlue.Text;
+            Settings.Hotkeys.PenYellow = HotkeyPenYellow.Text;
+            Settings.Hotkeys.PenWhite = HotkeyPenWhite.Text;
+            SaveSettingsToFile();
+        }
+
+        private System.Windows.Input.KeyGesture ParseKeyGesture(string gestureStr)
+        {
+            if (string.IsNullOrWhiteSpace(gestureStr)) return null;
+
+            var parts = gestureStr.Split('+');
+            if (parts.Length < 2) return null;
+
+            var modifiers = ModifierKeys.None;
+            string keyPart = null;
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                var part = parts[i].Trim();
+                switch (part)
+                {
+                    case "Ctrl": modifiers |= ModifierKeys.Control; break;
+                    case "Alt": modifiers |= ModifierKeys.Alt; break;
+                    case "Shift": modifiers |= ModifierKeys.Shift; break;
+                    case "Win": modifiers |= ModifierKeys.Windows; break;
+                    default: keyPart = part; break;
+                }
+            }
+
+            if (keyPart == null) return null;
+
+            // 数字键
+            if (keyPart.Length == 1 && keyPart[0] >= '0' && keyPart[0] <= '9')
+            {
+                var key = (Key)(Key.D0 + (keyPart[0] - '0'));
+                return new System.Windows.Input.KeyGesture(key, modifiers);
+            }
+
+            // 尝试解析 Key 枚举
+            if (Enum.TryParse(keyPart, out Key parsedKey))
+            {
+                return new System.Windows.Input.KeyGesture(parsedKey, modifiers);
+            }
+
+            return null;
+        }
+
+        internal void ApplyHotkeys()
+        {
+            // 移除所有 Alt 系列的 KeyBinding（保留 Ctrl 系列）
+            var toRemove = new System.Collections.Generic.List<KeyBinding>();
+            foreach (var binding in InputBindings)
+            {
+                if (binding is KeyBinding kb && kb.Modifiers.HasFlag(ModifierKeys.Alt))
+                {
+                    toRemove.Add(kb);
+                }
+            }
+            foreach (var kb in toRemove)
+            {
+                InputBindings.Remove(kb);
+            }
+
+            // 重新绑定
+            var hotkeys = Settings.Hotkeys;
+            AddHotkeyBinding(hotkeys.ToggleCanvas, "HotKey_ChangeToDrawTool");
+            AddHotkeyBinding(hotkeys.ClearScreen, "HotKey_Clear");
+            AddHotkeyBinding(hotkeys.Eraser, "HotKey_ChangeToEraser");
+            AddHotkeyBinding(hotkeys.Screenshot, "HotKey_Capture");
+            AddHotkeyBinding(hotkeys.ToggleToolbar, "HotKey_Hide");
+            AddHotkeyBinding(hotkeys.DrawLine, "HotKey_DrawLine");
+            AddHotkeyBinding(hotkeys.TextMode, "HotKey_Text");
+            AddHotkeyBinding(hotkeys.SelectMode, "HotKey_ChangeToSelect");
+            AddHotkeyBinding(hotkeys.PenBlack, "HotKey_ChangeToPen1");
+            AddHotkeyBinding(hotkeys.PenRed, "HotKey_ChangeToPen2");
+            AddHotkeyBinding(hotkeys.PenGreen, "HotKey_ChangeToPen3");
+            AddHotkeyBinding(hotkeys.PenBlue, "HotKey_ChangeToPen4");
+            AddHotkeyBinding(hotkeys.PenYellow, "HotKey_ChangeToPen5");
+            AddHotkeyBinding(hotkeys.PenWhite, "HotKey_ChangeToPen6");
+
+            UpdateHotkeyTooltips();
+        }
+
+        private void UpdateHotkeyTooltips()
+        {
+            var h = Settings.Hotkeys;
+
+            ToolTipService.SetToolTip(SymbolIconEmoji, $"按住可拖动，点击可隐藏工具栏（{h.ToggleToolbar}）");
+            ToolTipService.SetToolTip(GridModeToggleMouse, $"当前是鼠标模式，点击切换到画笔模式 ({h.ToggleCanvas})");
+            ToolTipService.SetToolTip(GridModeToggle, $"当前是画笔模式，点击切换到鼠标模式 ({h.ToggleCanvas})");
+
+            ToolTipService.SetToolTip(BorderPenColorBlack, $"黑色画笔 ({h.PenBlack})");
+            ToolTipService.SetToolTip(BorderPenColorRed, $"红色画笔 ({h.PenRed})");
+            ToolTipService.SetToolTip(BorderPenColorGreen, $"绿色画笔 ({h.PenGreen})");
+            ToolTipService.SetToolTip(BorderPenColorBlue, $"蓝色画笔 ({h.PenBlue})");
+            ToolTipService.SetToolTip(BorderPenColorYellow, $"黄色画笔 ({h.PenYellow})");
+            ToolTipService.SetToolTip(BorderPenColorWhite, $"白色画笔 ({h.PenWhite})");
+
+            ToolTipService.SetToolTip(EraserContainer, $"橡皮擦：擦除墨迹（点击切换笔迹擦/范围擦） ({h.Eraser})");
+            ToolTipService.SetToolTip(SymbolIconDelete, $"清屏：清除画布上所有墨迹 ({h.ClearScreen})");
+            ToolTipService.SetToolTip(SymbolIconSelect, $"选择：点击进入选择模式，再点一次退出 ({h.SelectMode}，Ctrl+A 全选)");
+            ToolTipService.SetToolTip(SymbolIconText, $"文本输入：点击画板添加文字 ({h.TextMode})");
+        }
+
+        private void AddHotkeyBinding(string gestureStr, string commandName)
+        {
+            var gesture = ParseKeyGesture(gestureStr);
+            if (gesture == null) return;
+
+            var command = TryFindResource(commandName) as System.Windows.Input.RoutedUICommand;
+            if (command == null) return;
+
+            InputBindings.Add(new KeyBinding(command, gesture));
         }
 
         #endregion

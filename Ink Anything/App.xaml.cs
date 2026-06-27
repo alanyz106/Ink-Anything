@@ -39,6 +39,7 @@ namespace Ink_Anything
         {
             if (!StoreHelper.IsStoreApp) RootPath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
 
+            LogHelper.InitLog();
             LogHelper.NewLog(string.Format("Ink Anything Starting (Version: {0})", Assembly.GetExecutingAssembly().GetName().Version.ToString()));
 
             bool ret;
