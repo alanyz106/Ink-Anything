@@ -20,31 +20,25 @@ namespace Ink_Anything
         static Color ColorPenBlue = Colors.Blue;
         static Color ColorPenYellow = Colors.Yellow;
 
-        StrokeCollection[] strokeCollections = new StrokeCollection[101];
-        bool[] whiteboadLastModeIsRedo = new bool[101];
         StrokeCollection lastTouchDownStrokeCollection = new StrokeCollection();
-        List<TextElementData>[] textElementCollections = new List<TextElementData>[101];
-
-        int CurrentWhiteboardIndex = 1;
-        int WhiteboardTotalCount = 1;
-        TimeMachineHistory[][] TimeMachineHistories = new TimeMachineHistory[101][]; //最多99页，0用来存储非白板时的墨迹以便还原
+        // 页面数据已迁移到 _whiteboardManager (WhiteboardManager)
 
         private void SaveStrokes(bool isBackupMain = false)
         {
             if (isBackupMain)
             {
                 var timeMachineHistory = timeMachine.ExportTimeMachineHistory();
-                TimeMachineHistories[0] = timeMachineHistory;
+                _whiteboardManager.TimeMachineHistories[0] = timeMachineHistory;
                 timeMachine.ClearStrokeHistory();
-                textElementCollections[0] = GetCurrentTextElementDataList();
+                _whiteboardManager.TextElementCollections[0] = GetCurrentTextElementDataList();
                 ClearTextElementsFromCanvas();
             }
             else
             {
                 var timeMachineHistory = timeMachine.ExportTimeMachineHistory();
-                TimeMachineHistories[CurrentWhiteboardIndex] = timeMachineHistory;
+                _whiteboardManager.TimeMachineHistories[_whiteboardManager.CurrentIndex] = timeMachineHistory;
                 timeMachine.ClearStrokeHistory();
-                textElementCollections[CurrentWhiteboardIndex] = GetCurrentTextElementDataList();
+                _whiteboardManager.TextElementCollections[_whiteboardManager.CurrentIndex] = GetCurrentTextElementDataList();
                 ClearTextElementsFromCanvas();
             }
         }
@@ -63,24 +57,24 @@ namespace Ink_Anything
         {
             try
             {
-                if (TimeMachineHistories[CurrentWhiteboardIndex] == null) return; //防止白板打开后不居中
+                if (_whiteboardManager.TimeMachineHistories[_whiteboardManager.CurrentIndex] == null) return; //防止白板打开后不居中
                 if (isBackupMain)
                 {
-                    timeMachine.ImportTimeMachineHistory(TimeMachineHistories[0]);
-                    foreach (var item in TimeMachineHistories[0])
+                    timeMachine.ImportTimeMachineHistory(_whiteboardManager.TimeMachineHistories[0]);
+                    foreach (var item in _whiteboardManager.TimeMachineHistories[0])
                     {
                         ApplyHistoryToCanvas(item);
                     }
-                    LoadTextElementsToCanvas(textElementCollections[0]);
+                    LoadTextElementsToCanvas(_whiteboardManager.TextElementCollections[0]);
                 }
                 else
                 {
-                    timeMachine.ImportTimeMachineHistory(TimeMachineHistories[CurrentWhiteboardIndex]);
-                    foreach (var item in TimeMachineHistories[CurrentWhiteboardIndex])
+                    timeMachine.ImportTimeMachineHistory(_whiteboardManager.TimeMachineHistories[_whiteboardManager.CurrentIndex]);
+                    foreach (var item in _whiteboardManager.TimeMachineHistories[_whiteboardManager.CurrentIndex])
                     {
                         ApplyHistoryToCanvas(item);
                     }
-                    LoadTextElementsToCanvas(textElementCollections[CurrentWhiteboardIndex]);
+                    LoadTextElementsToCanvas(_whiteboardManager.TextElementCollections[_whiteboardManager.CurrentIndex]);
                 }
             }
             catch { }
@@ -88,12 +82,12 @@ namespace Ink_Anything
 
         private void BtnWhiteBoardSwitchPrevious_Click(object sender, EventArgs e)
         {
-            if (CurrentWhiteboardIndex <= 1) return;
+            if (_whiteboardManager.CurrentIndex <= 1) return;
 
             SaveStrokes();
 
             ClearStrokes(true);
-            CurrentWhiteboardIndex--;
+            _whiteboardManager.CurrentIndex--;
 
             RestoreStrokes();
 
@@ -102,7 +96,7 @@ namespace Ink_Anything
 
         private void BtnWhiteBoardSwitchNext_Click(object sender, EventArgs e)
         {
-            if (CurrentWhiteboardIndex >= WhiteboardTotalCount)
+            if (_whiteboardManager.CurrentIndex >= _whiteboardManager.TotalCount)
             {
                 BtnWhiteBoardAdd_Click(sender, e);
                 return;
@@ -116,7 +110,7 @@ namespace Ink_Anything
 
 
             ClearStrokes(true);
-            CurrentWhiteboardIndex++;
+            _whiteboardManager.CurrentIndex++;
 
             RestoreStrokes();
 
@@ -125,7 +119,7 @@ namespace Ink_Anything
 
         private void BtnWhiteBoardAdd_Click(object sender, EventArgs e)
         {
-            if (WhiteboardTotalCount >= 99) return;
+            if (_whiteboardManager.TotalCount >= 99) return;
             if (Settings.Automation.IsAutoSaveStrokesAtClear && inkCanvas.Strokes.Count > Settings.Automation.MinimumAutomationStrokeNumber)
             {
                 SaveScreenShot(true);
@@ -134,52 +128,52 @@ namespace Ink_Anything
             SaveStrokes();
             ClearStrokes(true);
 
-            WhiteboardTotalCount++;
-            CurrentWhiteboardIndex++;
+            _whiteboardManager.TotalCount++;
+            _whiteboardManager.CurrentIndex++;
 
-            if (CurrentWhiteboardIndex != WhiteboardTotalCount)
+            if (_whiteboardManager.CurrentIndex != _whiteboardManager.TotalCount)
             {
-                for (int i = WhiteboardTotalCount; i > CurrentWhiteboardIndex; i--)
+                for (int i = _whiteboardManager.TotalCount; i > _whiteboardManager.CurrentIndex; i--)
                 {
-                    TimeMachineHistories[i] = TimeMachineHistories[i - 1];
+                    _whiteboardManager.TimeMachineHistories[i] = _whiteboardManager.TimeMachineHistories[i - 1];
                 }
             }
 
             UpdateIndexInfoDisplay();
 
-            if (WhiteboardTotalCount >= 99) BtnWhiteBoardAdd.IsEnabled = false;
+            if (_whiteboardManager.TotalCount >= 99) BtnWhiteBoardAdd.IsEnabled = false;
         }
 
         private void BtnWhiteBoardDelete_Click(object sender, RoutedEventArgs e)
         {
             ClearStrokes(true);
 
-            if (CurrentWhiteboardIndex != WhiteboardTotalCount)
+            if (_whiteboardManager.CurrentIndex != _whiteboardManager.TotalCount)
             {
-                for (int i = CurrentWhiteboardIndex; i <= WhiteboardTotalCount; i++)
+                for (int i = _whiteboardManager.CurrentIndex; i <= _whiteboardManager.TotalCount; i++)
                 {
-                    TimeMachineHistories[i] = TimeMachineHistories[i + 1];
+                    _whiteboardManager.TimeMachineHistories[i] = _whiteboardManager.TimeMachineHistories[i + 1];
                 }
             }
             else
             {
-                CurrentWhiteboardIndex--;
+                _whiteboardManager.CurrentIndex--;
             }
 
-            WhiteboardTotalCount--;
+            _whiteboardManager.TotalCount--;
 
             RestoreStrokes();
 
             UpdateIndexInfoDisplay();
 
-            if (WhiteboardTotalCount < 99) BtnWhiteBoardAdd.IsEnabled = true;
+            if (_whiteboardManager.TotalCount < 99) BtnWhiteBoardAdd.IsEnabled = true;
         }
 
         private void UpdateIndexInfoDisplay()
         {
-            TextBlockWhiteBoardIndexInfo.Text = string.Format("{0} / {1}", CurrentWhiteboardIndex, WhiteboardTotalCount);
+            TextBlockWhiteBoardIndexInfo.Text = string.Format("{0} / {1}", _whiteboardManager.CurrentIndex, _whiteboardManager.TotalCount);
 
-            if (CurrentWhiteboardIndex == 1)
+            if (_whiteboardManager.CurrentIndex == 1)
             {
                 BtnWhiteBoardSwitchPrevious.IsEnabled = false;
             }
@@ -188,7 +182,7 @@ namespace Ink_Anything
                 BtnWhiteBoardSwitchPrevious.IsEnabled = true;
             }
 
-            if (CurrentWhiteboardIndex == WhiteboardTotalCount)
+            if (_whiteboardManager.CurrentIndex == _whiteboardManager.TotalCount)
             {
                 BtnWhiteBoardSwitchNext.IsEnabled = false;
             }
@@ -197,7 +191,7 @@ namespace Ink_Anything
                 BtnWhiteBoardSwitchNext.IsEnabled = true;
             }
 
-            if (WhiteboardTotalCount == 1)
+            if (_whiteboardManager.TotalCount == 1)
             {
                 BtnWhiteBoardDelete.IsEnabled = false;
             }
@@ -342,7 +336,7 @@ namespace Ink_Anything
 
                                     Point iniP = new Point(result.Centroid.X - shape.Width / 2, result.Centroid.Y - shape.Height / 2);
                                     Point endP = new Point(result.Centroid.X + shape.Width / 2, result.Centroid.Y + shape.Height / 2);
-                                    var pointList = GenerateEllipseGeometry(iniP, endP);
+                                    var pointList = ShapeGenerator.GenerateEllipseGeometry(iniP, endP);
                                     var point = new StylusPointCollection(pointList);
                                     var stroke = new Stroke(point)
                                     {
@@ -430,13 +424,13 @@ namespace Ink_Anything
                                                 inkCanvas.Strokes.Remove(result.InkDrawingNode.Strokes);
                                                 newStrokes = new StrokeCollection();
 
-                                                var _pointList = GenerateEllipseGeometry(iniP, endP, false, true);
+                                                var _pointList = ShapeGenerator.GenerateEllipseGeometry(iniP, endP, false, true);
                                                 var _point = new StylusPointCollection(_pointList);
                                                 var _stroke = new Stroke(_point)
                                                 {
                                                     DrawingAttributes = inkCanvas.DefaultDrawingAttributes.Clone()
                                                 };
-                                                var _dashedLineStroke = GenerateDashedLineEllipseStrokeCollection(iniP, endP, true, false);
+                                                var _dashedLineStroke = ShapeGenerator.GenerateDashedLineEllipseStrokeCollection(iniP, endP, inkCanvas.DefaultDrawingAttributes, true, false);
                                                 StrokeCollection strokes = new StrokeCollection()
                                                 {
                                                     _stroke,
@@ -471,7 +465,7 @@ namespace Ink_Anything
                                     p[1] = newPoints[0];
                                     p[3] = newPoints[1];
 
-                                    var pointList = GenerateEllipseGeometry(iniP, endP);
+                                    var pointList = ShapeGenerator.GenerateEllipseGeometry(iniP, endP);
                                     var point = new StylusPointCollection(pointList);
                                     var stroke = new Stroke(point)
                                     {
@@ -747,12 +741,12 @@ namespace Ink_Anything
         private void SetNewBackupOfStroke()
         {
             lastTouchDownStrokeCollection = inkCanvas.Strokes.Clone();
-            int whiteboardIndex = CurrentWhiteboardIndex;
+            int whiteboardIndex = _whiteboardManager.CurrentIndex;
             if (currentMode == 0)
             {
                 whiteboardIndex = 0;
             }
-            strokeCollections[whiteboardIndex] = lastTouchDownStrokeCollection;
+            _whiteboardManager.StrokeCollections[whiteboardIndex] = lastTouchDownStrokeCollection;
         }
 
         public double GetDistance(Point point1, Point point2)

@@ -298,12 +298,12 @@ namespace Ink_Anything
                 if (lastTouchDownStrokeCollection.Count() != inkCanvas.Strokes.Count() &&
                     !(drawingShapeMode == 9 && !isFirstTouchCuboid))
                 {
-                    int whiteboardIndex = CurrentWhiteboardIndex;
+                    int whiteboardIndex = _whiteboardManager.CurrentIndex;
                     if (currentMode == 0)
                     {
                         whiteboardIndex = 0;
                     }
-                    strokeCollections[whiteboardIndex] = lastTouchDownStrokeCollection;
+                    _whiteboardManager.StrokeCollections[whiteboardIndex] = lastTouchDownStrokeCollection;
                 }
             }
         }

@@ -138,12 +138,12 @@ namespace Ink_Anything
             }
             if (inkCanvas.Strokes.Count != 0)
             {
-                int whiteboardIndex = CurrentWhiteboardIndex;
+                int whiteboardIndex = _whiteboardManager.CurrentIndex;
                 if (currentMode == 0)
                 {
                     whiteboardIndex = 0;
                 }
-                strokeCollections[whiteboardIndex] = inkCanvas.Strokes.Clone();
+                _whiteboardManager.StrokeCollections[whiteboardIndex] = inkCanvas.Strokes.Clone();
 
             }
 

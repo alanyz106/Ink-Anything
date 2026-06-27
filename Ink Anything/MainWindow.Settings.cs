@@ -628,12 +628,7 @@ namespace Ink_Anything
 
         public static void SaveSettingsToFile()
         {
-            string text = JsonConvert.SerializeObject(Settings, Formatting.Indented);
-            try
-            {
-                File.WriteAllText(App.RootPath + settingsFileName, text);
-            }
-            catch { }
+            SettingsManager.SaveToFile(Settings, App.RootPath + settingsFileName);
         }
 
         private void SCManipulationBoundaryFeedback(object sender, ManipulationBoundaryFeedbackEventArgs e)

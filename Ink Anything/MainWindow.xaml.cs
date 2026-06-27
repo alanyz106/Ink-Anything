@@ -46,6 +46,7 @@ namespace Ink_Anything
         public MainWindow()
         {
             InitializeComponent();
+            _strokeTransformService = new StrokeTransformService(inkCanvas, timeMachine);
 
             BorderSettings.Opacity = 0;
             BorderSettings.Visibility = Visibility.Collapsed;
@@ -142,6 +143,9 @@ namespace Ink_Anything
 
         public static Settings Settings = new Settings();
         public static string settingsFileName = "Settings.json";
+        internal readonly TextManager _textManager = new TextManager();
+        internal StrokeTransformService _strokeTransformService;
+        internal readonly WhiteboardManager _whiteboardManager = new WhiteboardManager();
         bool isLoaded = false;
         //bool isAutoUpdateEnabled = false;
 
@@ -323,15 +327,8 @@ namespace Ink_Anything
 
         private void LoadSettings(bool isStartup = true)
         {
-            if (File.Exists(App.RootPath + settingsFileName))
-            {
-                try
-                {
-                    string text = File.ReadAllText(App.RootPath + settingsFileName);
-                    Settings = JsonConvert.DeserializeObject<Settings>(text);
-                }
-                catch { }
-            }
+            var loaded = SettingsManager.LoadFromFile(App.RootPath + settingsFileName);
+            if (loaded != null) Settings = loaded;
 
             if (Settings.Startup.IsAutoEnterModeFinger)
             {
